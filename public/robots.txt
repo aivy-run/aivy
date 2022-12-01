@@ -1,0 +1,31 @@
+User-agent: *
+
+Disallow: /dashboard/
+Disallow: /settings/
+Disallow: /search?q=
+Disallow: /tags?q=
+Disallow: /setup
+Disallow: /cdn-cgi/
+
+User-agent: Yahoo Pipes 1.0
+Disallow: /
+
+User-agent: 008
+Disallow: /
+
+User-agent: voltron
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Livelapbot
+Disallow: /
+
+User-agent: Megalodon
+Disallow: /
+
+User-agent: ia_archiver
+Disallow: /
+
+Sitemap: https://aivy.run/sitemaps/_index.xml
