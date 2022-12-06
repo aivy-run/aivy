@@ -15,29 +15,7 @@ export const deleteAccount = async (
     const ids = image_posts.data!.map((v) => v.id)
     checkResult(image_posts)
     d({ ids, uid })
-    if (ids.length > 0)
-        checkResult(
-            await supabase
-                .from('image_posts_information')
-                .delete()
-                .or(ids.map((v) => `post_id.eq.${v}`).join(',')),
-        )
-    checkResult(
-        await supabase.from('notifications').delete().or(`author.eq.${uid},target_user.eq.${uid}`),
-    )
 
-    const tasks = [
-        (async () => checkResult(await supabase.from('image_posts').delete().eq('author', uid)))(),
-        (async () => checkResult(await supabase.from('bookmarks').delete().eq('author', uid)))(),
-        (async () => checkResult(await supabase.from('comments').delete().eq('author', uid)))(),
-        (async () => checkResult(await supabase.from('likes').delete().eq('author', uid)))(),
-
-        (async () =>
-            checkResult(
-                await supabase.from('relationship').delete().or(`uid.eq.${uid},target.eq.${uid}`),
-            ))(),
-    ]
-    await Promise.all(tasks)
     checkResult(await supabase.from('profiles').delete().eq('uid', uid))
 
     // delete cookies on sign out

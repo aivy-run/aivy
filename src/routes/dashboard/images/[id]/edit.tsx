@@ -8,6 +8,7 @@ import { NotFoundError } from '~/components/error-handler'
 import { ImagePostUploader } from '~/components/image-post-form/image-post-uploader'
 import { Button } from '~/components/ui/button'
 import { useModal } from '~/components/ui/modal'
+import { HStack, VStack } from '~/components/ui/stack'
 import { useState } from '~/hooks/use-state'
 import { deleteImageFn$ } from '~/lib/api/cloudflare'
 import { api } from '~/lib/api/supabase'
@@ -61,30 +62,32 @@ export default function Upload() {
               render: (close) => {
                 const [loading, setLoading] = createSignal(false)
                 return (
-                  <div>
+                  <VStack>
                     <h2>削除します。よろしいですか？</h2>
-                    <Button onClick={close}>キャンセル</Button>
-                    <Button
-                      class={css`
-                        background-color: #ff6464;
+                    <HStack>
+                      <Button onClick={close}>キャンセル</Button>
+                      <Button
+                        class={css`
+                          background-color: #ff6464;
 
-                        &:hover {
-                          background-color: #ffa2a2;
-                        }
-                      `}
-                      loading={loading()}
-                      onClick={async () => {
-                        setLoading(true)
-                        await Delete(`post.image.${data()!.id}.0`)
-                        await api.image.delete(data()!.id)
-                        setLoading(false)
-                        close()
-                        navigate('/dashboard/images')
-                      }}
-                    >
-                      削除する
-                    </Button>
-                  </div>
+                          &:hover {
+                            background-color: #ffa2a2;
+                          }
+                        `}
+                        loading={loading()}
+                        onClick={async () => {
+                          setLoading(true)
+                          await Delete(`post.image.${data()!.id}.0`)
+                          await api.image.delete(data()!.id)
+                          setLoading(false)
+                          close()
+                          navigate('/dashboard/images')
+                        }}
+                      >
+                        削除する
+                      </Button>
+                    </HStack>
+                  </VStack>
                 )
               },
             })

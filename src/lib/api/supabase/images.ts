@@ -62,10 +62,8 @@ export class ImagePostApi {
     }
 
     public async delete(id: number) {
-        const info = await supabase.from('image_posts_information').delete().eq('post_id', id)
-        if (info.error) throw info.error
-        const post = await supabase.from('image_posts').delete().eq('id', id)
-        if (post.error) throw post.error
+        const { error } = await supabase.from('image_posts').delete().eq('id', id)
+        if (error) throw error
         return
     }
 
