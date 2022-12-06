@@ -1,15 +1,13 @@
 import Color from 'color'
 import { createSignal } from 'solid-js'
-import { createServerAction$ } from 'solid-start/server'
 import { css, styled, useTheme } from 'solid-styled-components'
 
 import { FixedTitle } from '~/components/head/title'
 import { Button } from '~/components/ui/button'
 import { CheckBox } from '~/components/ui/checkbox'
 import { WithUser } from '~/components/with-user'
-import { deleteImageFn$ } from '~/lib/api/cloudflare'
+import { deleteAccount } from '~/lib/api/delete-account'
 import { supabase } from '~/lib/api/supabase/client'
-import { deleteAccount } from '~/lib/api/supabase/delete-account'
 
 const Container = styled(WithUser)`
   display: flex;
@@ -46,14 +44,6 @@ const Inner = styled.div`
 `
 
 export default function DeleteAccount() {
-  const [, Delete] = createServerAction$(async ({ ids, uid }: { ids: number[]; uid: string }) => {
-    return Promise.all([
-      ...ids.map((v) => deleteImageFn$(`post.image.${v}.0`)),
-      deleteImageFn$(`user.icon.${uid}`),
-      deleteImageFn$(`user.ogp.${uid}`),
-      deleteImageFn$(`user.header.${uid}`),
-    ])
-  })
   const theme = useTheme()
   const [loading, setLoading] = createSignal(false)
   const [checked, setChecked] = createSignal(false)
@@ -121,7 +111,7 @@ export default function DeleteAccount() {
                 disabled={!checked() || loading()}
                 onClick={async () => {
                   setLoading(true)
-                  await deleteAccount(me().id, Delete)
+                  await deleteAccount(me().id)
                   await supabase.auth.signOut()
                   setTimeout(() => {
                     setLoading(false)

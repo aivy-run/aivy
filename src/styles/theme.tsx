@@ -11,7 +11,7 @@ import {
   JSX,
   onMount,
 } from 'solid-js'
-import { isServer, NoHydration } from 'solid-js/web'
+import { isServer } from 'solid-js/web'
 import { useRequest } from 'solid-start/server'
 import { ThemeProvider as _ThemeProvider, useTheme } from 'solid-styled-components'
 
@@ -89,18 +89,16 @@ const GlobalStyles: Component = () => {
   const theme = useTheme()
 
   return (
-    <NoHydration>
-      <style
-        // eslint-disable-next-line solid/no-innerhtml
-        innerHTML={`
+    <style
+      // eslint-disable-next-line solid/no-innerhtml
+      innerHTML={`
         body {
           background-color: ${theme.$().colors.bg.string()};
           color: ${theme.$().colors.text.string()};
           min-height: 100vh;
         }
       `}
-      />
-    </NoHydration>
+    />
   )
 }
 

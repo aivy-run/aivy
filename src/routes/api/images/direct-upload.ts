@@ -1,35 +1,39 @@
-import cookie from 'cookie'
-import type { APIEvent } from 'solid-start'
+import { request } from 'undici'
 
-import { generateUrlFn$ } from '~/lib/api/cloudflare'
-import { createSupabaseInstance } from '~/lib/api/supabase/client'
+import {
+    CloudflareImagesResponse,
+    CLOUDFLARE_ACCESS_TOKEN$,
+    CLOUDFLARE_ACCOUNT_ID$,
+} from '~/lib/api/cloudflare'
+import { withAuth } from '~/lib/api/internal/auth'
 
-export const GET = async ({ request }: APIEvent) => {
-    const unauthorized = () =>
-        new Response('Not authenticated', {
-            status: 400,
-        })
+const generate = async () => {
+    if (!CLOUDFLARE_ACCESS_TOKEN$()) throw new Error('Access token is not defined')
+    const { statusCode, body } = await request(
+        `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID$()}/images/v1/direct_upload`,
+        {
+            method: 'POST',
+            headers: {
+                authorization: `Bearer ${CLOUDFLARE_ACCESS_TOKEN$()}`,
+            },
+        },
+    )
 
-    const sb = createSupabaseInstance()
+    if (statusCode !== 200) throw new Error(await body.text())
+
+    const json: CloudflareImagesResponse<{
+        id: string
+        uploadURL: string
+    }> = await body.json()
+    return json.result.uploadURL
+}
+export const GET = withAuth(async ({ request }) => {
     const url = new URL(request.url)
-    const raw = request.headers.get('cookie')
-    if (!raw) return unauthorized()
-
-    const parsed = cookie.parse(raw)
-
-    const access_token = parsed['aivy-access-token']
-    const refresh_token = parsed['aivy-refresh-token']
-
-    if (!access_token || !refresh_token) return unauthorized()
-
-    const { error } = await sb.auth.setSession({ access_token, refresh_token })
-    if (error) return unauthorized()
-
     const count = parseInt(url.searchParams.get('count') || '1') || 1
 
     const tasks: any[] = []
     for (let v = 0; v < (count < 1 ? 1 : count); v++) {
-        tasks.push(generateUrlFn$())
+        tasks.push(generate())
     }
 
     const urls = await Promise.all(tasks)
@@ -39,4 +43,4 @@ export const GET = async ({ request }: APIEvent) => {
             'Content-Type': 'application/json',
         },
     })
-}
+})

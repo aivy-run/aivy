@@ -3,13 +3,13 @@ import { useNavigate } from 'solid-start'
 
 import { FixedTitle } from '~/components/head/title'
 import { ImagePostUploader } from '~/components/image-post-form/image-post-uploader'
-import { useToast } from '~/components/ui/toast'
+import { useModal } from '~/components/ui/modal'
 import { WithUser } from '~/components/with-user'
 import { createDirectUploadUrl, uploadImage } from '~/lib/api/cloudflare'
 import { api } from '~/lib/api/supabase'
 
 export default function Upload() {
-  const toast = useToast()
+  const modal = useModal()
   const navigate = useNavigate()
 
   const [status, setStatus] = createSignal('')
@@ -41,11 +41,9 @@ export default function Upload() {
                   await uploadImage(urls[parseInt(i)]!, image.file, `post.image.${result.id}.${i}`)
                 }
               } catch (error) {
-                toast({
+                return modal({
                   title: 'アップロードに失敗しました。',
-                  description: 'アップロード中にエラーが発生しました。',
-                  status: 'error',
-                  isClosable: true,
+                  description: 'アップロード中にエラーが発生しました。もう一度やり直してください。',
                 })
               }
 

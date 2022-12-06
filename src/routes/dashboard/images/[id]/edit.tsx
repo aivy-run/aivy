@@ -1,7 +1,6 @@
 import { useParams } from '@solidjs/router'
 import { createSignal, onMount, Show } from 'solid-js'
 import { useNavigate } from 'solid-start'
-import { createServerAction$ } from 'solid-start/server'
 import { css } from 'solid-styled-components'
 
 import { NotFoundError } from '~/components/error-handler'
@@ -10,7 +9,7 @@ import { Button } from '~/components/ui/button'
 import { useModal } from '~/components/ui/modal'
 import { HStack, VStack } from '~/components/ui/stack'
 import { useState } from '~/hooks/use-state'
-import { deleteImageFn$ } from '~/lib/api/cloudflare'
+import { fetchImageMulti } from '~/lib/api/cloudflare'
 import { api } from '~/lib/api/supabase'
 import type { CompleteImagePost } from '~/lib/api/supabase/images'
 import type { UserProfile } from '~/lib/api/supabase/user'
@@ -22,7 +21,6 @@ export default function Upload() {
   const navigate = useNavigate()
   const [author, setAuthor] = createSignal<UserProfile['Row']>()
   const [data, setData] = createSignal<CompleteImagePost>()
-  const [, Delete] = createServerAction$(deleteImageFn$)
 
   onMount(async () => {
     const id = parseInt(params['id'] as string)
@@ -77,7 +75,10 @@ export default function Upload() {
                         loading={loading()}
                         onClick={async () => {
                           setLoading(true)
-                          await Delete(`post.image.${data()!.id}.0`)
+                          await fetchImageMulti(
+                            post.information.map((v) => `post.image.${data()!.id}.${v.index}`),
+                            'DELETE',
+                          )
                           await api.image.delete(data()!.id)
                           setLoading(false)
                           close()

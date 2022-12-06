@@ -7,7 +7,7 @@ import { Line } from '../ui/line'
 
 import { useUser } from '~/context/user'
 import { useFloating } from '~/hooks/use-floating'
-import { supabase } from '~/lib/api/supabase/client'
+import { signOut } from '~/lib/api/internal/auth'
 import { classnames } from '~/lib/classnames'
 import IconAddAlt from '~icons/carbon/add-alt'
 import IconBookmark from '~icons/carbon/bookmark'
@@ -161,7 +161,7 @@ export const Menu = () => {
           loading={loading()}
           onClick={async () => {
             setLoading(true)
-            await supabase.auth.signOut()
+            await signOut()
             setTimeout(() => {
               setLoading(false)
               window.location.href = window.location.protocol + '//' + window.location.host + '/'

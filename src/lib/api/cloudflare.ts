@@ -1,6 +1,6 @@
-const ID$ = () => process.env['CLOUDFLARE_ACCOUNT_ID']
-const TOKEN$ = () => process.env['CLOUDFLARE_ACCESS_TOKEN']
-const ID_PREFIX = () =>
+export const CLOUDFLARE_ACCOUNT_ID$ = () => process.env['CLOUDFLARE_ACCOUNT_ID']
+export const CLOUDFLARE_ACCESS_TOKEN$ = () => process.env['CLOUDFLARE_ACCESS_TOKEN']
+export const ID_PREFIX = () =>
     typeof import.meta.env['VITE_ID_PREFIX'] !== 'undefined'
         ? import.meta.env['VITE_ID_PREFIX']
         : import.meta.env.DEV
@@ -30,67 +30,13 @@ export const createDirectUploadUrl = async <N>(
     return json
 }
 
-export const generateUrlFn$ = async () => {
-    if (!TOKEN$()) throw new Error('Access token is not defined')
-    const { request } = await import('undici')
-    const { statusCode, body } = await request(
-        `https://api.cloudflare.com/client/v4/accounts/${ID$()}/images/v1/direct_upload`,
-        {
-            method: 'POST',
-            headers: {
-                authorization: `Bearer ${TOKEN$()}`,
-            },
-        },
-    )
-
-    if (statusCode !== 200) throw new Error(await body.text())
-
-    const json: CloudflareImagesResponse<{
-        id: string
-        uploadURL: string
-    }> = await body.json()
-    return json.result.uploadURL
-}
-
-export const getImageFn$ = async (id: string) => {
-    const { request } = await import('undici')
-    const { statusCode, body } = await request(
-        `https://api.cloudflare.com/client/v4/accounts/${ID$()}/images/v1/${ID_PREFIX()}${id}`,
-        {
-            headers: {
-                authorization: `Bearer ${TOKEN$()}`,
-            },
-        },
-    )
-    if (statusCode === 404) return
-    if (statusCode !== 200) throw new Error(await body.text())
-    const json: CloudflareImagesResponse<{
-        id: string
-        filename: string
-        metadata: {
-            key: string
-        }[]
-        requireSignedURLs: boolean
-        variants: string[]
-        uploaded: string
-    }> = await body.json()
-    return json
-}
-
-export const deleteImageFn$ = async (id: string) => {
-    const { request } = await import('undici')
-    const { statusCode, body } = await request(
-        `https://api.cloudflare.com/client/v4/accounts/${ID$()}/images/v1/${ID_PREFIX()}${id}`,
-        {
-            method: 'DELETE',
-            headers: {
-                authorization: `Bearer ${TOKEN$()}`,
-            },
-        },
-    )
-    if (statusCode !== 200) throw new Error(await body.text())
-    return
-}
+export const fetchImage = (id: string, init?: RequestInit) => fetch(`/api/images/${id}`, init)
+export const fetchImageMulti = (id: string[], method: string, ignoreError = false) =>
+    fetch(`/api/images/multi`, {
+        method: 'POST',
+        body: JSON.stringify({ id, method, ignoreError }),
+        headers: { 'Content-Type': 'application/json' },
+    })
 
 export const uploadImage = async (url: string, file: File, id: string) => {
     const form = new FormData()

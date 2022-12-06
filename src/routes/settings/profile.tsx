@@ -1,7 +1,6 @@
 import { createFileUploader, UploadFile } from '@solid-primitives/upload'
 import { createEffect, createSignal, Show } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import { createServerAction$ } from 'solid-start/server'
 import { css, useTheme } from 'solid-styled-components'
 
 import { Button } from '~/components/ui/button'
@@ -15,8 +14,7 @@ import {
   createDirectUploadUrl,
   createImageURL,
   deleteCache,
-  deleteImageFn$,
-  getImageFn$,
+  fetchImage,
   uploadImage,
 } from '~/lib/api/cloudflare'
 import type { UserProfile } from '~/lib/api/supabase/user'
@@ -40,9 +38,6 @@ export default function Profile() {
   const [status, setStatus] = createSignal('')
   const { selectFiles: selectHeaderFiles } = createFileUploader({ accept: 'image/*' })
   const { selectFiles: selectIconFiles } = createFileUploader({ accept: 'image/*' })
-
-  const [getter, getImage$] = createServerAction$(getImageFn$)
-  const [, deleteImage$] = createServerAction$(deleteImageFn$)
 
   createEffect(() => {
     setUpdates({ ...profile() })
@@ -192,8 +187,8 @@ export default function Profile() {
               if (icon) {
                 setStatus('アイコン画像をアップロード中')
                 const id = `user.icon.${profile().uid}`
-                await getImage$(id)
-                if (getter.result) await deleteImage$(id)
+                const res = await fetchImage(id)
+                if (res.ok) await fetchImage(id, { method: 'DELETE' })
                 const url = await createDirectUploadUrl()
                 await uploadImage(url, icon.file, id)
                 await deleteCache(id, 'icon')
@@ -201,16 +196,16 @@ export default function Profile() {
               if (header) {
                 setStatus('ヘッダー画像をアップロード中')
                 const id = `user.header.${profile().uid}`
-                await getImage$(id)
-                if (getter.result) await deleteImage$(id)
+                const res = await fetchImage(id)
+                if (res.ok) await fetchImage(id, { method: 'DELETE' })
                 const url = await createDirectUploadUrl()
                 await uploadImage(url, header.file, id)
                 await deleteCache(id, 'header')
               }
               setStatus('OGP画像を生成中')
               const ogpId = `user.ogp.${profile().uid}`
-              await getImage$(ogpId)
-              if (getter.result) await deleteImage$(ogpId)
+              const res = await fetchImage(ogpId)
+              if (res.ok) await fetchImage(ogpId, { method: 'DELETE' })
               try {
                 const ogp = await createOgp(profile(), header, icon)
                 const url = await createDirectUploadUrl()
