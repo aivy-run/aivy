@@ -34,7 +34,7 @@ const ImageBox: Component<
         local.class,
         css`
           position: relative;
-          width: 100%;
+          max-width: 100%;
           border: ${local.selected
             ? `3px solid ${theme.$().colors.main.darken(0.25).string()}`
             : 'none'};

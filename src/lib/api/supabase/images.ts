@@ -107,6 +107,7 @@ export class ImagePostApi {
         if (status === 406) return
         if (error) throw error
         if (!checkSingle(data)) throw new Error('Incorrect data')
+        data.information.sort((a, b) => (a.index > b.index ? 1 : -1))
         return data
     }
 

@@ -11,9 +11,7 @@ export const Information: Component = () => {
   const navigate = useNavigate()
   const { post, index } = useImagePost()
 
-  const info = createMemo(
-    () => post.information.concat().sort((a, b) => (a.index > b.index ? 1 : -1))[index()],
-  )
+  const info = createMemo(() => post.information[index()])
 
   return (
     <div
