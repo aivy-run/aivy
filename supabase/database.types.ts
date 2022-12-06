@@ -12,55 +12,55 @@ export interface Database {
       bookmarks: {
         Row: {
           target: number
-          author: string
           created_at: string
           type: string
+          author: string
           id: number
         }
         Insert: {
           target: number
-          author?: string
           created_at?: string
           type?: string
+          author?: string
           id?: number
         }
         Update: {
           target?: number
-          author?: string
           created_at?: string
           type?: string
+          author?: string
           id?: number
         }
       }
       comments: {
         Row: {
           commentable_id: number
-          author: string
           body: string
           parent_id: number | null
           created_at: string
           commentable_type: string
           likes: number
+          author: string
           id: number
         }
         Insert: {
           commentable_id: number
-          author: string
           body: string
           parent_id?: number | null
           created_at?: string
           commentable_type?: string
           likes?: number
+          author?: string
           id?: number
         }
         Update: {
           commentable_id?: number
-          author?: string
           body?: string
           parent_id?: number | null
           created_at?: string
           commentable_type?: string
           likes?: number
+          author?: string
           id?: number
         }
       }
@@ -85,9 +85,9 @@ export interface Database {
         Row: {
           title: string
           description: string | null
-          author: string
           tags: string[]
           contest_id: number | null
+          author: string
           created_at: string | null
           likes: number
           zoning: string
@@ -101,9 +101,9 @@ export interface Database {
         Insert: {
           title: string
           description?: string | null
-          author: string
           tags: string[]
           contest_id?: number | null
+          author?: string
           created_at?: string | null
           likes?: number
           zoning?: string
@@ -117,9 +117,9 @@ export interface Database {
         Update: {
           title?: string
           description?: string | null
-          author?: string
           tags?: string[]
           contest_id?: number | null
+          author?: string
           created_at?: string | null
           likes?: number
           zoning?: string
@@ -220,33 +220,33 @@ export interface Database {
       }
       notifications: {
         Row: {
-          author: string
           target_user: string | null
           target_image_post: number | null
           type: string
           target_comment: number | null
           created_at: string
           read: boolean
+          author: string
           id: number
         }
         Insert: {
-          author: string
           target_user?: string | null
           target_image_post?: number | null
           type: string
           target_comment?: number | null
           created_at?: string
           read?: boolean
+          author?: string
           id?: number
         }
         Update: {
-          author?: string
           target_user?: string | null
           target_image_post?: number | null
           type?: string
           target_comment?: number | null
           created_at?: string
           read?: boolean
+          author?: string
           id?: number
         }
       }
@@ -290,22 +290,22 @@ export interface Database {
       }
       relationship: {
         Row: {
-          uid: string
           target: string
           created_at: string
           id: number
+          uid: string
         }
         Insert: {
-          uid: string
           target: string
           created_at?: string
           id?: number
+          uid?: string
         }
         Update: {
-          uid?: string
           target?: string
           created_at?: string
           id?: number
+          uid?: string
         }
       }
       tags: {
