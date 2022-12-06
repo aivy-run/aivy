@@ -1,3 +1,4 @@
+import Color from 'color'
 import { parse } from 'parse5'
 import {
   Component,
@@ -62,15 +63,41 @@ export const TokenizedPrompt: Component<{
   )
 }
 
-export const Prompt: Component<{ prompt: Token; onTokenClick?: (token: string) => void }> = (
-  props,
-) => {
+const BRACKET_COLORS = {}
+
+export const Prompt: Component<{
+  prompt: Token
+  onTokenClick?: (token: string) => void
+  degree?: number
+}> = (props) => {
   const context = useContext(PromptContext)
   const theme = useTheme()
   const type = createMemo(() => {
     if (props.prompt.attrs) return props.prompt.attrs[0]?.['value']
     else return 'novelai'
   })
+  const text = createMemo(() =>
+    props.prompt.nodeName === '#text'
+      ? props.prompt.value
+          .replace(/%bracket-novelai%/g, '\\{')
+          .replace(/%\/bracket-novelai%/g, '\\}')
+          .replace(/%bracket-automatic1111%/g, '\\(')
+          .replace(/%\/bracket-automatic1111%/g, '\\)')
+      : '',
+  )
+  const degree = createMemo(() => {
+    const split = text().split(':')
+    if (split.length > 1) return parseFloat(split[1]!) || 1
+    else return props.degree || 1
+  })
+  const color = createMemo(() => {
+    const t = theme.$()
+    if (degree() === 1) return t.colors.text
+    const blend = degree() > 1 ? Color('#ffbb55') : Color('#99ddff')
+    const base = t.name === 'light' ? blend.darken(0.1) : blend.lighten(1)
+    return base.darken(0.2 * degree())
+  })
+
   return (
     <>
       <Switch>
@@ -82,22 +109,15 @@ export const Prompt: Component<{ prompt: Token; onTokenClick?: (token: string) =
           </div>
         </Match>
         <Match when={props.prompt.nodeName === '#text'}>
-          <For
-            each={props.prompt.value
-              .replace(/%bracket-novelai%/g, '{')
-              .replace(/%\/bracket-novelai%/g, '}')
-              .replace(/%bracket-automatic1111%/g, '(')
-              .replace(/%\/bracket-automatic1111%/g, ')')
-              .split(':')}
-          >
+          <For each={text().split(':')}>
             {(text, i) => (
-              <>
-                <Show when={i() !== 0}>:</Show>
+              <Show when={i() === 0} fallback={<>:{degree()}</>}>
                 <span
                   onClick={() => context.onTokenClick?.(text)}
                   class={css`
                     cursor: pointer;
                     transition: 0.2s;
+                    color: ${color().string()};
 
                     &:hover {
                       border-radius: 0.2rem;
@@ -107,7 +127,7 @@ export const Prompt: Component<{ prompt: Token; onTokenClick?: (token: string) =
                 >
                   {text}
                 </span>
-              </>
+              </Show>
             )}
           </For>
         </Match>
@@ -115,14 +135,18 @@ export const Prompt: Component<{ prompt: Token; onTokenClick?: (token: string) =
         <Match when={props.prompt.nodeName === 'increases'}>
           {type() === 'novelai' ? '{' : '('}
           <Show when={props.prompt.childNodes}>
-            <For each={props.prompt.childNodes}>{(node) => <Prompt prompt={node} />}</For>
+            <For each={props.prompt.childNodes}>
+              {(node) => <Prompt degree={degree() + 0.1} prompt={node} />}
+            </For>
           </Show>
           {type() === 'novelai' ? '}' : ')'}
         </Match>
         <Match when={props.prompt.nodeName === 'decreases'}>
           [
           <Show when={props.prompt.childNodes}>
-            <For each={props.prompt.childNodes}>{(node) => <Prompt prompt={node} />}</For>
+            <For each={props.prompt.childNodes}>
+              {(node) => <Prompt degree={(degree() || 1) - 0.1} prompt={node} />}
+            </For>
           </Show>
           ]
         </Match>
