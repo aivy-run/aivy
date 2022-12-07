@@ -14,7 +14,6 @@ export class TagApi {
     }
 
     public async use(tags: string[]) {
-        tags = tags.map((v) => v.toLowerCase())
         if (tags.length < 1) return
         const exists = await supabase
             .from('tags')
