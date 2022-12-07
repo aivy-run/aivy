@@ -1,5 +1,15 @@
 import dayjs from 'dayjs'
-import { Component, createEffect, createMemo, createSignal, For, Show, useContext } from 'solid-js'
+import {
+  Component,
+  createEffect,
+  createMemo,
+  createReaction,
+  createSignal,
+  For,
+  onMount,
+  Show,
+  useContext,
+} from 'solid-js'
 import { A, useNavigate } from 'solid-start'
 import { css, styled, useTheme } from 'solid-styled-components'
 
@@ -96,6 +106,17 @@ export const Comment: Component<
 
   createEffect(() => {
     if (props.type !== 'comment') return
+    const reps = replies()
+    if (reps.length < 1) return
+    api.like
+      .list({
+        targets: reps.map((v) => v.id),
+        type: 'comment',
+      })
+      .then((v) => setLikes((prev) => [...prev, ...v]))
+  })
+  onMount(() => {
+    if (props.type !== 'comment') return
     api.comment
       .count({
         parent_id: props.comment.id,
@@ -103,22 +124,20 @@ export const Comment: Component<
       })
       .then(setReplyCount)
   })
-  createEffect(() => {
+  const trackReplyLoad = createReaction(() => {
     if (props.type !== 'comment') return
+    // eslint-disable-next-line solid/reactivity
+    if (!openReplies()) trackReplyLoad(() => openReplies())
     if (openReplies()) {
       api.comment
         .list({
           parent_id: props.comment.id,
           commentable_type: 'image_post',
         })
-        .then((v) => {
-          setReplies((prev) => {
-            const filtered = v.filter((v2) => prev.findIndex((v3) => v3.id === v2.id) === -1)
-            return [...prev, ...filtered]
-          })
-        })
+        .then(setReplies)
     }
   })
+  trackReplyLoad(() => openReplies())
 
   const createdAt = createMemo(() => dayjs(props.comment.created_at))
   const time = createMemo(() => {
