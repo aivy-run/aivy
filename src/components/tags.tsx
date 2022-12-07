@@ -12,8 +12,8 @@ const Container = styled.div`
   align-items: center;
   padding: 0.5rem 1rem;
   gap: 1rem;
-  overflow-x: auto;
   -ms-overflow-style: none;
+  overflow-x: auto;
   scrollbar-width: none;
 
   &::-webkit-scrollbar {

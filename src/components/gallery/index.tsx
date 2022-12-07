@@ -21,6 +21,7 @@ import { api } from '~/lib/api/supabase'
 import type { Bookmark } from '~/lib/api/supabase/bookmarks'
 import type { CompleteImagePost } from '~/lib/api/supabase/images'
 import type { Like } from '~/lib/api/supabase/like'
+import IconImage from '~icons/carbon/image'
 
 const WIDTH = 220
 const GAP = 14
@@ -198,6 +199,27 @@ export const Gallery: Component<{
                   >
                     {rank()}
                   </RankingTag>
+                </Show>
+                <Show when={post.images > 1}>
+                  <div
+                    class={css`
+                      position: absolute;
+                      right: 0.25rem;
+                      bottom: 0.25rem;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      padding: 0.25rem 0.5rem;
+                      border-radius: 0.25rem;
+                      background-color: ${theme.$().colors.bg.fade(0.25).string()};
+                      color: ${theme.$().colors.text.string()};
+                      font-size: 0.9rem;
+                      gap: 0.25rem;
+                    `}
+                  >
+                    <IconImage />
+                    <div>{post.images}</div>
+                  </div>
                 </Show>
               </A>
               <div
