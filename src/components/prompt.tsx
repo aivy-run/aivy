@@ -115,9 +115,9 @@ export const Prompt: Component<{
                 <span
                   onClick={() => context.onTokenClick?.(text)}
                   class={css`
+                    color: ${color().string()};
                     cursor: pointer;
                     transition: 0.2s;
-                    color: ${color().string()};
 
                     &:hover {
                       border-radius: 0.2rem;

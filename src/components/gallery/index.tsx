@@ -19,7 +19,7 @@ import { useUser } from '~/context/user'
 import { createImageURL } from '~/lib/api/cloudflare'
 import { api } from '~/lib/api/supabase'
 import type { Bookmark } from '~/lib/api/supabase/bookmarks'
-import type { CompleteImagePost, ImagePost } from '~/lib/api/supabase/images'
+import type { CompleteImagePost } from '~/lib/api/supabase/images'
 import type { Like } from '~/lib/api/supabase/like'
 
 const WIDTH = 220
@@ -79,7 +79,6 @@ export const Gallery: Component<{
   posts: CompleteImagePost[]
   page: number
   all: number
-  zoning: ImagePost['Row']['zoning'][]
   scroll?: boolean
   ranking?: boolean
 }> = (props) => {
@@ -89,7 +88,7 @@ export const Gallery: Component<{
   } = useUser(true)
   const navigate = useNavigate()
   const [likes, setLikes] = createSignal<Like['Row'][]>([])
-  const [bookmarks, setBookmarks] = createSignal<Bookmark[]>([])
+  const [bookmarks, setBookmarks] = createSignal<Bookmark['Row'][]>([])
   const [remainder, setRemainder] = createSignal<any[]>([])
 
   let ref: HTMLDivElement
@@ -140,7 +139,6 @@ export const Gallery: Component<{
           const [bookmarked, setBookmarked] = createSignal<boolean>()
           const [bookmarkOffset, setBookmarkOffset] = createSignal(0)
 
-          const filter = createMemo(() => props.zoning.includes(post.zoning))
           const rank = createMemo(() => props.all * (props.page - 1) + i() + 1)
 
           createEffect(() => {
@@ -172,10 +170,7 @@ export const Gallery: Component<{
                 }}
               >
                 <img
-                  src={createImageURL(
-                    `post.image.${post.id}.0`,
-                    filter() ? 'thumbnail' : 'thumbnailfiltered',
-                  )}
+                  src={createImageURL(`post.image.${post.id}.0`, 'thumbnail')}
                   alt=""
                   class={css`
                     width: 100%;

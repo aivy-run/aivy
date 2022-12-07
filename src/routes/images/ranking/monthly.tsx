@@ -8,8 +8,10 @@ export default function Daily() {
   return (
     <Posts
       title={today().format('MM月') + 'のランキング'}
+      ranking
+      zoningButton
+      tags
       all={50}
-      ranking={true}
       url="/images/ranking/monthly"
       filter={{
         zoning: ['normal'],

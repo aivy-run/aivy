@@ -8,7 +8,10 @@
     "eslint": "eslint src/**/*.{ts,tsx}",
     "stylelint": "stylelint src/**/*.{ts,tsx}",
     "prettier": "prettier src/**/*.{ts,tsx}",
-    "format-all": "pnpm eslint --fix & pnpm stylelint --fix & pnpm prettier --write"
+    "format-all": "pnpm eslint --fix & pnpm stylelint --fix & pnpm prettier --write",
+    "supabase:diff": "supabase db diff --use-migra",
+    "supabase:push": "supabase db push",
+    "supabase:types": "supabase gen types typescript --local > supabase/database.types.ts"
   },
   "devDependencies": {
     "@iconify-json/carbon": "^1.1.9",

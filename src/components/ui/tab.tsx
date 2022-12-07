@@ -52,12 +52,21 @@ export const Tab = styled.div<{ selected?: boolean }>`
   flex: 0 0 auto;
   padding: 0.25rem;
   margin-right: 0.25rem;
+  color: ${(p) =>
+    p.theme
+      ?.$()
+      .colors.text.fade(p.selected ? 0 : 0.5)
+      .string()};
   cursor: pointer;
-  font-weight: bold;
+  font-weight: ${(p) => (p.selected ? 'bold' : 'normal')};
 
   * {
     color: ${(p) =>
-      (p.selected ? p.theme?.$().colors.main.darken(0.25) : p.theme?.$().colors.text)?.string()};
+      p.theme
+        ?.$()
+        .colors.text.fade(p.selected ? 0 : 0.5)
+        .string()};
+    font-weight: ${(p) => (p.selected ? 'bold' : 'normal')};
     white-space: nowrap;
   }
 

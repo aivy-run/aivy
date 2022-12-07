@@ -6,8 +6,11 @@ import { styled } from 'solid-styled-components'
 import { Posts } from '~/components/gallery/posts'
 import { FixedTitle } from '~/components/head/title'
 import { InternalAD } from '~/components/internal-ad'
+import { Tags } from '~/components/tags'
+import { ZoningSelector } from '~/components/zoning-selector'
 import { useUser } from '~/context/user'
 import { api } from '~/lib/api/supabase'
+import type { Zoning } from '~/lib/api/supabase/user'
 
 const Container = styled.div`
   padding: 0;
@@ -22,7 +25,7 @@ const Inner = styled.div`
   background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
   text-align: center;
   ${(p) => p.theme?.$().media.breakpoints.lg} {
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     border-bottom: none;
     margin-bottom: 1rem;
   }
@@ -44,6 +47,7 @@ export default function Index() {
     util: { withUser },
   } = useUser(true)
   const [following, setFollowing] = createSignal([] as string[])
+  const [zoning, setZoning] = createSignal<Zoning[]>(['normal'])
   const today = createMemo(() => dayjs(dayjs().format('YYYY-MM-DD')))
 
   createEffect(() => {
@@ -60,6 +64,8 @@ export default function Index() {
       </>
       <Container>
         <InternalAD />
+        <Tags />
+        <ZoningSelector onChange={setZoning} />
         <Inner>
           <Posts
             title={today().format('MM月DD日') + 'のランキング'}
@@ -67,6 +73,7 @@ export default function Index() {
             ranking={true}
             pagination={false}
             filter={{
+              zoning: zoning(),
               build(builder) {
                 builder.order('likes', { ascending: false })
                 builder.gte('created_at', dayjs(today()).format())
@@ -76,7 +83,12 @@ export default function Index() {
           <MoreButton href="/images/ranking/daily">もっと見る→</MoreButton>
         </Inner>
         <Inner>
-          <Posts title="新着" all={20} pagination={false} filter={{ latest: true }} />
+          <Posts
+            title="新着"
+            all={20}
+            pagination={false}
+            filter={{ zoning: zoning(), latest: true }}
+          />
           <MoreButton href="/images/latest">もっと見る→</MoreButton>
         </Inner>
         <Show when={following().length > 0}>
@@ -86,6 +98,8 @@ export default function Index() {
               all={5}
               pagination={false}
               filter={{
+                zoning: zoning(),
+                latest: true,
                 authorOr: following(),
               }}
             />
@@ -99,7 +113,7 @@ export default function Index() {
             ranking={true}
             pagination={false}
             filter={{
-              zoning: ['normal'],
+              zoning: zoning(),
               build(builder) {
                 builder.order('likes', { ascending: false })
                 builder.gte('created_at', dayjs(today().format('YYYY-MM-01')).format())

@@ -14,6 +14,7 @@ export class TagApi {
     }
 
     public async use(tags: string[]) {
+        tags = tags.map((v) => v.toLowerCase())
         if (tags.length < 1) return
         const exists = await supabase
             .from('tags')
@@ -39,10 +40,16 @@ export class TagApi {
         const { data, error } = await supabase
             .from('tags')
             .select('*')
-            .like('name', `%${txt}%`)
+            .ilike('name', `%${txt}%`)
             .order('used', { ascending: false })
             .limit(10)
         if (error) throw error
         return data.map((v) => v.name)
+    }
+
+    public async random(limit = 10) {
+        const { data, error } = await supabase.from('random_tags').select('*').limit(limit)
+        if (error) throw error
+        return data
     }
 }

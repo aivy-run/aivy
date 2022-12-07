@@ -2,7 +2,7 @@ import { supabase } from './client'
 
 import type { Database } from '~supabase/database.types'
 
-export type Bookmark = Database['public']['Tables']['bookmarks']['Row']
+export type Bookmark = Database['public']['Tables']['bookmarks']
 type Filter = {
     targets: number[]
     author: string
@@ -44,7 +44,7 @@ export class BookmarkApi {
         return builder
     }
 
-    public async list(filter?: Partial<Filter>): Promise<Bookmark[]> {
+    public async list(filter?: Partial<Filter>): Promise<Bookmark['Row'][]> {
         const { data, status, error } = await this.createBuilder(filter)
 
         if (status === 406) return []

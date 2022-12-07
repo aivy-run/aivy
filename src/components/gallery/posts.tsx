@@ -3,15 +3,19 @@ import { Component, createEffect, createMemo, createSignal, JSX, Show } from 'so
 import { css, styled } from 'solid-styled-components'
 
 import { Gallery } from '.'
+import { Tags } from '../tags'
 import { Fallback } from '../ui/fallback'
 import { Pagination } from '../ui/pagination'
 import { HStack } from '../ui/stack'
+import { ZoningSelector } from '../zoning-selector'
 import { getPostsData } from './util'
 
-import { allowedZoningType, useUser } from '~/context/user'
+import { useUser } from '~/context/user'
 import { useURLSearchParams } from '~/hooks/use-search-params'
 import { api } from '~/lib/api/supabase'
 import type { ImagesFilter, ImagePost, CompleteImagePost } from '~/lib/api/supabase/images'
+import type { Zoning } from '~/lib/api/supabase/user'
+import { setTagStore } from '~/lib/store'
 import IconRotate from '~icons/carbon/rotate-360'
 
 type PostsData = {
@@ -32,6 +36,8 @@ type Props = {
   zoning?: ImagePost['Row']['zoning'][]
 
   title?: string
+  zoningButton?: boolean
+  tags?: boolean
   reload?: boolean
   scroll?: boolean
   ranking?: boolean
@@ -67,23 +73,28 @@ export const Posts: Component<Props> = (props) => {
 
   const search = useURLSearchParams('page')
   const page = createMemo(() => parseInt(search().page || '') || 1)
+  const [zoning, setZoning] = createSignal<Zoning[]>(['normal'])
   const [loading, setLoading] = createSignal(true)
 
   const fetcher = async ({
     all,
     page,
+    zoning,
     random,
     filter,
     fetchPosts,
   }: {
     all: number
     page: number
+    zoning: Zoning[]
     random: boolean
     filter: Props['filter']
     fetchPosts: Props['fetchPosts']
   }) => {
     setLoading(true)
-    const cacheKey = `${all}.${page}.${random}.${JSON.stringify(filter)}.${fetchPosts?.toString()}`
+    const cacheKey = `${all}.${page}.${zoning}.${random}.${JSON.stringify(
+      filter,
+    )}.${fetchPosts?.toString()}`
     const cached = cache[cacheKey]
     if (cached) {
       const now = dayjs().toDate().getTime()
@@ -100,6 +111,8 @@ export const Posts: Component<Props> = (props) => {
       },
       () => (f!._zoning = ['normal']),
     )
+    if (props.zoningButton) f.zoning = zoning
+
     const postData = await fn(all, page, random, f)
     setLoading(false)
     const data = {
@@ -115,6 +128,7 @@ export const Posts: Component<Props> = (props) => {
   const fetchData = createMemo(() => ({
     all: props.all,
     page: page(),
+    zoning: zoning(),
     random: !!props.random,
     filter: props.filter,
     fetchPosts: props.fetchPosts,
@@ -125,57 +139,71 @@ export const Posts: Component<Props> = (props) => {
     if (isFetching()) return
     fetcher(fetchData()).then(setData)
   })
+  createEffect(() => {
+    const posts = data()?.posts
+    if (!posts) return
+    setTagStore((prev) =>
+      Array.from(new Set([...posts.flatMap((v) => v.tags), ...prev])).slice(0, 20),
+    )
+  })
 
   return (
-    <Show when={data()} fallback={props.fallback || <Fallback height="50vh" />} keyed>
-      {(data) => (
-        <Container>
-          <Show when={props.title}>
-            <HStack
-              gap="1.5rem"
-              class={css`
-                padding: 0 2rem;
-              `}
-            >
-              <Heading>{props.title}</Heading>
-              <Show when={props.reload}>
-                <IconRotate
-                  class={css`
-                    cursor: pointer;
+    <Container>
+      <Show when={props.tags}>
+        <Tags />
+      </Show>
+      <Show when={props.zoningButton}>
+        <ZoningSelector onChange={setZoning} />
+      </Show>
+      <Show when={data()} fallback={props.fallback || <Fallback height="50vh" />} keyed>
+        {(data) => (
+          <>
+            <Show when={props.title}>
+              <HStack
+                gap="1.5rem"
+                class={css`
+                  padding: 0 2rem;
+                `}
+              >
+                <Heading>{props.title}</Heading>
+                <Show when={props.reload}>
+                  <IconRotate
+                    class={css`
+                      cursor: pointer;
 
-                    &:hover {
-                      path {
-                        fill: rgba(0, 0, 0, 0.5);
-                        transition: 0.2s;
+                      &:hover {
+                        path {
+                          fill: rgba(0, 0, 0, 0.5);
+                          transition: 0.2s;
+                        }
                       }
-                    }
-                  `}
-                  onClick={() => {
-                    if (!loading()) fetcher(fetchData()).then(setData)
-                  }}
-                />
-              </Show>
-            </HStack>
-            <br />
-          </Show>
-          <Gallery
-            page={data.page}
-            all={props.all}
-            posts={data!.posts}
-            zoning={allowedZoningType()}
-            scroll={!!props.scroll}
-            ranking={!!props.ranking}
-          />
-          <br />
-          <Show when={typeof props.pagination === 'undefined' ? true : props.pagination}>
-            <Pagination
-              current={data.page}
-              count={Math.ceil(data.count / props.all)}
-              url={props.url || '/'}
+                    `}
+                    onClick={() => {
+                      if (!loading()) fetcher(fetchData()).then(setData)
+                    }}
+                  />
+                </Show>
+              </HStack>
+              <br />
+            </Show>
+            <Gallery
+              page={data.page}
+              all={props.all}
+              posts={data!.posts}
+              scroll={!!props.scroll}
+              ranking={!!props.ranking}
             />
-          </Show>
-        </Container>
-      )}
-    </Show>
+            <br />
+            <Show when={typeof props.pagination === 'undefined' ? true : props.pagination}>
+              <Pagination
+                current={data.page}
+                count={Math.ceil(data.count / props.all)}
+                url={props.url || '/'}
+              />
+            </Show>
+          </>
+        )}
+      </Show>
+    </Container>
   )
 }

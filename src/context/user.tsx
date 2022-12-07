@@ -15,12 +15,7 @@ import { useNavigate } from 'solid-start'
 
 import { api } from '~/lib/api/supabase'
 import { supabase } from '~/lib/api/supabase/client'
-import type { ImagePost } from '~/lib/api/supabase/images'
 import type { UserProfile } from '~/lib/api/supabase/user'
-
-export const [allowedZoningType, setAllowedZoningType] = createSignal([
-  'normal',
-] as ImagePost['Row']['zoning'][])
 
 const UserContext = createContext(
   {} as {

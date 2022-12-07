@@ -1,10 +1,6 @@
-import { Component, createMemo, JSX, Show } from 'solid-js'
-import { A, useLocation, useNavigate } from 'solid-start'
+import { Component, JSX, Show } from 'solid-js'
+import { A, useLocation } from 'solid-start'
 import { css, styled, useTheme } from 'solid-styled-components'
-
-import { useToast } from '../ui/toast'
-
-import { allowedZoningType, setAllowedZoningType, useUser } from '~/context/user'
 
 const FallBack = styled.div`
   position: relative;
@@ -18,8 +14,6 @@ const Container = styled.div`
   position: sticky;
   z-index: 5;
   top: 0;
-  display: flex;
-  justify-content: space-between;
   padding: 0 1rem;
   border-bottom: solid 1px ${(p) => p.theme?.$().colors.text.fade(0.5).string()};
   background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
@@ -71,31 +65,6 @@ const Tab: Component<{ href: string; selected: boolean; children: JSX.Element }>
   )
 }
 
-const Buttons = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-`
-
-const ZoningButton = styled.button<{ selected: boolean }>`
-  padding: 0.25rem 0.5rem;
-  border: none;
-  border-radius: 0.25rem;
-  background-color: ${(p) =>
-    p.theme
-      ?.$()
-      .colors.sub.fade(p.selected ? 0.5 : 0.75)
-      .string()};
-  color: ${(p) =>
-    p.theme
-      ?.$()
-      .colors.text.fade(p.selected ? 0 : 0.5)
-      .string()};
-  cursor: pointer;
-  font-weight: 500;
-  outline: none;
-`
-
 const SHOW_PATHNAME = [
   '/',
   '/contests/list',
@@ -106,15 +75,7 @@ const SHOW_PATHNAME = [
 ]
 
 export const HeaderTabs: Component = () => {
-  const {
-    util: { withUser },
-  } = useUser(true)
-  const toast = useToast()
-  const navigate = useNavigate()
   const location = useLocation()
-
-  const r18 = createMemo(() => allowedZoningType().includes('r18'))
-  const r18g = createMemo(() => allowedZoningType().includes('r18g'))
 
   return (
     <Show when={SHOW_PATHNAME.includes(location.pathname)} fallback={<FallBack />}>
@@ -133,54 +94,6 @@ export const HeaderTabs: Component = () => {
             Contests
           </Tab>
         </Tabs>
-        <Buttons>
-          <ZoningButton
-            selected={r18()}
-            onClick={() => {
-              withUser(
-                ([, profile], r18) => {
-                  if (!profile.zoning.includes('r18')) {
-                    return toast({
-                      title: 'R-18作品は表示できません',
-                      description: 'アカウント設定を確認してください',
-                      status: 'error',
-                      isClosable: true,
-                    })
-                  }
-                  if (r18) setAllowedZoningType((prev) => prev.filter((v) => v !== 'r18'))
-                  else setAllowedZoningType((prev) => [...prev, 'r18'])
-                },
-                () => navigate('/sign'),
-                r18,
-              )
-            }}
-          >
-            R-18
-          </ZoningButton>
-          <ZoningButton
-            selected={r18g()}
-            onClick={() => {
-              withUser(
-                ([, profile], r18g) => {
-                  if (!profile.zoning.includes('r18g')) {
-                    return toast({
-                      title: 'R-18G作品は表示できません',
-                      description: 'アカウント設定を確認してください',
-                      status: 'error',
-                      isClosable: true,
-                    })
-                  }
-                  if (r18g) setAllowedZoningType((prev) => prev.filter((v) => v !== 'r18g'))
-                  else setAllowedZoningType((prev) => [...prev, 'r18g'])
-                },
-                () => navigate('/sign'),
-                r18g,
-              )
-            }}
-          >
-            R-18G
-          </ZoningButton>
-        </Buttons>
       </Container>
     </Show>
   )

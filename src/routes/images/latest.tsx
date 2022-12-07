@@ -14,6 +14,8 @@ export default function Latest() {
       <PostContainer>
         <Posts
           title="最新の投稿"
+          zoningButton
+          tags
           all={50}
           url="/images/latest"
           filter={{

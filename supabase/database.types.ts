@@ -14,22 +14,22 @@ export interface Database {
           target: number
           created_at: string
           type: string
-          author: string
           id: number
+          author: string
         }
         Insert: {
           target: number
           created_at?: string
           type?: string
-          author?: string
           id?: number
+          author?: string
         }
         Update: {
           target?: number
           created_at?: string
           type?: string
-          author?: string
           id?: number
+          author?: string
         }
       }
       comments: {
@@ -40,8 +40,8 @@ export interface Database {
           created_at: string
           commentable_type: string
           likes: number
-          author: string
           id: number
+          author: string
         }
         Insert: {
           commentable_id: number
@@ -50,8 +50,8 @@ export interface Database {
           created_at?: string
           commentable_type?: string
           likes?: number
-          author?: string
           id?: number
+          author?: string
         }
         Update: {
           commentable_id?: number
@@ -60,8 +60,8 @@ export interface Database {
           created_at?: string
           commentable_type?: string
           likes?: number
-          author?: string
           id?: number
+          author?: string
         }
       }
       contests: {
@@ -87,7 +87,6 @@ export interface Database {
           description: string | null
           tags: string[]
           contest_id: number | null
-          author: string
           created_at: string | null
           likes: number
           zoning: string
@@ -97,13 +96,13 @@ export interface Database {
           bookmarks: number
           published: boolean
           id: number
+          author: string
         }
         Insert: {
           title: string
           description?: string | null
           tags: string[]
           contest_id?: number | null
-          author?: string
           created_at?: string | null
           likes?: number
           zoning?: string
@@ -113,13 +112,13 @@ export interface Database {
           bookmarks?: number
           published?: boolean
           id?: number
+          author?: string
         }
         Update: {
           title?: string
           description?: string | null
           tags?: string[]
           contest_id?: number | null
-          author?: string
           created_at?: string | null
           likes?: number
           zoning?: string
@@ -129,6 +128,7 @@ export interface Database {
           bookmarks?: number
           published?: boolean
           id?: number
+          author?: string
         }
       }
       image_posts_information: {
@@ -182,40 +182,40 @@ export interface Database {
         Row: {
           target: number
           created_at: string
-          author: string
           type: string
           id: number
+          author: string
         }
         Insert: {
           target: number
           created_at?: string
-          author?: string
           type?: string
           id?: number
+          author?: string
         }
         Update: {
           target?: number
           created_at?: string
-          author?: string
           type?: string
           id?: number
+          author?: string
         }
       }
       muted_users: {
         Row: {
           target: string
-          author: string
           id: number
+          author: string
         }
         Insert: {
           target: string
-          author?: string
           id?: number
+          author?: string
         }
         Update: {
           target?: string
-          author?: string
           id?: number
+          author?: string
         }
       }
       notifications: {
@@ -226,8 +226,8 @@ export interface Database {
           target_comment: number | null
           created_at: string
           read: boolean
-          author: string
           id: number
+          author: string
         }
         Insert: {
           target_user?: string | null
@@ -236,8 +236,8 @@ export interface Database {
           target_comment?: number | null
           created_at?: string
           read?: boolean
-          author?: string
           id?: number
+          author?: string
         }
         Update: {
           target_user?: string | null
@@ -246,8 +246,8 @@ export interface Database {
           target_comment?: number | null
           created_at?: string
           read?: boolean
-          author?: string
           id?: number
+          author?: string
         }
       }
       profiles: {
@@ -372,6 +372,23 @@ export interface Database {
           updated_at?: string | null
           bookmarks?: number | null
           published?: boolean | null
+        }
+      }
+      random_tags: {
+        Row: {
+          created_at: string | null
+          name: string | null
+          used: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          name?: string | null
+          used?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          name?: string | null
+          used?: number | null
         }
       }
     }
