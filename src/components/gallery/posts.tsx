@@ -92,9 +92,9 @@ export const Posts: Component<Props> = (props) => {
     fetchPosts: Props['fetchPosts']
   }) => {
     setLoading(true)
-    const cacheKey = `${all}.${page}.${zoning}.${random}.${JSON.stringify(
-      filter,
-    )}.${fetchPosts?.toString()}`
+    const cacheKey = `${all}.${page}.${zoning}.${random}.${JSON.stringify(filter)}.${
+      filter?.build?.toString().length
+    }.${fetchPosts?.toString()}`
     const cached = cache[cacheKey]
     if (cached) {
       const now = dayjs().toDate().getTime()
