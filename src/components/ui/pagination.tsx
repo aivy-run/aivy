@@ -12,6 +12,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   gap: 1rem;
+  user-select: none;
 `
 
 const IconButton = styled(Button)`
@@ -39,7 +40,8 @@ const numEqualsOr = (num: number, ...others: number[]) => {
 export const Pagination: Component<{
   count: number
   current: number
-  url: ((index: number) => string) | string
+  url?: ((index: number) => string) | string
+  onClick?: (page: number) => void
   key?: string
   noScroll?: boolean
 }> = (props) => {
@@ -58,9 +60,14 @@ export const Pagination: Component<{
           href={
             typeof props.url === 'string'
               ? `${props.url}?${key()}=${props.current - 1}`
-              : props.url(props.current - 1)
+              : props.url?.(props.current - 1) || ''
           }
           noScroll={!!props.noScroll}
+          onClick={(e) => {
+            if (!props.onClick) return
+            e.preventDefault()
+            props.onClick(props.current - 1)
+          }}
         >
           <IconButton>
             <IconLeft />
@@ -105,9 +112,14 @@ export const Pagination: Component<{
                   href={
                     typeof props.url === 'string'
                       ? `${props.url}?${key()}=${page}`
-                      : props.url(page)
+                      : props.url?.(page) || ''
                   }
                   noScroll={!!props.noScroll}
+                  onClick={(e) => {
+                    if (!props.onClick) return
+                    e.preventDefault()
+                    props.onClick(page)
+                  }}
                 >
                   <p>{page}</p>
                 </A>
@@ -131,9 +143,14 @@ export const Pagination: Component<{
           href={
             typeof props.url === 'string'
               ? `${props.url}?${key()}=${props.current + 1}`
-              : props.url(props.current + 1)
+              : props.url?.(props.current + 1) || ''
           }
           noScroll={!!props.noScroll}
+          onClick={(e) => {
+            if (!props.onClick) return
+            e.preventDefault()
+            props.onClick(props.current + 1)
+          }}
         >
           <IconButton>
             <IconRight />

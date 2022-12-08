@@ -4,7 +4,6 @@ import {
   Component,
   createContext,
   createEffect,
-  createMemo,
   createSignal,
   Setter,
   useContext,
@@ -45,6 +44,7 @@ const Context = createContext(
     post: CompleteImagePost
 
     index: Accessor<number>
+    setIndex: Setter<number>
 
     liked: Accessor<boolean | undefined>
     setLiked: Setter<boolean>
@@ -73,7 +73,7 @@ export const ImagePostView: Component<{
   const [likeOffset, setLikeOffset] = createSignal(0)
   const [bookmarked, setBookmarked] = createSignal<boolean>()
   const [bookmarkOffset, setBookmarkOffset] = createSignal(0)
-  const index = createMemo(() => (parseInt(search.i) || 1) - 1)
+  const [index, setIndex] = createSignal((parseInt(search.i) || 1) - 1)
 
   createEffect(() => {
     withUser(([me]) => {
@@ -89,6 +89,7 @@ export const ImagePostView: Component<{
         post: props.post,
 
         index,
+        setIndex,
 
         liked,
         setLiked,
@@ -169,7 +170,7 @@ export const ImagePostView: Component<{
             <Pagination
               count={props.post.images}
               current={index() + 1}
-              url={`/images/${props.post.id}`}
+              onClick={(page) => setIndex(page - 1)}
               key="i"
               noScroll={true}
             />
@@ -208,7 +209,7 @@ export const ImagePostView: Component<{
               <Pagination
                 count={props.post.images}
                 current={index() + 1}
-                url={`/images/${props.post.id}`}
+                onClick={(page) => setIndex(page - 1)}
                 key="i"
                 noScroll={true}
               />

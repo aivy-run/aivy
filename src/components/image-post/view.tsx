@@ -1,6 +1,5 @@
 import { Component, createEffect, createSignal, For, Show } from 'solid-js'
 import { createSlider } from 'solid-slider'
-import { useSearchParams } from 'solid-start'
 import { css, styled, useTheme } from 'solid-styled-components'
 
 import { useImagePost } from '.'
@@ -35,8 +34,7 @@ const Zoom = styled.div<{ show: boolean }>`
 `
 
 export const View: Component = () => {
-  const [, setSearchParams] = useSearchParams<{ i: string }>()
-  const { post, index } = useImagePost()
+  const { post, index, setIndex } = useImagePost()
   const [setting] = useBrowserSetting()
   const theme = useTheme()
   const [loading, setLoading] = createSignal(true)
@@ -53,8 +51,10 @@ export const View: Component = () => {
       slider.on('created', () => setLoading(false))
     },
   )
-  createEffect(() => setSearchParams({ i: current() + 1 }, { resolve: false }))
-  createEffect(() => moveTo(index()))
+  createEffect(() => setIndex(current()))
+  createEffect(() => {
+    if (current() !== index()) moveTo(index())
+  })
 
   return (
     <div
