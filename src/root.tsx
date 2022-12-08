@@ -26,6 +26,7 @@ import { UserProvider } from './context/user'
 import { ThemeProvider } from './styles/theme'
 
 import './styles/global.css'
+import 'solid-slider/slider.css'
 
 const Providers: Component<{ children: JSX.Element }> = (props) => (
   <ThemeProvider>

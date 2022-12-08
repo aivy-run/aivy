@@ -25,7 +25,9 @@ const LoginButton = styled(Button)`
   }
 `
 
-const url = (pathname: string) => (import.meta.env.DEV ? 'http://localhost:3000' : '') + pathname
+const url = (pathname: string) =>
+  (import.meta.env.DEV ? import.meta.env['VITE_DEV_ORIGIN'] || 'http://localhost:3000' : '') +
+  pathname
 
 export default function Sign() {
   const {

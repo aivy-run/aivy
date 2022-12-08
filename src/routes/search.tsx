@@ -7,13 +7,12 @@ import {
   createSignal,
   splitProps,
 } from 'solid-js'
-import { useLocation, useNavigate } from 'solid-start'
+import { useLocation, useNavigate, useSearchParams } from 'solid-start'
 import { css, styled, useTheme } from 'solid-styled-components'
 
 import { PostsWithSorter } from '~/components/gallery/posts-sorter'
 import { FixedTitle } from '~/components/head/title'
 import { Input } from '~/components/ui/input'
-import { useURLSearchParams } from '~/hooks/use-search-params'
 
 // import IconAudioControl from '~icons/carbon/audio-console'
 // import IconSearch from '~icons/carbon/search'
@@ -31,16 +30,16 @@ const SearchInput: Component<ComponentProps<'div'>> = (props) => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const search = useURLSearchParams('q')
+  const [search] = useSearchParams<{ q: string }>()
 
-  const [current, setCurrent] = createSignal(location.pathname === '/search' ? search().q : '')
+  const [current, setCurrent] = createSignal(location.pathname === '/search' ? search.q : '')
   const [, others] = splitProps(props, [])
 
   let ref: HTMLInputElement
 
   createEffect(() => {
-    if (!search().q) ref.focus()
-    if (location.pathname === '/search') setCurrent(search().q)
+    if (!search.q) ref.focus()
+    if (location.pathname === '/search') setCurrent(search.q)
   })
 
   return (
@@ -79,8 +78,8 @@ const PostContainer = styled.div`
 
 export default function Search() {
   const theme = useTheme()
-  const search = useURLSearchParams('q')
-  const title = createMemo(() => (search().q ? `「${search().q}」 の検索結果` : '検索'))
+  const [search] = useSearchParams<{ q: string }>()
+  const title = createMemo(() => (search.q ? `「${search.q}」 の検索結果` : '検索'))
 
   return (
     <>
@@ -96,10 +95,10 @@ export default function Search() {
         <Container>
           <SearchInput />
         </Container>
-        <Show when={search().q}>
+        <Show when={search.q}>
           <PostContainer>
             <PostsWithSorter
-              heading={`「${search().q}」 の検索結果`}
+              heading={`「${search.q}」 の検索結果`}
               index="latest"
               options={[
                 {
@@ -108,7 +107,7 @@ export default function Search() {
                   all: 20,
                   filter: {
                     latest: true,
-                    search: search().q,
+                    search: search.q,
                   },
                 },
                 {
@@ -116,7 +115,7 @@ export default function Search() {
                   type: 'likes',
                   all: 20,
                   filter: {
-                    search: search().q,
+                    search: search.q,
                     build(builder) {
                       builder.order('likes', { ascending: false })
                     },

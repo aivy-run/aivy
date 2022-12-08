@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import { Component, createEffect, createMemo, createSignal, JSX, Show } from 'solid-js'
+import { useSearchParams } from 'solid-start'
 import { css, styled } from 'solid-styled-components'
 
 import { Gallery } from '.'
@@ -11,7 +12,6 @@ import { ZoningSelector } from '../zoning-selector'
 import { getPostsData } from './util'
 
 import { useUser } from '~/context/user'
-import { useURLSearchParams } from '~/hooks/use-search-params'
 import { api } from '~/lib/api/supabase'
 import type { ImagesFilter, ImagePost, CompleteImagePost } from '~/lib/api/supabase/images'
 import type { Zoning } from '~/lib/api/supabase/user'
@@ -71,8 +71,8 @@ export const Posts: Component<Props> = (props) => {
     util: { withUser },
   } = useUser(true)
 
-  const search = useURLSearchParams('page')
-  const page = createMemo(() => parseInt(search().page || '') || 1)
+  const [search] = useSearchParams<{ page: string }>()
+  const page = createMemo(() => parseInt(search.page || '') || 1)
   const [zoning, setZoning] = createSignal<Zoning[]>(['normal'])
   const [loading, setLoading] = createSignal(true)
 

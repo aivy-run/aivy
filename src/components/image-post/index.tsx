@@ -9,6 +9,7 @@ import {
   Setter,
   useContext,
 } from 'solid-js'
+import { useSearchParams } from 'solid-start'
 import { css, styled, useTheme } from 'solid-styled-components'
 
 import { Pagination } from '../ui/pagination'
@@ -21,7 +22,6 @@ import { ZoningFilter } from './zoning-filter'
 import { Comments } from '~/components/image-post/comments'
 import { HStack, VStack } from '~/components/ui/stack'
 import { useUser } from '~/context/user'
-import { useURLSearchParams } from '~/hooks/use-search-params'
 import { api } from '~/lib/api/supabase'
 import type { CompleteImagePost } from '~/lib/api/supabase/images'
 import IconBookmark from '~icons/carbon/bookmark-filled'
@@ -66,14 +66,14 @@ export const ImagePostView: Component<{
     util: { withUser },
   } = useUser(true)
 
-  const search = useURLSearchParams('i')
+  const [search] = useSearchParams<{ i: string }>()
   const theme = useTheme()
 
   const [liked, setLiked] = createSignal<boolean>()
   const [likeOffset, setLikeOffset] = createSignal(0)
   const [bookmarked, setBookmarked] = createSignal<boolean>()
   const [bookmarkOffset, setBookmarkOffset] = createSignal(0)
-  const index = createMemo(() => (parseInt(search().i) || 1) - 1)
+  const index = createMemo(() => (parseInt(search.i) || 1) - 1)
 
   createEffect(() => {
     withUser(([me]) => {

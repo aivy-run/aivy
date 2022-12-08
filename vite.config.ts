@@ -5,7 +5,7 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
     ssr: {
-        noExternal: ['solid-styled-components'],
+        noExternal: ['solid-styled-components', 'solid-slider'],
     },
     plugins: [
         Icons({

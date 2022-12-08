@@ -1,4 +1,4 @@
-import { A } from '@solidjs/router'
+import { A, useSearchParams } from '@solidjs/router'
 import { Component, ComponentProps, createMemo, For, JSX, Show } from 'solid-js'
 import { useLocation } from 'solid-start'
 import { css, styled } from 'solid-styled-components'
@@ -6,7 +6,6 @@ import { css, styled } from 'solid-styled-components'
 import { Posts } from './posts'
 
 import { Tab, Tabs } from '~/components/ui/tab'
-import { useURLSearchParams } from '~/hooks/use-search-params'
 
 const Inner = styled.div`
   padding: 1rem 2rem;
@@ -25,10 +24,10 @@ type PropsT = {
 }
 
 export const PostsWithSorter: Component<PropsT> = (props) => {
-  const search = useURLSearchParams('t', 'page')
+  const [search] = useSearchParams<{ t: string }>()
   const location = useLocation()
 
-  const type = createMemo(() => search().t || props.index)
+  const type = createMemo(() => search.t || props.index)
   const url = (...query: [string, string][]) => {
     const params = new URLSearchParams(location.search)
     for (const q of query) params.set(...q)

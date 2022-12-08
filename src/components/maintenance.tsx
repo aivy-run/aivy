@@ -1,10 +1,8 @@
 import { Component, JSX, Show } from 'solid-js'
-import { A } from 'solid-start'
+import { A, useSearchParams } from 'solid-start'
 import { styled } from 'solid-styled-components'
 
 import { Button } from './ui/button'
-
-import { useURLSearchParams } from '~/hooks/use-search-params'
 
 const Container = styled.div`
   display: flex;
@@ -16,7 +14,7 @@ const Container = styled.div`
 `
 
 export const Maintenance: Component<{ children: JSX.Element }> = (props) => {
-  const params = useURLSearchParams('bypass')
+  const [search] = useSearchParams<{ bypass: string }>()
   return (
     <Show when={!(true || import.meta.env.DEV)} fallback={<>{props.children}</>}>
       <Container>
