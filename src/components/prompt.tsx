@@ -92,10 +92,11 @@ export const Prompt: Component<{
   })
   const color = createMemo(() => {
     const t = theme.$()
-    if (degree() === 1) return t.colors.text
-    const blend = degree() > 1 ? Color('#ffbb55') : Color('#99ddff')
+    const deg = degree()
+    if (deg === 1) return t.colors.text
+    const blend = deg > 1 ? Color('#ffbb55') : Color('#99ddff')
     const base = t.name === 'light' ? blend.darken(0.1) : blend.lighten(1)
-    return base.darken(0.2 * degree())
+    return base.darken(0.2 * (deg > 3  ? 3 : deg))
   })
 
   return (
