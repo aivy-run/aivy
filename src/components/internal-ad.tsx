@@ -74,10 +74,9 @@ const ADS: {
 
 export const InternalAD: Component = () => {
   const theme = useTheme()
-  const [index, setIndex] = createSignal(0)
   const [task, setTask] = createSignal(0)
   const [loading, setLoading] = createSignal(true)
-  const [slider, { current, next, prev }] = createSlider({
+  const [slider, { current, next, prev, moveTo }] = createSlider({
     loop: false,
     slides: {
       number: ADS.length,
@@ -88,12 +87,12 @@ export const InternalAD: Component = () => {
   const hasNext = createMemo(() => current() !== ADS.length - 1)
 
   createEffect(
-    on(index, () => {
+    on(current, (current) => {
       clearInterval(task())
       setTask(
         setInterval(() => {
-          setIndex(hasNext() ? index() + 1 : 0)
-        }, 7500) as unknown as number,
+          moveTo(hasNext() ? current + 1 : 0)
+        }, 7000) as unknown as number,
       )
     }),
   )

@@ -96,7 +96,7 @@ export const View: Component = () => {
         )}
       >
         <For each={post.information}>
-          {(v) => (
+          {(v, i) => (
             <div
               class={css`
                 width: 100%;
@@ -115,14 +115,16 @@ export const View: Component = () => {
                 }
               `}
             >
-              <img
-                src={createImageURL(
-                  `post.image.${post.id}.${v.index}`,
-                  `w=${setting.max_resolution.width},h=${setting.max_resolution.height}`,
-                )}
-                alt=""
-                onClick={() => setZoom(!zoom())}
-              />
+              <Show when={current() < i() + 2 && i() - 2 < current()}>
+                <img
+                  src={createImageURL(
+                    `post.image.${post.id}.${v.index}`,
+                    `w=${setting.max_resolution.width},h=${setting.max_resolution.height}`,
+                  )}
+                  alt=""
+                  onClick={() => setZoom(!zoom())}
+                />
+              </Show>
             </div>
           )}
         </For>
