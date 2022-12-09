@@ -58,7 +58,7 @@ export class ImagePostApi {
             .select()
         if (info.error) throw info.error
 
-        return { ...post.data, information: info.data }
+        return { ...post.data, information: info.data.sort((a, b) => (a.index > b.index ? 1 : -1)) }
     }
 
     public async delete(id: number) {
@@ -93,7 +93,7 @@ export class ImagePostApi {
                     return data
                 }),
             )
-            post.data.information = info
+            post.data.information = info.sort((a, b) => (a.index > b.index ? 1 : -1))
         }
         return post.data
     }
@@ -154,6 +154,7 @@ export class ImagePostApi {
         const { data, error } = await builder.range(since, since + limit - 1)
         if (error) throw error
         if (!checkMulti(data)) throw new Error('Incorrect data')
+        for (const v of data) v.information.sort((a, b) => (a.index > b.index ? 1 : -1))
         return data
     }
 
