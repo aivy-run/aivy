@@ -96,7 +96,7 @@ export const Prompt: Component<{
     if (deg === 1) return t.colors.text
     const blend = deg > 1 ? Color('#ffbb55') : Color('#99ddff')
     const base = t.name === 'light' ? blend.darken(0.1) : blend.lighten(1)
-    return base.darken(0.2 * (deg > 3  ? 3 : deg))
+    return base.darken(0.2 * (deg > 3 ? 3 : deg))
   })
 
   return (

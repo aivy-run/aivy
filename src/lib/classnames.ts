@@ -1,3 +1,3 @@
-export const classnames = (...names: (string | undefined)[]) => {
-    return names.filter((v) => v).join(' ')
+export const classnames = (...names: any[]) => {
+    return names.filter((v) => typeof v === 'string').join(' ')
 }

@@ -33,12 +33,9 @@ const Zoom = styled.div<{ show: boolean }>`
   }
 `
 
-export const View: Component = () => {
-  const { post, index, setIndex } = useImagePost()
+const Slider: Component<{ onLoad?: () => void; onClick?: () => void }> = (props) => {
   const [setting] = useBrowserSetting()
-  const theme = useTheme()
-  const [loading, setLoading] = createSignal(true)
-  const [zoom, setZoom] = createSignal(false)
+  const { post, index, setIndex } = useImagePost()
   const [slider, { current, moveTo }] = createSlider(
     {
       loop: false,
@@ -47,21 +44,67 @@ export const View: Component = () => {
         spacing: 1,
       },
     },
-    (slider) => {
-      slider.on('created', () => setLoading(false))
-    },
+    (slider) => props.onLoad && slider.on('created', props.onLoad),
   )
   createEffect(() => setIndex(current()))
   createEffect(() => {
     if (current() !== index()) moveTo(index())
   })
+  return (
+    <div
+      use:slider={slider}
+      class={classnames(
+        'keen-slider',
+        css`
+          width: 100%;
+          height: 100%;
+        `,
+      )}
+    >
+      <For each={post.information}>
+        {(v, i) => (
+          <div
+            class={css`
+              width: 100%;
+              height: 100%;
+
+              img {
+                display: inline-block;
+                width: 100%;
+                height: 100%;
+                cursor: zoom-in;
+                object-fit: contain;
+              }
+            `}
+          >
+            <Show when={current() <= i() + 1 && i() - 1 <= current()}>
+              <img
+                src={createImageURL(
+                  `post.image.${post.id}.${v.index}`,
+                  `w=${setting.max_resolution.width},h=${setting.max_resolution.height}`,
+                )}
+                alt=""
+                onClick={() => props.onClick?.()}
+              />
+            </Show>
+          </div>
+        )}
+      </For>
+    </div>
+  )
+}
+
+export const View: Component = () => {
+  const theme = useTheme()
+  const [loading, setLoading] = createSignal(true)
+  const [zoom, setZoom] = createSignal(false)
 
   return (
     <div
       class={css`
-        position: relative;
         min-width: 100%;
         max-width: 100%;
+        height: 70vh;
         background-color: rgba(0, 0, 0, 0.35);
         ${theme.$().media.breakpoints.lg} {
           min-width: 50%;
@@ -73,10 +116,6 @@ export const View: Component = () => {
       <Show when={loading()}>
         <div
           class={css`
-            position: absolute;
-            z-index: 10;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             background-color: ${theme.$().colors.bg.string()};
@@ -85,65 +124,9 @@ export const View: Component = () => {
           <Fallback height="100%" />
         </div>
       </Show>
-      <div
-        use:slider={slider}
-        class={classnames(
-          'keen-slider',
-          css`
-            width: 100%;
-            height: 100%;
-          `,
-        )}
-      >
-        <For each={post.information}>
-          {(v, i) => (
-            <div
-              class={css`
-                width: 100%;
-                height: 100%;
-
-                img {
-                  display: inline-block;
-                  width: 100%;
-                  height: 100%;
-                  cursor: zoom-in;
-                  object-fit: contain;
-                  ${theme.$().media.breakpoints.lg} {
-                    width: 100%;
-                    height: 100%;
-                  }
-                }
-              `}
-            >
-              <Show when={current() < i() + 2 && i() - 2 < current()}>
-                <img
-                  src={createImageURL(
-                    `post.image.${post.id}.${v.index}`,
-                    `w=${setting.max_resolution.width},h=${setting.max_resolution.height}`,
-                  )}
-                  alt=""
-                  onClick={() => setZoom(!zoom())}
-                />
-              </Show>
-            </div>
-          )}
-        </For>
-      </div>
+      <Slider onLoad={() => setLoading(false)} onClick={() => setZoom(true)} />
       <Zoom show={zoom()} onClick={() => setZoom(!zoom())}>
-        <img
-          src={createImageURL(
-            `post.image.${post.id}.${index()}`,
-            `w=${setting.max_resolution.width},h=${setting.max_resolution.height}`,
-          )}
-          alt=""
-          class={css`
-            width: auto;
-            height: 100%;
-            border-radius: 0.5rem;
-            background-color: rgba(0, 0, 0, 0.5);
-            cursor: zoom-out;
-          `}
-        />
+        <Slider onLoad={() => setLoading(false)} />
       </Zoom>
     </div>
   )
