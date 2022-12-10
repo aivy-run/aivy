@@ -1,6 +1,5 @@
-import cookie from 'cookie'
 import dayjs from 'dayjs'
-import type { APIEvent } from 'solid-start'
+import { APIEvent, parseCookie, serializeCookie } from 'solid-start'
 
 import { createSupabaseInstance, supabase } from '../supabase/client'
 
@@ -15,7 +14,7 @@ export const withAuth =
         const raw = event.request.headers.get('cookie')
         if (!raw) return unauthorized()
 
-        const parsed = cookie.parse(raw)
+        const parsed = parseCookie(raw)
 
         const access_token = parsed['aivy-access-token']
         const refresh_token = parsed['aivy-refresh-token']
@@ -28,17 +27,41 @@ export const withAuth =
         return await callback(event)
     }
 
-export const initializeCookieSetter = () => {
+export const signOut = async () => {
+    await supabase.auth.signOut()
+    const expires = dayjs().toDate()
+    const secure = import.meta.env.DEV ? false : true
+    document.cookie = serializeCookie('aivy-browser-settings', '', {
+        secure,
+        expires,
+        sameSite: 'lax',
+        path: '/',
+    })
+    document.cookie = serializeCookie('aivy-access-token', '', {
+        secure,
+        expires,
+        sameSite: 'lax',
+        path: '/',
+    })
+    document.cookie = serializeCookie('aivy-refresh-token', '', {
+        secure,
+        expires,
+        sameSite: 'lax',
+        path: '/',
+    })
+}
+
+export const initializeClientAuth = () => {
     supabase.auth.onAuthStateChange((event, session) => {
         const secure = import.meta.env.DEV ? false : true
         if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
-            document.cookie = cookie.serialize('aivy-access-token', '', {
+            document.cookie = serializeCookie('aivy-access-token', '', {
                 expires: new Date(0),
                 sameSite: 'lax',
                 secure,
                 path: '/',
             })
-            document.cookie = cookie.serialize('aivy-refresh-token', '', {
+            document.cookie = serializeCookie('aivy-refresh-token', '', {
                 expires: new Date(0),
                 sameSite: 'lax',
                 secure,
@@ -47,42 +70,18 @@ export const initializeCookieSetter = () => {
         } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
             if (!session) return
             const maxAge = dayjs.duration({ years: 100 }).asSeconds()
-            document.cookie = cookie.serialize('aivy-access-token', session.access_token, {
+            document.cookie = serializeCookie('aivy-access-token', session.access_token, {
                 maxAge,
                 sameSite: 'lax',
                 secure,
                 path: '/',
             })
-            document.cookie = cookie.serialize('aivy-refresh-token', session.refresh_token, {
+            document.cookie = serializeCookie('aivy-refresh-token', session.refresh_token, {
                 maxAge,
                 sameSite: 'lax',
                 secure,
                 path: '/',
             })
         }
-    })
-}
-
-export const signOut = async () => {
-    await supabase.auth.signOut()
-    const expires = dayjs().toDate()
-    const secure = import.meta.env.DEV ? false : true
-    document.cookie = cookie.serialize('aivy-browser-settings', '', {
-        secure,
-        expires,
-        sameSite: 'lax',
-        path: '/',
-    })
-    document.cookie = cookie.serialize('aivy-access-token', '', {
-        secure,
-        expires,
-        sameSite: 'lax',
-        path: '/',
-    })
-    document.cookie = cookie.serialize('aivy-refresh-token', '', {
-        secure,
-        expires,
-        sameSite: 'lax',
-        path: '/',
     })
 }

@@ -1,4 +1,6 @@
 // @refresh reload
+import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration'
 import { Component, JSX, Suspense } from 'solid-js'
 import { Assets } from 'solid-js/web'
 import { SolidNProgress } from 'solid-progressbar'
@@ -28,11 +30,18 @@ import { ThemeProvider } from './styles/theme'
 import './styles/global.css'
 import 'solid-slider/slider.css'
 
+import 'dayjs/locale/ja'
+
+dayjs.locale('ja')
+dayjs.extend(duration)
+
 const Providers: Component<{ children: JSX.Element }> = (props) => (
   <ThemeProvider>
     <ToastProvider>
       <ModalProvider>
-        <UserProvider>{props.children}</UserProvider>
+        <Suspense>
+          <UserProvider>{props.children}</UserProvider>
+        </Suspense>
       </ModalProvider>
     </ToastProvider>
   </ThemeProvider>
@@ -86,13 +95,11 @@ const Root = () => {
             <Header />
             <main>
               <ErrorBoundary fallback={(err) => <ErrorHandler error={err} />}>
-                <Suspense>
-                  <Maintenance>
-                    <Routes>
-                      <FileRoutes />
-                    </Routes>
-                  </Maintenance>
-                </Suspense>
+                <Maintenance>
+                  <Routes>
+                    <FileRoutes />
+                  </Routes>
+                </Maintenance>
               </ErrorBoundary>
             </main>
             <Footer />

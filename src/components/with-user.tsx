@@ -3,7 +3,6 @@ import {
   ComponentProps,
   createEffect,
   createMemo,
-  createSignal,
   JSX,
   Match,
   Show,
@@ -28,10 +27,8 @@ export const FetchingTransition: Component<
     status: { isFetching },
   } = useUser(true)
   const [local, others] = splitProps(props, ['class', 'children', 'ignore', 'fallback'])
-  const [pending, setPending] = createSignal(true)
-  createEffect(() => setPending(isFetching()))
 
-  const ok = createMemo(() => props.ignore || !pending())
+  const ok = createMemo(() => props.ignore || !isFetching())
 
   return (
     <div

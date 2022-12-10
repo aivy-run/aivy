@@ -1,27 +1,31 @@
-import type { User } from '@supabase/supabase-js'
+import type { Session, User } from '@supabase/supabase-js'
 import dayjs from 'dayjs'
 import {
   Accessor,
   Component,
   createContext,
   createEffect,
+  createMemo,
+  createResource,
   createSignal,
   JSX,
   on,
   onMount,
+  Resource,
   useContext,
 } from 'solid-js'
-import { useNavigate } from 'solid-start'
+import { isServer } from 'solid-js/web'
+import { parseCookie, serializeCookie, useNavigate, useServerContext } from 'solid-start'
 
 import { api } from '~/lib/api/supabase'
-import { supabase } from '~/lib/api/supabase/client'
+import { createSupabaseInstance, supabase } from '~/lib/api/supabase/client'
 import type { UserProfile } from '~/lib/api/supabase/user'
 
 const UserContext = createContext(
   {} as {
     isFetching: Accessor<boolean>
-    user: Accessor<User | undefined>
-    profile: Accessor<UserProfile['Row'] | undefined>
+    user: Resource<User | null>
+    profile: Resource<UserProfile['Row'] | undefined>
     update: (updates: Partial<UserProfile['Row']>) => void | Promise<void>
   },
 )
@@ -56,33 +60,79 @@ export const useUser = <I extends boolean = false>(ignore?: I) => {
 }
 
 export const UserProvider: Component<{ children: JSX.Element }> = (props) => {
+  const sb = isServer ? createSupabaseInstance() : supabase
+
+  const event = useServerContext()
+  const cookie = () =>
+    parseCookie(isServer ? event.request.headers.get('cookie') || '' : document.cookie)
+  const accessToken = createMemo(() => cookie()['aivy-access-token'])
+  const refreshToken = createMemo(() => cookie()['aivy-refresh-token'])
   const [isFetching, setIsFetching] = createSignal(true)
-  const [user, setUser] = createSignal<User>()
-  const [profile, setProfile] = createSignal<UserProfile['Row']>()
   const navigate = useNavigate()
 
   const fetchUser = async () => {
-    const { data } = await supabase.auth.getUser()
-    if (!data.user) setIsFetching(false)
-    return data.user
+    let session: Session | null = null
+    let user: User | null = null
+    const access_token = accessToken()
+    const refresh_token = refreshToken()
+    if (access_token && refresh_token) {
+      const { data } = await sb.auth.setSession({
+        access_token,
+        refresh_token,
+      })
+      user = data.user
+      session = data.session
+    } else {
+      const { data } = await sb.auth.getUser()
+      user = data.user
+    }
+    if (isServer) {
+      const expire = dayjs().toDate()
+      const eternity = dayjs.duration({ years: 100 }).asSeconds()
+      const secure = import.meta.env.DEV ? false : true
+      event.responseHeaders.append(
+        'Set-Cookie',
+        serializeCookie(`aivy-access-token`, session?.access_token || '', {
+          secure,
+          expires: session ? undefined : expire,
+          maxAge: session ? eternity : undefined,
+          sameSite: 'lax',
+          path: '/',
+        }),
+      )
+      event.responseHeaders.append(
+        'Set-Cookie',
+        serializeCookie(`aivy-refresh-token`, session?.refresh_token || '', {
+          secure,
+          expires: session ? undefined : expire,
+          maxAge: session ? eternity : undefined,
+          sameSite: 'lax',
+          path: '/',
+        }),
+      )
+    }
+    if (!user) setIsFetching(false)
+    return user
   }
-  onMount(() => fetchUser().then(setUser))
+  const [user, { mutate: mutateUser }] = createResource(fetchUser)
+  onMount(() => fetchUser().then(mutateUser))
 
   const fetchProfile = async (id: string) => {
     if (!id) return
     const profile = await api.user.get(id)
     if (!profile) {
       setIsFetching(false)
-      return navigate('/setup')
+      navigate('/setup')
+      return
     }
-    setProfile(profile as UserProfile['Row'])
     setIsFetching(false)
     return profile
   }
 
+  const [profile, { mutate: mutateProfile }] = createResource(() => user()?.id, fetchProfile)
   createEffect(
     on(user, (user) => {
-      if (user) fetchProfile(user.id).then(setProfile)
+      if (user) fetchProfile(user.id).then(mutateProfile)
     }),
   )
 
@@ -98,7 +148,7 @@ export const UserProvider: Component<{ children: JSX.Element }> = (props) => {
       .select()
       .single()
     if (error) throw error
-    setProfile(data)
+    mutateProfile(data)
   }
 
   return (

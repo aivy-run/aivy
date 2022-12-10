@@ -1,10 +1,10 @@
-import cookie from 'cookie'
 import dayjs from 'dayjs'
+import { parseCookie, serializeCookie } from 'solid-start'
 
 export const clearCookie = (path = '/') => {
-    const parsed = cookie.parse(document.cookie)
+    const parsed = parseCookie(document.cookie)
     for (const key of Object.keys(parsed)) {
-        document.cookie = cookie.serialize(key, '', {
+        document.cookie = serializeCookie(key, '', {
             expires: dayjs().toDate(),
             path,
         })

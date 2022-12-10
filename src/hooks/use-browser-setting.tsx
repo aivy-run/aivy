@@ -1,7 +1,7 @@
-import cookie from 'cookie'
 import { createEffect, createSignal } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { isServer } from 'solid-js/web'
+import { parseCookie, serializeCookie } from 'solid-start'
 import { useRequest } from 'solid-start/server'
 
 import { isValidJSON } from '~/lib/is-valid-json'
@@ -18,7 +18,7 @@ const DEFAULT: BrowserSettings = {
 }
 
 const saveToCookie = (raw: string) => {
-  document.cookie = cookie.serialize(COOKIE_KEY, raw, {
+  document.cookie = serializeCookie(COOKIE_KEY, raw, {
     sameSite: 'lax',
     maxAge: 100 * 365 * 24 * 60 * 60,
     path: '/',
@@ -30,7 +30,7 @@ const load = () => {
   if (isServer) {
     const { request } = useRequest()
     const raw = request.headers.get('cookie') || ''
-    const parsed = cookie.parse(raw)
+    const parsed = parseCookie(raw)
     stored = parsed[COOKIE_KEY] || ''
   } else {
     stored = localStorage.getItem(STORAGE_KEY) || ''
