@@ -9,7 +9,6 @@ import {
   createResource,
   createSignal,
   JSX,
-  onMount,
   Resource,
   useContext,
 } from 'solid-js'
@@ -113,14 +112,12 @@ export const UserProvider: Component<{ children: JSX.Element }> = (props) => {
     if (!user) setIsFetching(false)
     return user
   }
-  const [user, { mutate: mutateUser }] = createResource(fetchUser)
-  onMount(() => fetchUser().then(mutateUser))
+  const [user] = createResource(fetchUser)
 
   const fetchProfile = async (id: string) => {
     if (!id) return
     const profile = await api.user.get(id)
     if (!profile) {
-      setIsFetching(false)
       navigate('/setup')
       return
     }
@@ -130,7 +127,7 @@ export const UserProvider: Component<{ children: JSX.Element }> = (props) => {
 
   const [profile, { mutate: mutateProfile }] = createResource(() => user()?.id, fetchProfile)
   createEffect(() => {
-    if (user() && isFetching()) fetchProfile(user()!.id).then(mutateProfile)
+    if (user()) fetchProfile(user()!.id).then(mutateProfile)
   })
 
   const update = async (userProfile: UserProfile['Update']) => {

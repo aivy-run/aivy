@@ -1,4 +1,4 @@
-import { createEffect, createSignal, For, Match, Show, Switch } from 'solid-js'
+import { createEffect, createSignal, For, Match, on, Show, Switch } from 'solid-js'
 import type { Component } from 'solid-js'
 import { A } from 'solid-start'
 import { css, styled, useTheme } from 'solid-styled-components'
@@ -60,8 +60,9 @@ const I = 5
 
 export const Notifications: Component = () => {
   const {
+    accessor: [, profile],
     util: { withUser },
-  } = useUser(true)
+  } = useUser()
   const theme = useTheme()
   let ref: HTMLDivElement
   const [open, setOpen] = useFloating(() => ref!)
@@ -74,43 +75,37 @@ export const Notifications: Component = () => {
   const read = (n: CompleteNotification[]) => api.notification.read(n.map((v) => v.id))
 
   createEffect(() => {
-    withUser(([, profile]) => {
-      if (open()) return
-      api.notification
-        .count({
-          target_user: profile.uid,
-          read: false,
-        })
-        .then(setCount)
-    })
+    if (open()) return
+    api.notification
+      .count({
+        target_user: profile().uid,
+        read: false,
+      })
+      .then(setCount)
   })
 
   createEffect(() => {
     if (open() && notifications().length > 0) read(notifications())
   })
 
-  createEffect(() => {
-    withUser(
-      ([, profile], page) => {
-        setLoading(true)
-        api.notification
-          .list({
-            target_user: profile.uid,
-            limit: I,
-            since: I * (page - 1),
-            latest: true,
-          })
-          .then((v) => {
-            if (v.length < I) setComplete(true)
-            setNotifications((prev) => [...prev, ...v])
-            setLoading(false)
-            if (open() && v.length > 0) read(v)
-          })
-      },
-      null,
-      page,
-    )
-  })
+  createEffect(
+    on(page, (page) => {
+      setLoading(true)
+      api.notification
+        .list({
+          target_user: profile().uid,
+          limit: I,
+          since: I * (page - 1),
+          latest: true,
+        })
+        .then((v) => {
+          if (v.length < I) setComplete(true)
+          setNotifications((prev) => [...prev, ...v])
+          setLoading(false)
+          if (open() && v.length > 0) read(v)
+        })
+    }),
+  )
 
   return (
     <div

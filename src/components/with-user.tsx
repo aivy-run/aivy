@@ -3,12 +3,9 @@ import {
   ComponentProps,
   createEffect,
   createMemo,
-  createSignal,
   JSX,
-  Match,
   Show,
   splitProps,
-  Switch,
 } from 'solid-js'
 import { useNavigate } from 'solid-start'
 import { css } from 'solid-styled-components'
@@ -28,10 +25,8 @@ export const FetchingTransition: Component<
     status: { isFetching },
   } = useUser(true)
   const [local, others] = splitProps(props, ['class', 'children', 'ignore', 'fallback'])
-  const [pending, setPending] = createSignal(true)
-  createEffect(() => setPending(isFetching()))
 
-  const ok = createMemo(() => props.ignore || !pending())
+  const ok = createMemo(() => props.ignore || !isFetching())
 
   return (
     <div
@@ -59,30 +54,24 @@ export const WithUser: Component<
     fallback?: JSX.Element
   }
 > = (props) => {
-  const data = useUser(true)
+  const userData = useUser(true)
   const [local, others] = splitProps(props, ['children', 'fallback', 'redirectWhenGuest'])
+  const data = createMemo(() => !userData.status.isGuest() && userData)
   const navigate = useNavigate()
 
   createEffect(() => {
-    if (!data.status.isFetching() && data.status.isGuest() && local.redirectWhenGuest)
+    if (!userData.status.isFetching() && userData.status.isGuest() && local.redirectWhenGuest)
       navigate('/sign', { replace: true })
   })
 
   return (
     <FetchingTransition {...others}>
-      <Show when={!data.status.isGuest() && data} fallback={local.fallback} keyed>
-        {(args) => (
-          <>
-            <Switch>
-              <Match when={typeof local.children === 'function' && local.children} keyed>
-                {(fn) => fn(args as ArgT)}
-              </Match>
-              <Match when={typeof local.children !== 'function' && local.children} keyed>
-                {(children) => children}
-              </Match>
-            </Switch>
-          </>
-        )}
+      <Show when={data()} fallback={local.fallback} keyed>
+        {(args) => {
+          const child = props.children
+          if (typeof child === 'function') return child(args as ArgT)
+          else return <>{child}</>
+        }}
       </Show>
     </FetchingTransition>
   )

@@ -8,7 +8,6 @@ import { Menu } from './menu'
 import { Notifications } from './notifications'
 
 import IconSearch from '~icons/carbon/search'
-
 const Container = styled.div`
   position: relative;
   display: flex;

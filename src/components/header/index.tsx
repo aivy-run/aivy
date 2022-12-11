@@ -45,7 +45,7 @@ export const Header = () => {
           <Show when={theme.$().name === 'dark'} fallback={<LogoLight height={40} />}>
             <LogoDark height={40} />
           </Show>
-        </Link>{' '}
+        </Link>
         <User />
       </Container>
       <HeaderTabs />
