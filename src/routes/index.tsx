@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { createEffect, createMemo, createSignal, Show } from 'solid-js'
+import { createEffect, createSignal, Show } from 'solid-js'
 import { A } from 'solid-start'
 import { styled } from 'solid-styled-components'
 
@@ -48,7 +48,7 @@ export default function Index() {
   } = useUser(true)
   const [following, setFollowing] = createSignal([] as string[])
   const [zoning, setZoning] = createSignal<Zoning[]>(['normal'])
-  const today = createMemo(() => dayjs(dayjs().format('YYYY-MM-DD')))
+  const today = dayjs(dayjs().format('YYYY-MM-DD'))
 
   createEffect(() => {
     withUser(async ([me]) => {
@@ -68,7 +68,7 @@ export default function Index() {
         <ZoningSelector onChange={setZoning} />
         <Inner>
           <Posts
-            title={today().format('MM月DD日') + 'のランキング'}
+            title={today.format('MM月DD日') + 'のランキング'}
             all={6}
             ranking={true}
             pagination={false}
@@ -76,7 +76,7 @@ export default function Index() {
               zoning: zoning(),
               build(builder) {
                 builder.order('likes', { ascending: false })
-                builder.gte('created_at', dayjs(today()).format())
+                builder.gte('created_at', dayjs(today).format())
               },
             }}
           />
@@ -108,7 +108,7 @@ export default function Index() {
         </Show>
         <Inner>
           <Posts
-            title={today().format('MM月') + 'のランキング'}
+            title={today.format('MM月') + 'のランキング'}
             all={6}
             ranking={true}
             pagination={false}
@@ -116,7 +116,7 @@ export default function Index() {
               zoning: zoning(),
               build(builder) {
                 builder.order('likes', { ascending: false })
-                builder.gte('created_at', dayjs(today().format('YYYY-MM-01')).format())
+                builder.gte('created_at', dayjs(today.format('YYYY-MM-01')).format())
               },
             }}
           />

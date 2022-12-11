@@ -35,7 +35,6 @@ specifiers:
   solid-slider: ^1.3.12
   solid-start: ^0.2.7
   solid-start-netlify: ^0.2.7
-  solid-start-node: ^0.2.7
   solid-styled-components: ^0.28.5
   stylelint: ^14.14.0
   stylelint-config-idiomatic-order: ^9.0.0
@@ -86,7 +85,6 @@ devDependencies:
   postcss-syntax: 0.36.2_postcss@8.4.18
   prettier: 2.7.1
   solid-start-netlify: 0.2.7_solid-start@0.2.7
-  solid-start-node: 0.2.7_uksqlmdb5bjhcqejg3xw6lmar4
   stylelint: 14.14.0
   stylelint-config-idiomatic-order: 9.0.0_stylelint@14.14.0
   stylelint-config-prettier: 9.0.3_stylelint@14.14.0
@@ -4272,14 +4270,6 @@ packages:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
 
-  /polka/1.0.0-next.22:
-    resolution: {integrity: sha512-a7tsZy5gFbJr0aUltZS97xCkbPglXuD67AMvTyZX7BTDBH384FWf0ZQF6rPvdutSxnO1vUlXM2zSLf5tCKk5RA==}
-    engines: {node: '>=8'}
-    dependencies:
-      '@polka/url': 1.0.0-next.21
-      trouter: 3.2.0
-    dev: true
-
   /postcss-media-query-parser/0.2.3:
     resolution: {integrity: sha512-3sOlxmbKcSHMjlUXQZKQ06jOswE7oVkXPxmZdoB1r5l0q6gTFTQSHxNxOrCccElbW7dxNytifNEo8qidX2Vsig==}
     dev: true
@@ -4434,11 +4424,6 @@ packages:
       call-bind: 1.0.2
       define-properties: 1.1.4
       functions-have-names: 1.2.3
-    dev: true
-
-  /regexparam/1.3.0:
-    resolution: {integrity: sha512-6IQpFBv6e5vz1QAqI+V4k8P2e/3gRrqfCJ9FI+O1FLQTO+Uz6RXZEZOPmTJ6hlGj7gkERzY5BRCv09whKP96/g==}
-    engines: {node: '>=6'}
     dev: true
 
   /regexpp/3.2.0:
@@ -4705,28 +4690,6 @@ packages:
       - supports-color
     dev: true
 
-  /solid-start-node/0.2.7_uksqlmdb5bjhcqejg3xw6lmar4:
-    resolution: {integrity: sha512-p7xy34pqIbVfoyoqs57zdi+JVVxQc8uEdBFYyTWJriQa9UTu+Wk6H/Xy0QkMjHapmLiTnT8SxFDWoWslliWnJQ==}
-    peerDependencies:
-      solid-start: '*'
-      undici: ^5.8.0
-      vite: '*'
-    dependencies:
-      '@rollup/plugin-commonjs': 22.0.2_rollup@2.79.1
-      '@rollup/plugin-json': 4.1.0_rollup@2.79.1
-      '@rollup/plugin-node-resolve': 13.3.0_rollup@2.79.1
-      compression: 1.7.4
-      polka: 1.0.0-next.22
-      rollup: 2.79.1
-      sirv: 2.0.2
-      solid-start: 0.2.7_soztqtaqyw7uxbcoxro27vxb3u
-      terser: 5.15.1
-      undici: 5.11.0
-      vite: 3.1.8
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
   /solid-start/0.2.7_soztqtaqyw7uxbcoxro27vxb3u:
     resolution: {integrity: sha512-e/h4kE9lATMsX0PKKM07y6rPCt+AV8TE6n1m+8LZzgsBWtO9G/qKHEbQsjx+RCNqEi0zTl6gVSxPfXVQcKocXg==}
     hasBin: true
@@ -4803,6 +4766,7 @@ packages:
 
   /sourcemap-codec/1.4.8:
     resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
+    deprecated: Please use @jridgewell/sourcemap-codec instead
     dev: true
 
   /spdx-correct/3.1.1:
@@ -5107,13 +5071,6 @@ packages:
   /trim-newlines/3.0.1:
     resolution: {integrity: sha512-c1PTsA3tYrIsLGkJkzHF+w9F2EyxfXGo4UyJc4pFL++FMjnq0HJS69T3M7d//gKrFKwy429bouPescbjecU+Zw==}
     engines: {node: '>=8'}
-    dev: true
-
-  /trouter/3.2.0:
-    resolution: {integrity: sha512-rLLXbhTObLy2MBVjLC+jTnoIKw99n0GuJs9ov10J870vDw5qhTurPzsDrudNtBf5w/CZ9ctZy2p2IMmhGcel2w==}
-    engines: {node: '>=6'}
-    dependencies:
-      regexparam: 1.3.0
     dev: true
 
   /ts-toolbelt/9.6.0:

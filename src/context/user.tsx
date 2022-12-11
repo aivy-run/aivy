@@ -9,7 +9,6 @@ import {
   createResource,
   createSignal,
   JSX,
-  on,
   onMount,
   Resource,
   useContext,
@@ -130,11 +129,9 @@ export const UserProvider: Component<{ children: JSX.Element }> = (props) => {
   }
 
   const [profile, { mutate: mutateProfile }] = createResource(() => user()?.id, fetchProfile)
-  createEffect(
-    on(user, (user) => {
-      if (user) fetchProfile(user.id).then(mutateProfile)
-    }),
-  )
+  createEffect(() => {
+    if (user() && isFetching()) fetchProfile(user()!.id).then(mutateProfile)
+  })
 
   const update = async (userProfile: UserProfile['Update']) => {
     const updates = {

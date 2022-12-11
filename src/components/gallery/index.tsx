@@ -104,11 +104,10 @@ export const Gallery: Component<{
 
   onMount(() => {
     calcRemainder()
-    window.addEventListener('resize', calcRemainder)
+    if (typeof window !== 'undefined') window.addEventListener('resize', calcRemainder)
   })
-
   onCleanup(() => {
-    window.removeEventListener('resize', calcRemainder)
+    if (typeof window !== 'undefined') window.removeEventListener('resize', calcRemainder)
   })
 
   createEffect(() => {

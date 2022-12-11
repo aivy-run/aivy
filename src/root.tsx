@@ -2,7 +2,7 @@
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import { Component, JSX, Suspense } from 'solid-js'
-import { Assets } from 'solid-js/web'
+import { useAssets } from 'solid-js/web'
 import { SolidNProgress } from 'solid-progressbar'
 import {
   ErrorBoundary,
@@ -38,11 +38,7 @@ dayjs.extend(duration)
 const Providers: Component<{ children: JSX.Element }> = (props) => (
   <ThemeProvider>
     <ToastProvider>
-      <ModalProvider>
-        <Suspense>
-          <UserProvider>{props.children}</UserProvider>
-        </Suspense>
-      </ModalProvider>
+      <ModalProvider>{props.children}</ModalProvider>
     </ToastProvider>
   </ThemeProvider>
 )
@@ -55,8 +51,15 @@ const Container = styled.div`
   }
 `
 
+const Tracer = () => {
+  console.trace('trace')
+  return <>Tracer</>
+}
+
 const Root = () => {
-  const html = (
+  useAssets(() => `<style id="_goober">${extractCss()}</style>`)
+
+  return (
     <Html lang="ja">
       <Head>
         <Meta charset="utf-8" />
@@ -82,34 +85,32 @@ const Root = () => {
           href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap"
           rel="stylesheet"
         />
-
-        <Assets>
-          {/* eslint-disable-next-line solid/no-innerhtml */}
-          <style id="_goober" innerHTML={extractCss()} />
-        </Assets>
       </Head>
       <Body>
         <Providers>
           <SolidNProgress color="#3ea8ff" />
           <Container>
-            <Header />
-            <main>
+            <UserProvider>
               <ErrorBoundary fallback={(err) => <ErrorHandler error={err} />}>
-                <Maintenance>
-                  <Routes>
-                    <FileRoutes />
-                  </Routes>
-                </Maintenance>
+                <Header />
+                <main>
+                  <Suspense>
+                    <Maintenance>
+                      <Routes>
+                        <FileRoutes />
+                      </Routes>
+                    </Maintenance>
+                  </Suspense>
+                </main>
+                <Footer />
               </ErrorBoundary>
-            </main>
-            <Footer />
+            </UserProvider>
           </Container>
         </Providers>
         <Scripts />
       </Body>
     </Html>
   )
-  return html
 }
 
 export default Root

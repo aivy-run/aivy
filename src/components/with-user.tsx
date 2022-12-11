@@ -3,6 +3,7 @@ import {
   ComponentProps,
   createEffect,
   createMemo,
+  createSignal,
   JSX,
   Match,
   Show,
@@ -27,8 +28,10 @@ export const FetchingTransition: Component<
     status: { isFetching },
   } = useUser(true)
   const [local, others] = splitProps(props, ['class', 'children', 'ignore', 'fallback'])
+  const [pending, setPending] = createSignal(true)
+  createEffect(() => setPending(isFetching()))
 
-  const ok = createMemo(() => props.ignore || !isFetching())
+  const ok = createMemo(() => props.ignore || !pending())
 
   return (
     <div
@@ -69,14 +72,16 @@ export const WithUser: Component<
     <FetchingTransition {...others}>
       <Show when={!data.status.isGuest() && data} fallback={local.fallback} keyed>
         {(args) => (
-          <Switch>
-            <Match when={typeof local.children === 'function' && local.children} keyed>
-              {(fn) => fn(args as ArgT)}
-            </Match>
-            <Match when={typeof local.children !== 'function' && local.children} keyed>
-              {(children) => children}
-            </Match>
-          </Switch>
+          <>
+            <Switch>
+              <Match when={typeof local.children === 'function' && local.children} keyed>
+                {(fn) => fn(args as ArgT)}
+              </Match>
+              <Match when={typeof local.children !== 'function' && local.children} keyed>
+                {(children) => children}
+              </Match>
+            </Switch>
+          </>
         )}
       </Show>
     </FetchingTransition>

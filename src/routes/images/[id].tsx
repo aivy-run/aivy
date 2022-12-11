@@ -1,4 +1,4 @@
-import { createMemo, createResource, Show } from 'solid-js'
+import { createMemo, createResource, Show, Suspense } from 'solid-js'
 import { isServer } from 'solid-js/web'
 import { Meta, useParams } from 'solid-start'
 import { useRequest } from 'solid-start/server'
@@ -9,6 +9,7 @@ import { ImagePostView } from '~/components/image-post'
 import { useState } from '~/hooks/use-state'
 import { createImageURL } from '~/lib/api/cloudflare'
 import { api } from '~/lib/api/supabase'
+import type { CompleteImagePost } from '~/lib/api/supabase/images'
 
 export default function Image() {
   const state = useState()
@@ -29,8 +30,7 @@ export default function Image() {
     return post
   })
 
-  const title = () => {
-    const post = resource()
+  const title = (post: CompleteImagePost) => {
     if (!post?.id) return ''
     const tag = post.tags.length > 0 ? `#${post.tags[0]}` : ''
     const title = post.title
@@ -39,28 +39,30 @@ export default function Image() {
   }
 
   return (
-    <Show when={resource()} keyed>
-      {(post) => (
-        <>
+    <Suspense>
+      <Show when={resource()} keyed>
+        {(post) => (
           <>
-            <FixedTitle>{title()}</FixedTitle>
-            <Meta property="og:title" content={title()} />
-            <Meta property="og:description" content={post.description || ''} />
-            <Meta
-              property="og:image"
-              content={createImageURL(
-                `post.image.${post.id}.0`,
-                post.zoning === 'normal' ? 'ogp' : 'ogpfiltered',
-              )}
-            />
-            <Meta name="twitter:card" content="summary_large_image" />
-            <Meta name="note:card" content="summary_large_image" />
+            <>
+              <FixedTitle>{title(post)}</FixedTitle>
+              <Meta property="og:title" content={title(post)} />
+              <Meta property="og:description" content={post.description || ''} />
+              <Meta
+                property="og:image"
+                content={createImageURL(
+                  `post.image.${post.id}.0`,
+                  post.zoning === 'normal' ? 'ogp' : 'ogpfiltered',
+                )}
+              />
+              <Meta name="twitter:card" content="summary_large_image" />
+              <Meta name="note:card" content="summary_large_image" />
+            </>
+            <Show when={!isServer || !isTwitterBot()}>
+              <ImagePostView post={post} />
+            </Show>
           </>
-          <Show when={!isServer || !isTwitterBot()}>
-            <ImagePostView post={post} />
-          </Show>
-        </>
-      )}
-    </Show>
+        )}
+      </Show>
+    </Suspense>
   )
 }

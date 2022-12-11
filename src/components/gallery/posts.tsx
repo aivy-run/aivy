@@ -1,5 +1,14 @@
 import dayjs from 'dayjs'
-import { Component, createEffect, createMemo, createSignal, JSX, Show } from 'solid-js'
+import {
+  Component,
+  createEffect,
+  createMemo,
+  createResource,
+  createSignal,
+  JSX,
+  Show,
+  Suspense,
+} from 'solid-js'
 import { useSearchParams } from 'solid-start'
 import { css, styled } from 'solid-styled-components'
 
@@ -60,6 +69,7 @@ type Cache = {
   data: {
     posts: CompleteImagePost[]
     count: number
+    page: number
   }
 }
 
@@ -67,7 +77,6 @@ const cache: Record<string, Cache | undefined> = {}
 
 export const Posts: Component<Props> = (props) => {
   const {
-    status: { isFetching },
     util: { withUser },
   } = useUser(true)
 
@@ -133,12 +142,8 @@ export const Posts: Component<Props> = (props) => {
     filter: props.filter,
     fetchPosts: props.fetchPosts,
   }))
-  const [data, setData] = createSignal<PostsData>()
+  const [data, { mutate: setData }] = createResource(fetchData, fetcher)
 
-  createEffect(() => {
-    if (isFetching()) return
-    fetcher(fetchData()).then(setData)
-  })
   createEffect(() => {
     const posts = data()?.posts
     if (!posts) return
@@ -155,55 +160,57 @@ export const Posts: Component<Props> = (props) => {
       <Show when={props.zoningButton}>
         <ZoningSelector onChange={setZoning} />
       </Show>
-      <Show when={data()} fallback={props.fallback || <Fallback height="50vh" />} keyed>
-        {(data) => (
-          <>
-            <Show when={props.title}>
-              <HStack
-                gap="1.5rem"
-                class={css`
-                  padding: 0 2rem;
-                `}
-              >
-                <Heading>{props.title}</Heading>
-                <Show when={props.reload}>
-                  <IconRotate
-                    class={css`
-                      cursor: pointer;
+      <Suspense fallback={props.fallback || <Fallback height="50vh" />}>
+        <Show when={data()} keyed>
+          {(data) => (
+            <>
+              <Show when={props.title}>
+                <HStack
+                  gap="1.5rem"
+                  class={css`
+                    padding: 0 2rem;
+                  `}
+                >
+                  <Heading>{props.title}</Heading>
+                  <Show when={props.reload}>
+                    <IconRotate
+                      class={css`
+                        cursor: pointer;
 
-                      &:hover {
-                        path {
-                          fill: rgba(0, 0, 0, 0.5);
-                          transition: 0.2s;
+                        &:hover {
+                          path {
+                            fill: rgba(0, 0, 0, 0.5);
+                            transition: 0.2s;
+                          }
                         }
-                      }
-                    `}
-                    onClick={() => {
-                      if (!loading()) fetcher(fetchData()).then(setData)
-                    }}
-                  />
-                </Show>
-              </HStack>
-              <br />
-            </Show>
-            <Gallery
-              page={data.page}
-              all={props.all}
-              posts={data!.posts}
-              scroll={!!props.scroll}
-              ranking={!!props.ranking}
-            />
-            <br />
-            <Show when={typeof props.pagination === 'undefined' ? true : props.pagination}>
-              <Pagination
-                current={data.page}
-                count={Math.ceil(data.count / props.all)}
-                url={props.url || '/'}
+                      `}
+                      onClick={() => {
+                        if (!loading()) fetcher(fetchData()).then(setData)
+                      }}
+                    />
+                  </Show>
+                </HStack>
+                <br />
+              </Show>
+              <Gallery
+                page={data.page}
+                all={props.all}
+                posts={data!.posts}
+                scroll={!!props.scroll}
+                ranking={!!props.ranking}
               />
-            </Show>
-          </>
-        )}
-      </Show>
+              <br />
+              <Show when={typeof props.pagination === 'undefined' ? true : props.pagination}>
+                <Pagination
+                  current={data.page}
+                  count={Math.ceil(data.count / props.all)}
+                  url={props.url || '/'}
+                />
+              </Show>
+            </>
+          )}
+        </Show>
+      </Suspense>
     </Container>
   )
 }

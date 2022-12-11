@@ -1,15 +1,6 @@
 import Color from 'color'
 import dayjs from 'dayjs'
-import {
-  Accessor,
-  Component,
-  createEffect,
-  createMemo,
-  createResource,
-  createSignal,
-  JSX,
-  onMount,
-} from 'solid-js'
+import { Accessor, Component, createEffect, createMemo, createSignal, JSX, onMount } from 'solid-js'
 import { isServer } from 'solid-js/web'
 import { parseCookie, serializeCookie, useServerContext } from 'solid-start'
 import { ThemeProvider as _ThemeProvider, useTheme } from 'solid-styled-components'
@@ -121,8 +112,7 @@ export const ThemeProvider: Component<{ children: JSX.Element }> = (props) => {
     setTheme(setting.theme === 'light' ? light : dark)
   }
 
-  const [loader] = createResource(set)
-  loader()
+  set()
 
   createEffect(() => {
     if (setting.theme === 'system') setTheme(prefersLight() ? light : dark)
