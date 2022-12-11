@@ -90,7 +90,7 @@ export const Gallery: Component<{
   const navigate = useNavigate()
   const [likes, setLikes] = createSignal<Like['Row'][]>([])
   const [bookmarks, setBookmarks] = createSignal<Bookmark['Row'][]>([])
-  const [remainder, setRemainder] = createSignal<any[]>([])
+  const [remainder, setRemainder] = createSignal<any[]>([null, null, null, null, null, null])
 
   let ref: HTMLDivElement
 
