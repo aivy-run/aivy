@@ -76,7 +76,7 @@ export default function Index() {
               zoning: zoning(),
               build(builder) {
                 builder.order('likes', { ascending: false })
-                builder.gte('created_at', dayjs(today).format())
+                builder.gte('created_at', today.format())
               },
             }}
           />
