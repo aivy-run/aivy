@@ -85,7 +85,7 @@ export default function Index() {
         <Inner>
           <Posts
             title="新着"
-            all={20}
+            all={12}
             pagination={false}
             filter={{ zoning: zoning(), latest: true }}
           />
