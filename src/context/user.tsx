@@ -9,6 +9,7 @@ import {
   createResource,
   createSignal,
   JSX,
+  onMount,
   Resource,
   useContext,
 } from 'solid-js'
@@ -112,7 +113,10 @@ export const UserProvider: Component<{ children: JSX.Element }> = (props) => {
     if (!user) setIsFetching(false)
     return user
   }
-  const [user] = createResource(fetchUser)
+  const [user, { mutate: mutateUser }] = createResource(fetchUser)
+  onMount(() => {
+    if (!user() && isFetching()) fetchUser().then(mutateUser)
+  })
 
   const fetchProfile = async (id: string) => {
     if (!id) return
