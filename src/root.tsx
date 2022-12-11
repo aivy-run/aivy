@@ -51,11 +51,6 @@ const Container = styled.div`
   }
 `
 
-const Tracer = () => {
-  console.trace('trace')
-  return <>Tracer</>
-}
-
 const Root = () => {
   useAssets(() => `<style id="_goober">${extractCss()}</style>`)
 
@@ -84,6 +79,13 @@ const Root = () => {
         <Link
           href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap"
           rel="stylesheet"
+        />
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${
+            import.meta.env['VITE_ADSENSE_ID']
+          }`}
+          crossorigin="anonymous"
         />
       </Head>
       <Body>
