@@ -22,7 +22,7 @@ import { Comments } from '~/components/image-post/comments'
 import { HStack, VStack } from '~/components/ui/stack'
 import { useUser } from '~/context/user'
 import { api } from '~/lib/api/supabase'
-import type { CompleteImagePost } from '~/lib/api/supabase/images'
+import type { CompleteImagePost, ImageInformation } from '~/lib/api/supabase/images'
 import IconBookmark from '~icons/carbon/bookmark-filled'
 import IconFavorite from '~icons/carbon/favorite-filled'
 import IconView from '~icons/carbon/view'
@@ -42,6 +42,7 @@ const Container = styled.div`
 const Context = createContext(
   {} as {
     post: CompleteImagePost
+    info: ImageInformation['Row'][]
 
     index: Accessor<number>
     setIndex: Setter<number>
@@ -61,6 +62,7 @@ const Context = createContext(
 export const useImagePost = () => useContext(Context)
 export const ImagePostView: Component<{
   post: CompleteImagePost
+  info: ImageInformation['Row'][]
 }> = (props) => {
   const {
     util: { withUser },
@@ -87,6 +89,7 @@ export const ImagePostView: Component<{
     <Context.Provider
       value={{
         post: props.post,
+        info: props.info,
 
         index,
         setIndex,

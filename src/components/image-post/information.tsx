@@ -9,9 +9,9 @@ import { TokenizedPrompt } from '../prompt'
 export const Information: Component = () => {
   const theme = useTheme()
   const navigate = useNavigate()
-  const { post, index } = useImagePost()
+  const { info, index } = useImagePost()
 
-  const info = createMemo(() => post.information[index()])
+  const information = createMemo(() => info[index()])
 
   return (
     <div
@@ -36,7 +36,7 @@ export const Information: Component = () => {
       `}
     >
       <h2>画像情報</h2>
-      <Show when={info()?.prompt} keyed>
+      <Show when={information()?.prompt} keyed>
         {(prompt) => (
           <div>
             Prompt:{' '}
@@ -50,7 +50,7 @@ export const Information: Component = () => {
         )}
       </Show>
       <br />
-      <Show when={info()?.negative_prompt} keyed>
+      <Show when={information()?.negative_prompt} keyed>
         {(negative_prompt) => (
           <div>
             Negative Prompt:{' '}
@@ -66,56 +66,56 @@ export const Information: Component = () => {
         )}
       </Show>
       <br />
-      <Show when={info()?.model} keyed>
+      <Show when={information()?.model} keyed>
         {(model) => (
           <div>
             Model: <div>{model}</div>
           </div>
         )}
       </Show>
-      <Show when={info()?.steps} keyed>
+      <Show when={information()?.steps} keyed>
         {(steps) => (
           <div>
             Steps: <div>{steps}</div>
           </div>
         )}
       </Show>
-      <Show when={info()?.cfg_scale} keyed>
+      <Show when={information()?.cfg_scale} keyed>
         {(cfg_scale) => (
           <div>
             CFG Scale: <div>{cfg_scale}</div>
           </div>
         )}
       </Show>
-      <Show when={info()?.sampler} keyed>
+      <Show when={information()?.sampler} keyed>
         {(sampler) => (
           <div>
             Sampler: <div>{sampler}</div>
           </div>
         )}
       </Show>
-      <Show when={info()?.seed} keyed>
+      <Show when={information()?.seed} keyed>
         {(seed) => (
           <div>
             Seed: <div>{seed}</div>
           </div>
         )}
       </Show>
-      <Show when={info()?.vae} keyed>
+      <Show when={information()?.vae} keyed>
         {(vae) => (
           <div>
             VAE: <div>{vae}</div>
           </div>
         )}
       </Show>
-      <Show when={info()?.embedding} keyed>
+      <Show when={information()?.embedding} keyed>
         {(embedding) => (
           <div>
             Embedding: <div>{embedding}</div>
           </div>
         )}
       </Show>
-      <Show when={info()?.hypernetwork} keyed>
+      <Show when={information()?.hypernetwork} keyed>
         {(hypernetwork) => (
           <div>
             HyperNetwork: <div>{hypernetwork}</div>

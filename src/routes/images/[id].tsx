@@ -6,6 +6,7 @@ import { useRequest } from 'solid-start/server'
 import { NotFoundError } from '~/components/error-handler'
 import { FixedTitle } from '~/components/head/title'
 import { ImagePostView } from '~/components/image-post'
+import { Fallback } from '~/components/ui/fallback'
 import { useState } from '~/hooks/use-state'
 import { createImageURL } from '~/lib/api/cloudflare'
 import { api } from '~/lib/api/supabase'
@@ -23,11 +24,10 @@ export default function Image() {
   }
 
   const [resource] = createResource(id, async (id) => {
-    const stated = state().post
-    if (stated) return stated
-    const post = await api.image.get(id)
+    const post = state().post || (await api.image.get(id))
     if (!post) throw new NotFoundError()
-    return post
+    const info = await api.image.getInfo(post.id)
+    return { post, info }
   })
 
   const title = (post: CompleteImagePost) => {
@@ -39,9 +39,9 @@ export default function Image() {
   }
 
   return (
-    <Suspense>
+    <Suspense fallback={<Fallback height="100%" />}>
       <Show when={resource()} keyed>
-        {(post) => (
+        {({ post, info }) => (
           <>
             <>
               <FixedTitle>{title(post)}</FixedTitle>
@@ -58,7 +58,7 @@ export default function Image() {
               <Meta name="note:card" content="summary_large_image" />
             </>
             <Show when={!isServer || !isTwitterBot()}>
-              <ImagePostView post={post} />
+              <ImagePostView post={post} info={info} />
             </Show>
           </>
         )}

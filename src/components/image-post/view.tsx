@@ -35,7 +35,7 @@ const Zoom = styled.div<{ show: boolean }>`
 
 const Slider: Component<{ onLoad?: () => void; onClick?: () => void }> = (props) => {
   const [setting] = useBrowserSetting()
-  const { post, index, setIndex } = useImagePost()
+  const { post, info, index, setIndex } = useImagePost()
   const [slider, { current, moveTo }] = createSlider(
     {
       loop: false,
@@ -61,7 +61,7 @@ const Slider: Component<{ onLoad?: () => void; onClick?: () => void }> = (props)
         `,
       )}
     >
-      <For each={post.information}>
+      <For each={info}>
         {(v, i) => (
           <div
             class={css`

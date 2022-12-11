@@ -12,7 +12,6 @@ export type ImagePost = Database['public']['Tables']['image_posts']
 
 export type CompleteImagePost = ImagePost['Row'] & {
     profiles: UserProfile['Row']
-    information: ImageInformation['Row'][]
 }
 
 export type ImagesFilter = {
@@ -32,8 +31,7 @@ export type ImagesFilter = {
     _zoning: ImagePost['Row']['zoning'][]
 }
 
-const checkSingle = (data: any): data is CompleteImagePost =>
-    data && !Array.isArray(data.profiles) && Array.isArray(data.information)
+const checkSingle = (data: any): data is CompleteImagePost => data && !Array.isArray(data.profiles)
 const checkMulti = (data: any[]): data is CompleteImagePost[] =>
     data.filter((v) => !checkSingle(v)).length < 1
 
@@ -101,13 +99,22 @@ export class ImagePostApi {
     public async get(id: number) {
         const { data, error, status } = await supabase
             .from('image_posts')
-            .select('*, profiles!inner(*), information:image_posts_information!inner(*)')
+            .select('*, profiles!inner(*)')
             .eq('id', id)
             .single()
         if (status === 406) return
         if (error) throw error
         if (!checkSingle(data)) throw new Error('Incorrect data')
-        data.information.sort((a, b) => (a.index > b.index ? 1 : -1))
+        return data
+    }
+
+    public async getInfo(id: number) {
+        const { data, error } = await supabase
+            .from('image_posts_information')
+            .select('*')
+            .eq('post_id', id)
+        if (error) throw error
+        data.sort((a, b) => (a.index > b.index ? 1 : -1))
         return data
     }
 
@@ -118,9 +125,7 @@ export class ImagePostApi {
     ) {
         const options: Required<Parameters<ReturnType<typeof supabase.from>['select']>>['1'] = {}
         if (count) options.count = count
-        const builder = supabase
-            .from('image_posts')
-            .select('*, profiles!inner(*), information:image_posts_information!inner(*)', options)
+        const builder = supabase.from('image_posts').select('*, profiles!inner(*)', options)
 
         if (random) builder.order('uid', { foreignTable: 'profiles', ascending: false })
 
@@ -154,7 +159,6 @@ export class ImagePostApi {
         const { data, error } = await builder.range(since, since + limit - 1)
         if (error) throw error
         if (!checkMulti(data)) throw new Error('Incorrect data')
-        for (const v of data) v.information.sort((a, b) => (a.index > b.index ? 1 : -1))
         return data
     }
 
