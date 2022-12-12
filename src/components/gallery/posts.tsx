@@ -1,14 +1,5 @@
 import dayjs from 'dayjs'
-import {
-  Component,
-  createEffect,
-  createMemo,
-  createResource,
-  createSignal,
-  JSX,
-  Show,
-  Suspense,
-} from 'solid-js'
+import { Component, createEffect, createMemo, createSignal, JSX, Show } from 'solid-js'
 import { useSearchParams } from 'solid-start'
 import { css, styled } from 'solid-styled-components'
 
@@ -113,8 +104,10 @@ export const Posts: Component<Props> = (props) => {
     const cached = cache[cacheKey]
     if (cached && !fetchPosts) {
       const now = dayjs().toDate().getTime()
-      if (cached.expires > now) return cached.data
-      else delete cache[cacheKey]
+      if (cached.expires > now) {
+        setLoading(false)
+        return cached.data
+      } else delete cache[cacheKey]
     }
     const fn = fetchPosts || getPostsData
     const f = { ...filter }
@@ -128,7 +121,6 @@ export const Posts: Component<Props> = (props) => {
     if (props.zoningButton) f.zoning = zoning
 
     const postData = await fn(all, page, random, f)
-    setLoading(false)
     const data = {
       ...postData,
       page,
@@ -137,6 +129,7 @@ export const Posts: Component<Props> = (props) => {
       data,
       expires: dayjs().toDate().getTime() + dayjs.duration({ minutes: 3 }).asMilliseconds(),
     }
+    setLoading(false)
     return data
   }
   const fetchData = () => ({
@@ -149,7 +142,9 @@ export const Posts: Component<Props> = (props) => {
     profile: profile(),
     fetchPosts: props.fetchPosts,
   })
-  const [data, { mutate: setData }] = createResource(fetchData, fetcher)
+  const [data, setData] = createSignal<Awaited<ReturnType<typeof fetcher>>>()
+
+  createEffect(() => fetcher(fetchData()).then(setData))
 
   createEffect(() => {
     const posts = data()?.posts
@@ -167,57 +162,55 @@ export const Posts: Component<Props> = (props) => {
       <Show when={props.zoningButton}>
         <ZoningSelector onChange={setZoning} />
       </Show>
-      <Suspense fallback={props.fallback || <Fallback height="50vh" />}>
-        <Show when={data()} keyed>
-          {(data) => (
-            <>
-              <Show when={props.title}>
-                <HStack
-                  gap="1.5rem"
-                  class={css`
-                    padding: 0 2rem;
-                  `}
-                >
-                  <Heading>{props.title}</Heading>
-                  <Show when={props.reload}>
-                    <IconRotate
-                      class={css`
-                        cursor: pointer;
+      <Show when={data()} fallback={<Fallback height="100%" />} keyed>
+        {(postData) => (
+          <>
+            <Show when={props.title}>
+              <HStack
+                gap="1.5rem"
+                class={css`
+                  padding: 0 2rem;
+                `}
+              >
+                <Heading>{props.title}</Heading>
+                <Show when={props.reload}>
+                  <IconRotate
+                    class={css`
+                      cursor: pointer;
 
-                        &:hover {
-                          path {
-                            fill: rgba(0, 0, 0, 0.5);
-                            transition: 0.2s;
-                          }
+                      &:hover {
+                        path {
+                          fill: rgba(0, 0, 0, 0.5);
+                          transition: 0.2s;
                         }
-                      `}
-                      onClick={() => {
-                        if (!loading()) fetcher(fetchData()).then(setData)
-                      }}
-                    />
-                  </Show>
-                </HStack>
-                <br />
-              </Show>
-              <Gallery
-                page={data.page}
-                all={props.all}
-                posts={data!.posts}
-                scroll={!!props.scroll}
-                ranking={!!props.ranking}
-              />
+                      }
+                    `}
+                    onClick={() => {
+                      if (!loading()) fetcher(fetchData()).then(setData)
+                    }}
+                  />
+                </Show>
+              </HStack>
               <br />
-              <Show when={typeof props.pagination === 'undefined' ? true : props.pagination}>
-                <Pagination
-                  current={data.page}
-                  count={Math.ceil(data.count / props.all)}
-                  url={props.url || '/'}
-                />
-              </Show>
-            </>
-          )}
-        </Show>
-      </Suspense>
+            </Show>
+            <Gallery
+              page={postData.page}
+              all={props.all}
+              posts={postData!.posts}
+              scroll={!!props.scroll}
+              ranking={!!props.ranking}
+            />
+            <br />
+            <Show when={typeof props.pagination === 'undefined' ? true : props.pagination}>
+              <Pagination
+                current={postData.page}
+                count={Math.ceil(postData.count / props.all)}
+                url={props.url || '/'}
+              />
+            </Show>
+          </>
+        )}
+      </Show>
     </Container>
   )
 }
