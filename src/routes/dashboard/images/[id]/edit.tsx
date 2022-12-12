@@ -11,14 +11,12 @@ import { HStack, VStack } from '~/components/ui/stack'
 import { useState } from '~/hooks/use-state'
 import { fetchImageMulti } from '~/lib/api/cloudflare'
 import { api } from '~/lib/api/supabase'
-import type { UserProfile } from '~/lib/api/supabase/user'
 
 export default function Upload() {
   const modal = useModal()
   const state = useState()
   const params = useParams()
   const navigate = useNavigate()
-  const [author, setAuthor] = createSignal<UserProfile['Row']>()
 
   const [data] = createResource(
     () => parseInt(params['id'] || ''),

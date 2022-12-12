@@ -23,7 +23,7 @@ import { getPostsData } from './util'
 import { useUser } from '~/context/user'
 import { api } from '~/lib/api/supabase'
 import type { ImagesFilter, ImagePost, CompleteImagePost } from '~/lib/api/supabase/images'
-import type { Zoning } from '~/lib/api/supabase/user'
+import type { UserProfile, Zoning } from '~/lib/api/supabase/user'
 import { setTagStore } from '~/lib/store'
 import IconRotate from '~icons/carbon/rotate-360'
 
@@ -77,7 +77,7 @@ const cache: Record<string, Cache | undefined> = {}
 
 export const Posts: Component<Props> = (props) => {
   const {
-    util: { withUser },
+    accessor: [, profile],
   } = useUser(true)
 
   const [search] = useSearchParams<{ page: string }>()
@@ -91,6 +91,7 @@ export const Posts: Component<Props> = (props) => {
     zoning,
     random,
     filter,
+    profile,
     fetchPosts,
   }: {
     all: number
@@ -98,6 +99,7 @@ export const Posts: Component<Props> = (props) => {
     zoning: Zoning[]
     random: boolean
     filter: Props['filter']
+    profile: UserProfile['Row'] | undefined
     fetchPosts: Props['fetchPosts']
   }) => {
     setLoading(true)
@@ -112,14 +114,13 @@ export const Posts: Component<Props> = (props) => {
     }
     const fn = fetchPosts || getPostsData
     const f = { ...filter }
-    await withUser(
-      async ([, profile]) => {
-        const muted = await api.mute.list(profile.uid)
-        if (muted) f!._mute = muted.map((v) => v.target)
-        f!._zoning = profile.zoning
-      },
-      () => (f!._zoning = ['normal']),
-    )
+    if (profile) {
+      const muted = await api.mute.list(profile.uid)
+      if (muted) f!._mute = muted.map((v) => v.target)
+      f._zoning = profile.zoning
+    } else {
+      f._zoning = ['normal']
+    }
     if (props.zoningButton) f.zoning = zoning
 
     const postData = await fn(all, page, random, f)
@@ -134,14 +135,15 @@ export const Posts: Component<Props> = (props) => {
     }
     return data
   }
-  const fetchData = createMemo(() => ({
+  const fetchData = () => ({
     all: props.all,
     page: page(),
     zoning: zoning(),
     random: !!props.random,
     filter: props.filter,
+    profile: profile(),
     fetchPosts: props.fetchPosts,
-  }))
+  })
   const [data, { mutate: setData }] = createResource(fetchData, fetcher)
 
   createEffect(() => {
