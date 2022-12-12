@@ -77,6 +77,7 @@ const cache: Record<string, Cache | undefined> = {}
 
 export const Posts: Component<Props> = (props) => {
   const {
+    status: { isFetching },
     accessor: [, profile],
   } = useUser(true)
 
@@ -91,6 +92,7 @@ export const Posts: Component<Props> = (props) => {
     zoning,
     random,
     filter,
+    isFetching,
     profile,
     fetchPosts,
   }: {
@@ -99,9 +101,11 @@ export const Posts: Component<Props> = (props) => {
     zoning: Zoning[]
     random: boolean
     filter: Props['filter']
+    isFetching: boolean
     profile: UserProfile['Row'] | undefined
     fetchPosts: Props['fetchPosts']
   }) => {
+    if (isFetching) return
     setLoading(true)
     const cacheKey = `${all}.${page}.${zoning}.${random}.${JSON.stringify(filter)}.${
       filter?.build?.toString().length
@@ -141,6 +145,7 @@ export const Posts: Component<Props> = (props) => {
     zoning: zoning(),
     random: !!props.random,
     filter: props.filter,
+    isFetching: isFetching(),
     profile: profile(),
     fetchPosts: props.fetchPosts,
   })
