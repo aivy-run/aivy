@@ -10,9 +10,10 @@ export const SLOTMAP = {
 export const ADS: Component<
   ComponentProps<'ins'> & {
     adSlot: keyof typeof SLOTMAP
+    format?: 'horizontal' | 'vertical' | 'rectangle' | 'auto'
   }
 > = (props) => {
-  const [local, others] = splitProps(props, ['class', 'adSlot'])
+  const [local, others] = splitProps(props, ['class', 'adSlot', 'format'])
   onMount(() => {
     try {
       ;(window.adsbygoogle || []).push({})
@@ -23,12 +24,12 @@ export const ADS: Component<
   return (
     <NoHydration>
       <ins
-        class={classnames('adsbygoogle', local.class)}
         {...others}
+        class={classnames('adsbygoogle', local.class)}
         style={{ display: 'block' }}
         data-ad-client={import.meta.env['VITE_ADSENSE_ID']}
         data-ad-slot={SLOTMAP[local.adSlot]}
-        data-ad-format="auto"
+        data-ad-format={local.format || 'auto'}
         data-full-width-responsive="true"
         data-adtest={import.meta.env.DEV ? 'on' : 'off'}
       />

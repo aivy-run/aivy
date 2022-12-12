@@ -242,7 +242,7 @@ export const ImagePostView: Component<{
             width: 100%;
           `}
         >
-          <ADS adSlot="AIVY_PAGE_IMAGE" />
+          <ADS adSlot="AIVY_PAGE_IMAGE" format="horizontal" />
         </div>
       </Container>
     </Context.Provider>
