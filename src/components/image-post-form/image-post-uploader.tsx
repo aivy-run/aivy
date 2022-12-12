@@ -48,7 +48,10 @@ type Props =
         }
       | {
           mode: 'edit'
-          initial: CompleteImagePost
+          initial: {
+            post: CompleteImagePost
+            info: ImageInformation['Row'][]
+          }
           onDelete: () => void
         }
     )
@@ -75,14 +78,17 @@ export const ImagePostUploader: Component<Props> = (props) => {
 
   createEffect(() => {
     if (props.mode === 'edit') {
-      const { information, profiles: _, ...others } = props.initial
+      const {
+        post: { profiles: _, ...others },
+        info,
+      } = props.initial
       setData(others)
-      setInformation(information)
+      setInformation(info)
       setImages(
-        information.map(
+        info.map(
           (v) =>
             ({
-              source: createImageURL(`post.image.${props.initial.id}.${v.index}`),
+              source: createImageURL(`post.image.${others.id}.${v.index}`),
             } as UploadFile),
         ),
       )

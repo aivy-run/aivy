@@ -74,26 +74,20 @@ export class ImagePostApi {
             .from('image_posts')
             .update({ ...postData, updated_at: dayjs().format() })
             .eq('id', id)
-            .select('*, profiles!inner(*), information:image_posts_information!inner(*)')
-            .single()
         if (post.error) throw post.error
         if (information) {
-            const info = await Promise.all(
+            await Promise.all(
                 information.map(async (v) => {
-                    const { data, error } = await supabase
+                    const { error } = await supabase
                         .from('image_posts_information')
                         .update(v)
                         .eq('post_id', id)
                         .eq('index', v.index)
-                        .select()
-                        .single()
                     if (error) throw error
-                    return data
                 }),
             )
-            post.data.information = info.sort((a, b) => (a.index > b.index ? 1 : -1))
         }
-        return post.data
+        return
     }
 
     public async get(id: number) {

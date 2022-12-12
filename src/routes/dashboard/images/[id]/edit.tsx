@@ -1,5 +1,5 @@
 import { useParams } from '@solidjs/router'
-import { createSignal, onMount, Show } from 'solid-js'
+import { createResource, createSignal, Show } from 'solid-js'
 import { useNavigate } from 'solid-start'
 import { css } from 'solid-styled-components'
 
@@ -11,7 +11,6 @@ import { HStack, VStack } from '~/components/ui/stack'
 import { useState } from '~/hooks/use-state'
 import { fetchImageMulti } from '~/lib/api/cloudflare'
 import { api } from '~/lib/api/supabase'
-import type { CompleteImagePost } from '~/lib/api/supabase/images'
 import type { UserProfile } from '~/lib/api/supabase/user'
 
 export default function Upload() {
@@ -20,40 +19,28 @@ export default function Upload() {
   const params = useParams()
   const navigate = useNavigate()
   const [author, setAuthor] = createSignal<UserProfile['Row']>()
-  const [data, setData] = createSignal<CompleteImagePost>()
 
-  onMount(async () => {
-    const id = parseInt(params['id'] as string)
-    if (!id) return
-    const post = state().post
-    if (post) {
-      setData({ ...post, author: post.profiles.uid })
-      setAuthor(post.profiles)
-    } else {
-      const post = await api.image.get(id)
+  const [data] = createResource(
+    () => parseInt(params['id'] || ''),
+    async (id) => {
+      if (!id) return
+      const post = state().post || (await api.image.get(id))
       if (!post) throw new NotFoundError()
-      setAuthor(post.profiles)
-      setData({ ...post, author: post.profiles.uid })
-    }
-  })
+      const info = await api.image.getInfo(post.id)
+      return { post, info }
+    },
+  )
 
   return (
     <Show when={data()} keyed>
-      {(post) => (
+      {(data) => (
         <ImagePostUploader
           mode="edit"
-          initial={post}
+          initial={data}
           onSubmit={async (post, information) => {
-            await api.tags.post(post.tags)
-            const result = await api.image.update(data()!.id, post, information)
-            navigate(`/images/${data()!.id}`, {
-              state: {
-                post: {
-                  ...result,
-                  profiles: author(),
-                },
-              },
-            })
+            await api.tags.post(data.post.tags)
+            await api.image.update(data.post.id, post, information)
+            navigate(`/images/${data.post.id}`)
           }}
           onDelete={async () => {
             modal({
@@ -76,10 +63,10 @@ export default function Upload() {
                         onClick={async () => {
                           setLoading(true)
                           await fetchImageMulti(
-                            post.information.map((v) => `post.image.${data()!.id}.${v.index}`),
+                            data.info.map((v) => `post.image.${data.post.id}.${v.index}`),
                             'DELETE',
                           )
-                          await api.image.delete(data()!.id)
+                          await api.image.delete(data.post.id)
                           setLoading(false)
                           close()
                           navigate('/dashboard/images')

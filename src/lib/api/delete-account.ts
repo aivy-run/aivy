@@ -2,7 +2,6 @@ import type { PostgrestResponse } from '@supabase/supabase-js'
 
 import { fetchImageMulti } from './cloudflare'
 import { signOut } from './internal/auth'
-import { api } from './supabase'
 
 import { supabase } from '~/lib/api/supabase/client'
 
@@ -12,15 +11,19 @@ const checkResult = (result: PostgrestResponse<any>) => {
 }
 
 export const deleteAccount = async (uid: string) => {
-    const posts = await api.image.list(undefined, undefined, false, { author: [uid] })
+    const { data, error } = await supabase.from('image_posts').select('*').eq('author', uid)
+    if (error) throw error
     await fetchImageMulti(
         [
             `user.icon.${uid}`,
             `user.header.${uid}`,
             `user.ogp.${uid}`,
-            ...posts.flatMap((post) =>
-                post.information.map((v) => `post.image.${post.id}.${v.index}`),
-            ),
+            ...data.flatMap((post) => {
+                const list: any[] = []
+                list.length = post.images
+                list.fill({})
+                return list.map((_, i) => `post.image.${post.id}.${i}`)
+            }),
         ],
         'DELETE',
         true,
