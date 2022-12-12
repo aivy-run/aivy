@@ -103,9 +103,9 @@ export const Posts: Component<Props> = (props) => {
     setLoading(true)
     const cacheKey = `${all}.${page}.${zoning}.${random}.${JSON.stringify(filter)}.${
       filter?.build?.toString().length
-    }.${fetchPosts?.toString()}`
+    }`
     const cached = cache[cacheKey]
-    if (cached) {
+    if (cached && !fetchPosts) {
       const now = dayjs().toDate().getTime()
       if (cached.expires > now) return cached.data
       else delete cache[cacheKey]
