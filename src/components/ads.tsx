@@ -13,7 +13,7 @@ export const ADS: Component<
 > = (props) => {
   const [local, others] = splitProps(props, ['class', 'adSlot'])
   onMount(() => {
-    window.adsbygoogle.push({})
+    ;(window.adsbygoogle || []).push({})
   })
   return (
     <ins
