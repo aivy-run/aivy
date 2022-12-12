@@ -3,6 +3,7 @@ import { isServer } from 'solid-js/web'
 import { Meta, useParams } from 'solid-start'
 import { useRequest } from 'solid-start/server'
 
+import { ADS } from '~/components/ads'
 import { NotFoundError } from '~/components/error-handler'
 import { FixedTitle } from '~/components/head/title'
 import { ImagePostView } from '~/components/image-post'
@@ -60,6 +61,7 @@ export default function Image() {
             <Show when={!isServer || !isTwitterBot()}>
               <ImagePostView post={post} info={info} />
             </Show>
+            <ADS adSlot="AIVY_PAGE_IMAGE" />
           </>
         )}
       </Show>
