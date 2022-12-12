@@ -1,4 +1,5 @@
 import { Component, ComponentProps, onMount, splitProps } from 'solid-js'
+import { NoHydration } from 'solid-js/web'
 
 import { classnames } from '~/lib/classnames'
 
@@ -13,19 +14,25 @@ export const ADS: Component<
 > = (props) => {
   const [local, others] = splitProps(props, ['class', 'adSlot'])
   onMount(() => {
-    ;(window.adsbygoogle || []).push({})
+    try {
+      ;(window.adsbygoogle || []).push({})
+    } catch (error) {
+      console.error(error)
+    }
   })
   return (
-    <ins
-      class={classnames('adsbygoogle', local.class)}
-      {...others}
-      style={{ display: 'block' }}
-      data-ad-client={import.meta.env['VITE_ADSENSE_ID']}
-      data-ad-slot={SLOTMAP[local.adSlot]}
-      data-ad-format="auto"
-      data-full-width-responsive="true"
-      data-adtest={import.meta.env.DEV ? 'on' : 'off'}
-    />
+    <NoHydration>
+      <ins
+        class={classnames('adsbygoogle', local.class)}
+        {...others}
+        style={{ display: 'block' }}
+        data-ad-client={import.meta.env['VITE_ADSENSE_ID']}
+        data-ad-slot={SLOTMAP[local.adSlot]}
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+        data-adtest={import.meta.env.DEV ? 'on' : 'off'}
+      />
+    </NoHydration>
   )
 }
 

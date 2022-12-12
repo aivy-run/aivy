@@ -11,6 +11,7 @@ import {
 import { useSearchParams } from 'solid-start'
 import { css, styled, useTheme } from 'solid-styled-components'
 
+import { ADS } from '../ads'
 import { Pagination } from '../ui/pagination'
 import { Buttons } from './buttons'
 import { Information } from './information'
@@ -235,6 +236,14 @@ export const ImagePostView: Component<{
           </div>
           <Comments id={props.post.id} />
         </ZoningFilter>
+        <div
+          class={css`
+            text-align: center;
+            width: 100%;
+          `}
+        >
+          <ADS adSlot="AIVY_PAGE_IMAGE" />
+        </div>
       </Container>
     </Context.Provider>
   )
