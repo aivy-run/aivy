@@ -94,8 +94,8 @@ const Root = () => {
         <Providers>
           <SolidNProgress color="#3ea8ff" />
           <Container>
+            <Header />
             <ErrorBoundary fallback={(err) => <ErrorHandler error={err} />}>
-              <Header />
               <main>
                 <Suspense>
                   <Maintenance>
@@ -105,8 +105,8 @@ const Root = () => {
                   </Maintenance>
                 </Suspense>
               </main>
-              <Footer />
             </ErrorBoundary>
+            <Footer />
           </Container>
         </Providers>
         <Scripts />
