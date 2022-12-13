@@ -72,8 +72,6 @@ export const Posts: Component<Props> = (props) => {
     accessor: [, profile],
   } = useUser(true)
 
-  console.log('render')
-
   const [search] = useSearchParams<{ page: string }>()
   const page = createMemo(() => parseInt(search.page || '') || 1)
   const [zoning, setZoning] = createSignal<Zoning[]>(['normal'])
@@ -96,7 +94,6 @@ export const Posts: Component<Props> = (props) => {
     profile: UserProfile['Row'] | undefined
     fetchPosts: Props['fetchPosts']
   }) => {
-    console.log('fetch')
     filter = filter || {}
     setLoading(true)
     const cacheKey = `${all}.${page}.${zoning}.${random}.${JSON.stringify(filter)}.${
@@ -144,7 +141,6 @@ export const Posts: Component<Props> = (props) => {
   const [data, setData] = createSignal<Awaited<ReturnType<typeof fetcher>>>()
 
   createEffect(() => {
-    console.log(isFetching())
     if (isFetching()) return
     fetcher(fetchData()).then(setData)
   })
