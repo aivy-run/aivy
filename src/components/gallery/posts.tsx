@@ -72,10 +72,12 @@ export const Posts: Component<Props> = (props) => {
     accessor: [, profile],
   } = useUser(true)
 
+  console.log('render')
+
   const [search] = useSearchParams<{ page: string }>()
   const page = createMemo(() => parseInt(search.page || '') || 1)
   const [zoning, setZoning] = createSignal<Zoning[]>(['normal'])
-  const [loading, setLoading] = createSignal(true)
+  const [loading, setLoading] = createSignal(false)
 
   const fetcher = async ({
     all,
@@ -83,7 +85,6 @@ export const Posts: Component<Props> = (props) => {
     zoning,
     random,
     filter,
-    isFetching,
     profile,
     fetchPosts,
   }: {
@@ -92,11 +93,11 @@ export const Posts: Component<Props> = (props) => {
     zoning: Zoning[]
     random: boolean
     filter: Props['filter']
-    isFetching: boolean
     profile: UserProfile['Row'] | undefined
     fetchPosts: Props['fetchPosts']
   }) => {
-    if (isFetching) return
+    console.log('fetch')
+    filter = filter || {}
     setLoading(true)
     const cacheKey = `${all}.${page}.${zoning}.${random}.${JSON.stringify(filter)}.${
       filter?.build?.toString().length
@@ -110,17 +111,16 @@ export const Posts: Component<Props> = (props) => {
       } else delete cache[cacheKey]
     }
     const fn = fetchPosts || getPostsData
-    const f = { ...filter }
     if (profile) {
       const muted = await api.mute.list(profile.uid)
-      if (muted) f!._mute = muted.map((v) => v.target)
-      f._zoning = profile.zoning
+      if (muted) filter!._mute = muted.map((v) => v.target)
+      filter._zoning = profile.zoning
     } else {
-      f._zoning = ['normal']
+      filter._zoning = ['normal']
     }
-    if (props.zoningButton) f.zoning = zoning
+    if (props.zoningButton) filter.zoning = zoning
 
-    const postData = await fn(all, page, random, f)
+    const postData = await fn(all, page, random, filter)
     const data = {
       ...postData,
       page,
@@ -132,19 +132,22 @@ export const Posts: Component<Props> = (props) => {
     setLoading(false)
     return data
   }
-  const fetchData = () => ({
+  const fetchData = createMemo(() => ({
     all: props.all,
     page: page(),
     zoning: zoning(),
     random: !!props.random,
-    filter: props.filter,
-    isFetching: isFetching(),
+    filter: { ...props.filter },
     profile: profile(),
     fetchPosts: props.fetchPosts,
-  })
+  }))
   const [data, setData] = createSignal<Awaited<ReturnType<typeof fetcher>>>()
 
-  createEffect(() => fetcher(fetchData()).then(setData))
+  createEffect(() => {
+    console.log(isFetching())
+    if (isFetching()) return
+    fetcher(fetchData()).then(setData)
+  })
 
   createEffect(() => {
     const posts = data()?.posts

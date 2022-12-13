@@ -4,7 +4,6 @@ import {
   Accessor,
   Component,
   createContext,
-  createEffect,
   createMemo,
   createResource,
   createSignal,
@@ -113,11 +112,6 @@ export const UserProvider: Component<{ children: JSX.Element }> = (props) => {
     if (!user) setIsFetching(false)
     return user
   }
-  const [user, { mutate: mutateUser }] = createResource(fetchUser)
-  onMount(() => {
-    if (!user() && isFetching()) fetchUser().then(mutateUser)
-  })
-
   const fetchProfile = async (id: string) => {
     if (!id) return
     const profile = await api.user.get(id)
@@ -129,9 +123,11 @@ export const UserProvider: Component<{ children: JSX.Element }> = (props) => {
     return profile
   }
 
+  const [user, { mutate: mutateUser }] = createResource(fetchUser)
   const [profile, { mutate: mutateProfile }] = createResource(() => user()?.id, fetchProfile)
-  createEffect(() => {
-    if (user()) fetchProfile(user()!.id).then(mutateProfile)
+  onMount(() => {
+    if (!user() && isFetching()) fetchUser().then(mutateUser)
+    setIsFetching(!(user() && profile()))
   })
 
   const update = async (userProfile: UserProfile['Update']) => {

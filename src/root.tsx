@@ -27,10 +27,10 @@ import { ToastProvider } from './components/ui/toast'
 import { UserProvider } from './context/user'
 import { ThemeProvider } from './styles/theme'
 
+import 'dayjs/locale/ja'
+
 import './styles/global.css'
 import 'solid-slider/slider.css'
-
-import 'dayjs/locale/ja'
 
 dayjs.locale('ja')
 dayjs.extend(duration)
@@ -38,7 +38,9 @@ dayjs.extend(duration)
 const Providers: Component<{ children: JSX.Element }> = (props) => (
   <ThemeProvider>
     <ToastProvider>
-      <ModalProvider>{props.children}</ModalProvider>
+      <ModalProvider>
+        <UserProvider>{props.children}</UserProvider>
+      </ModalProvider>
     </ToastProvider>
   </ThemeProvider>
 )
@@ -92,21 +94,19 @@ const Root = () => {
         <Providers>
           <SolidNProgress color="#3ea8ff" />
           <Container>
-            <UserProvider>
-              <ErrorBoundary fallback={(err) => <ErrorHandler error={err} />}>
-                <Header />
-                <main>
-                  <Suspense>
-                    <Maintenance>
-                      <Routes>
-                        <FileRoutes />
-                      </Routes>
-                    </Maintenance>
-                  </Suspense>
-                </main>
-                <Footer />
-              </ErrorBoundary>
-            </UserProvider>
+            <ErrorBoundary fallback={(err) => <ErrorHandler error={err} />}>
+              <Header />
+              <main>
+                <Suspense>
+                  <Maintenance>
+                    <Routes>
+                      <FileRoutes />
+                    </Routes>
+                  </Maintenance>
+                </Suspense>
+              </main>
+              <Footer />
+            </ErrorBoundary>
           </Container>
         </Providers>
         <Scripts />
