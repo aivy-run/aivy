@@ -1,6 +1,5 @@
 import type { UploadFile } from '@solid-primitives/upload'
 import Color from 'color'
-import exifr from 'exifr'
 import { Component, createEffect, createSignal, For, Show } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { css, styled, useTheme } from 'solid-styled-components'
@@ -21,7 +20,8 @@ import { TextArea } from '~/components/ui/textarea'
 import { createImageURL } from '~/lib/api/cloudflare'
 import { api } from '~/lib/api/supabase'
 import type { CompleteImagePost, ImageInformation, ImagePost } from '~/lib/api/supabase/images'
-import { parseExif } from '~/lib/parse-exif'
+import { parseMetadata } from '~/lib/parse-png-meta'
+import { loadMeta } from '~/lib/png-meta'
 
 const Container = styled.div`
   display: flex;
@@ -141,8 +141,8 @@ export const ImagePostUploader: Component<Props> = (props) => {
               }
               filtered.push(file)
 
-              const exif = await exifr.parse(file.source)
-              const info = { ...(autoLoad() ? parseExif(exif) : {}) }
+              const meta = await loadMeta(file.file)
+              const info = { ...(autoLoad() ? parseMetadata(meta) : {}) }
               setInformation(parseInt(i), info)
             }
             setImages(filtered)

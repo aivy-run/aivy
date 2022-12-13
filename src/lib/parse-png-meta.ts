@@ -1,6 +1,6 @@
 import type { ImageInformation } from '~/lib/api/supabase/images'
 
-const parseAutomatic1111Exif = (parameters: string) => {
+const parseAutomatic1111Meta = (parameters: string) => {
     const result: Partial<ImageInformation['Update']> = {}
     const prompt = parameters.split(/\nNegative prompt:/)[0]
     const negative_prompt = parameters.split(/\nNegative prompt:/)[1]?.split(/Steps: \d+/)[0]
@@ -29,9 +29,9 @@ const parseAutomatic1111Exif = (parameters: string) => {
     return result
 }
 
-const parseNovelAIExif = (exif: Record<string, any>) => {
-    const comment = JSON.parse(exif['Comment'])
-    const prompt = exif['Description']
+const parseNovelAIMeta = (meta: Record<string, any>) => {
+    const comment = JSON.parse(meta['Comment'])
+    const prompt = meta['Description']
     const result: Partial<ImageInformation['Update']> = {
         prompt,
         negative_prompt: comment['uc'],
@@ -39,12 +39,12 @@ const parseNovelAIExif = (exif: Record<string, any>) => {
         sampler: `${comment['sampler']}`,
         cfg_scale: parseInt(comment['scale']),
         seed: `${comment['seed']}`,
-        model: `${exif['Software']}`,
+        model: `${meta['Software']}`,
     }
     return result
 }
 
-export const parseExif = (exif: any) => {
-    if (exif?.['parameters']) return parseAutomatic1111Exif(exif['parameters'] as string)
-    else if (exif?.['Software'] === 'NovelAI') return parseNovelAIExif(exif)
+export const parseMetadata = (meta: any) => {
+    if (meta?.['parameters']) return parseAutomatic1111Meta(meta['parameters'] as string)
+    else if (meta?.['Software'] === 'NovelAI') return parseNovelAIMeta(meta)
 }
