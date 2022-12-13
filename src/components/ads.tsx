@@ -1,5 +1,6 @@
 import { Component, ComponentProps, onMount, splitProps } from 'solid-js'
 import { NoHydration } from 'solid-js/web'
+import { css } from 'solid-styled-components'
 
 import { classnames } from '~/lib/classnames'
 
@@ -25,7 +26,15 @@ export const ADS: Component<
     <NoHydration>
       <ins
         {...others}
-        class={classnames('adsbygoogle', local.class)}
+        class={classnames(
+          'adsbygoogle',
+          css`
+            iframe {
+              background-color: ${import.meta.env.DEV ? 'red' : ''};
+            }
+          `,
+          local.class,
+        )}
         style={{ display: 'block' }}
         data-ad-client={import.meta.env['VITE_ADSENSE_ID']}
         data-ad-slot={SLOTMAP[local.adSlot]}
