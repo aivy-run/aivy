@@ -1,3 +1,4 @@
+import devtools from 'solid-devtools/vite'
 import solid from 'solid-start/vite'
 import { FileSystemIconLoader } from 'unplugin-icons/loaders'
 import Icons from 'unplugin-icons/vite'
@@ -14,6 +15,10 @@ export default defineConfig({
                 thirdparty: FileSystemIconLoader('./src/assets/icons/thirdparty'),
                 aivy: FileSystemIconLoader('./src/assets/icons/aivy'),
             },
+        }),
+        devtools({
+            name: true,
+            componentLocation: true,
         }),
         solid({
             adapter: 'solid-start-netlify',
