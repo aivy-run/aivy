@@ -5,7 +5,6 @@ import { createStore } from 'solid-js/store'
 import { css, styled, useTheme } from 'solid-styled-components'
 
 import { Tab, Tabs } from '../ui/tab'
-import { ContestSelect } from './contest-select'
 import { ImageInformationForm } from './image-information'
 
 import { ImageUpload } from '~/components/image-post-form/image-upload'
@@ -337,15 +336,6 @@ export const ImagePostUploader: Component<Props> = (props) => {
               setData('tags', (prev) => [...(prev || []), v])
             }}
           />
-          <br />
-          <Show when={props.mode === 'post'}>
-            <ContestSelect
-              onSelect={(id) => {
-                if (id) setData('contest_id', id)
-                else setData('contest_id', undefined)
-              }}
-            />
-          </Show>
           <br />
           <HStack>
             <Button
