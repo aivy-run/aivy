@@ -6,6 +6,7 @@ import { styled } from 'solid-styled-components'
 import { Posts } from '~/components/gallery/posts'
 import { FixedTitle } from '~/components/head/title'
 import { InternalAD } from '~/components/internal-ad'
+import { Notes } from '~/components/note-list/notes'
 import { Tags } from '~/components/tags'
 import { ZoningSelector } from '~/components/zoning-selector'
 import { useUser } from '~/context/user'
@@ -81,6 +82,14 @@ export default function Index() {
             }}
           />
           <MoreButton href="/images/ranking/daily">もっと見る→</MoreButton>
+        </Inner>
+        <Inner>
+          <Notes
+            title="最新のノート"
+            all={4}
+            pagination={false}
+            filter={{ latest: true, published: true }}
+          />
         </Inner>
         <Inner>
           <Posts

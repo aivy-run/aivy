@@ -5,7 +5,6 @@ import { css, styled, useTheme } from 'solid-styled-components'
 
 import { Fallback } from './ui/fallback'
 
-import NETA_CONTEST_PNG from '~/assets/images/ad/neta-contest.png'
 import OFFICIAL_DISCORD_PNG from '~/assets/images/ad/official-discord.png'
 import OFFICIAL_TWITTER_PNG from '~/assets/images/ad/official-twitter.png'
 import Left from '~icons/carbon/chevron-left'
@@ -60,10 +59,6 @@ const ADS: {
     image: OFFICIAL_DISCORD_PNG,
     url: 'https://discord.gg/9NqyGWHHQu',
     target: '_blank',
-  },
-  {
-    image: NETA_CONTEST_PNG,
-    url: '/contests/1',
   },
   {
     image: OFFICIAL_TWITTER_PNG,

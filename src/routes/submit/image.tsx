@@ -2,7 +2,7 @@ import { createSignal } from 'solid-js'
 import { useNavigate } from 'solid-start'
 
 import { FixedTitle } from '~/components/head/title'
-import { ImagePostUploader } from '~/components/image-post-form/image-post-uploader'
+import { ImagePostUploader } from '~/components/image-post-form'
 import { useModal } from '~/components/ui/modal'
 import { WithUser } from '~/components/with-user'
 import { createDirectUploadUrl, uploadImage } from '~/lib/api/cloudflare'

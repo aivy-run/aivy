@@ -21,6 +21,7 @@ const ModalContainer = styled.div<{ show: boolean }>`
   display: flex;
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   align-items: center;
   justify-content: center;
   opacity: ${(p) => (p.show ? '1' : '0')};
@@ -35,6 +36,7 @@ const ModalBackground = styled.div<{ show: boolean }>`
   left: 0;
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   background-color: rgba(0, 0, 0, ${(p) => (p.show ? '0.75' : '0')});
   pointer-events: none;
   transition: 0.2s ease-in-out;

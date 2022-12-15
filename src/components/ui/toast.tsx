@@ -34,6 +34,7 @@ const ToastContainer = styled.div`
   left: 0;
   display: flex;
   height: 100vh;
+  height: 100dvh;
   flex-direction: column-reverse;
   padding: 1rem;
   gap: 1rem;

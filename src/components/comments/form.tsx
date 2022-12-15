@@ -1,8 +1,8 @@
 import { Accessor, Component, createContext, createEffect, createSignal, Setter } from 'solid-js'
 import { css, styled } from 'solid-styled-components'
 
-import { Button } from '../../ui/button'
-import { TextArea } from '../../ui/textarea'
+import { Button } from '../ui/button'
+import { TextArea } from '../ui/textarea'
 
 import type { CompleteComment } from '~/lib/api/supabase/comments'
 

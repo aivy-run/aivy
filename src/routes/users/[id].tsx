@@ -255,27 +255,32 @@ export default function User() {
                 <br />
                 <Tabs>
                   <Tab selected={location.pathname === `/users/${user.id}`}>
-                    <A href="./" state={{ user: user }}>
-                      投稿
+                    <A href="./" state={{ user: user }} noScroll>
+                      画像
+                    </A>
+                  </Tab>
+                  <Tab selected={location.pathname === `/users/${user.id}/note`}>
+                    <A href="./note" state={{ user: user }} noScroll>
+                      ノート
                     </A>
                   </Tab>
                   <Tab selected={location.pathname === `/users/${user.id}/followers`}>
-                    <A href="./followers" state={{ user: user }}>
+                    <A href="./followers" state={{ user: user }} noScroll>
                       フォロワー ({user.followers + offset()})
                     </A>
                   </Tab>
                   <Tab selected={location.pathname === `/users/${user.id}/follows`}>
-                    <A href="./follows" state={{ user: user }}>
+                    <A href="./follows" state={{ user: user }} noScroll>
                       フォロー ({user.follows || 0})
                     </A>
                   </Tab>
                   <Tab selected={location.pathname === `/users/${user.id}/likes`}>
-                    <A href="./likes" state={{ user: user }}>
+                    <A href="./likes" state={{ user: user }} noScroll>
                       いいね
                     </A>
                   </Tab>
                   <Tab selected={location.pathname === `/users/${user.id}/others`}>
-                    <A href="./others" state={{ user: user }}>
+                    <A href="./others" state={{ user: user }} noScroll>
                       その他
                     </A>
                   </Tab>

@@ -61,7 +61,6 @@ const I = 5
 export const Notifications: Component = () => {
   const {
     accessor: [, profile],
-    util: { withUser },
   } = useUser()
   const theme = useTheme()
   let ref: HTMLDivElement
@@ -242,6 +241,46 @@ export const Notifications: Component = () => {
                         </Match>
                         <Match when={v.type === 'image_post_comment_reply'}>
                           <A href={`/images/${v.target_image_post?.id}`}>
+                            <span
+                              class={css`
+                                font-weight: bold;
+                              `}
+                            >
+                              {v.author.username}
+                            </span>
+                            さんがあなたのコメントに返信しました。
+                          </A>
+                        </Match>
+                        <Match when={v.type === 'note_post_like'}>
+                          <A href={`/notes/${v.target_note_post?.id}`}>
+                            <span
+                              class={css`
+                                font-weight: bold;
+                              `}
+                            >
+                              {v.author.username}
+                            </span>
+                            さんが
+                            <span>{truncate(v.target_note_post?.title || '')}</span>
+                            にいいね！しました。
+                          </A>
+                        </Match>
+                        <Match when={v.type === 'note_post_comment'}>
+                          <A href={`/notes/${v.target_note_post?.id}`}>
+                            <span
+                              class={css`
+                                font-weight: bold;
+                              `}
+                            >
+                              {v.author.username}
+                            </span>
+                            さんが
+                            <span>{truncate(v.target_note_post?.title || '')}</span>
+                            にコメントしました。
+                          </A>
+                        </Match>
+                        <Match when={v.type === 'note_post_comment_reply'}>
+                          <A href={`/notes/${v.target_note_post?.id}`}>
                             <span
                               class={css`
                                 font-weight: bold;

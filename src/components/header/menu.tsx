@@ -1,5 +1,5 @@
 import { createSignal, Show } from 'solid-js'
-import { A } from 'solid-start'
+import { A, useNavigate } from 'solid-start'
 import { css, styled, useTheme } from 'solid-styled-components'
 
 import { IconImg } from '../ui/icon-img'
@@ -8,11 +8,13 @@ import { Line } from '../ui/line'
 import { useUser } from '~/context/user'
 import { useFloating } from '~/hooks/use-floating'
 import { signOut } from '~/lib/api/internal/auth'
+import { postNote } from '~/lib/api/internal/post-note'
 import { classnames } from '~/lib/classnames'
 import IconAddAlt from '~icons/carbon/add-alt'
 import IconBookmark from '~icons/carbon/bookmark'
-import IconImage from '~icons/carbon/image'
+import IconDashboard from '~icons/carbon/dashboard'
 import IconSettings from '~icons/carbon/settings'
+import IconEditNote from '~icons/material-symbols/edit-note'
 
 const Container = styled.div`
   position: absolute;
@@ -64,8 +66,9 @@ export const Menu = () => {
     accessor: [, profile],
     status: { isFetching },
   } = useUser()
-  const [loading, setLoading] = createSignal(false)
   const theme = useTheme()
+  const navigate = useNavigate()
+  const [loading, setLoading] = createSignal(false)
 
   let ref: HTMLDivElement
   const [open, setOpen] = useFloating(() => ref!)
@@ -122,7 +125,7 @@ export const Menu = () => {
           </div>
         </A>
         <Line />
-        <A href="/upload" onClick={toggle}>
+        <A href="/submit/image" onClick={toggle}>
           <MenuItem>
             <span>
               <IconAddAlt />
@@ -130,15 +133,27 @@ export const Menu = () => {
             画像を投稿
           </MenuItem>
         </A>
+        <MenuItem
+          onClick={async () => {
+            const data = await postNote()
+            navigate(`/dashboard/notes/${data.id}/edit`)
+            toggle()
+          }}
+        >
+          <span>
+            <IconEditNote />
+          </span>
+          ノートを投稿
+        </MenuItem>
         <A href="/dashboard/images" onClick={toggle}>
           <MenuItem>
             <span>
-              <IconImage />
+              <IconDashboard />
             </span>
-            投稿を管理
+            ダッシュボード
           </MenuItem>
         </A>
-        <A href="/dashboard/bookmarks" onClick={toggle}>
+        <A href="/bookmarks/image" onClick={toggle}>
           <MenuItem>
             <span>
               <IconBookmark />

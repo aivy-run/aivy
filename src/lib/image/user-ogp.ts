@@ -1,50 +1,11 @@
 import type { UploadFile } from '@solid-primitives/upload'
 
-import { createImageURL } from './api/cloudflare'
+import { createImageURL } from '../api/cloudflare'
+import { makeCircle, waitImageLoaded } from './util'
 
 import type { UserProfile } from '~/lib/api/supabase/user'
 
-const waitImageLoaded = (image: HTMLImageElement) => {
-    return new Promise<void>((resolve, reject) => {
-        if (image.complete) resolve()
-        image.onload = () => resolve()
-        image.onerror = (e) => reject(e)
-    })
-}
-
-const fetchImage = async (url: string) => {
-    const res = await fetch(url)
-    if (res.status !== 200) throw new Error(await res.text())
-    const blob = await res.blob()
-    const base64 = await new Promise<string>((resolve, _) => {
-        const reader = new FileReader()
-        reader.onloadend = () => resolve(reader.result as string)
-        reader.readAsDataURL(blob)
-    })
-    return base64
-}
-
-const createIcon = async (url: string) => {
-    const base64 = await fetchImage(url)
-    const icon = new Image()
-    icon.src = base64
-    await waitImageLoaded(icon)
-    const canvas = document.createElement('canvas')
-    const cw = (canvas.width = 200),
-        ch = (canvas.height = 200)
-    const ctx = canvas.getContext('2d')!
-    ctx.drawImage(icon, 0, 0)
-
-    ctx.globalCompositeOperation = 'destination-in'
-    ctx.beginPath()
-    ctx.arc(cw / 2, ch / 2, ch / 2, 0, Math.PI * 2)
-    ctx.closePath()
-    ctx.fill()
-
-    return canvas.toDataURL('image/png')
-}
-
-export const createOgp = async (
+export const createUserOgp = async (
     profile: UserProfile['Row'],
     headerFile?: UploadFile,
     iconFile?: UploadFile,
@@ -53,12 +14,15 @@ export const createOgp = async (
     const ctx = canvas.getContext('2d')!
     const background = new Image()
     const icon = new Image()
-    icon.src = iconFile
-        ? iconFile.source
-        : await createIcon(createImageURL(`user.icon.${profile.uid}`, 'icon'))
+    icon.src = iconFile ? iconFile.source : createImageURL(`user.icon.${profile.uid}`, 'icon')
     background.src = headerFile
         ? headerFile.source
-        : await fetchImage(createImageURL(`user.header.${profile.uid}`, 'ogp'))
+        : createImageURL(`user.header.${profile.uid}`, 'ogp')
+    if (import.meta.env.DEV) {
+        background.crossOrigin = icon.crossOrigin = 'Anonymous'
+    }
+
+    await makeCircle(icon)
 
     await waitImageLoaded(background)
     await waitImageLoaded(icon)

@@ -18,7 +18,7 @@ import {
   uploadImage,
 } from '~/lib/api/cloudflare'
 import type { UserProfile } from '~/lib/api/supabase/user'
-import { createOgp } from '~/lib/create-ogp'
+import { createUserOgp } from '~/lib/image/user-ogp'
 
 export default function Profile() {
   const theme = useTheme()
@@ -207,7 +207,7 @@ export default function Profile() {
               const res = await fetchImage(ogpId)
               if (res.ok) await fetchImage(ogpId, { method: 'DELETE' })
               try {
-                const ogp = await createOgp(profile(), header, icon)
+                const ogp = await createUserOgp(profile(), header, icon)
                 const url = await createDirectUploadUrl()
                 await uploadImage(url, new File([ogp], 'ogp.png'), ogpId)
                 await deleteCache(ogpId, 'ogp')

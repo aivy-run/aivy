@@ -1,4 +1,3 @@
-import { Show } from 'solid-js'
 import { A, Outlet, useLocation } from 'solid-start'
 import { css, styled } from 'solid-styled-components'
 
@@ -20,28 +19,26 @@ const Container = styled(WithUser)`
   }
 `
 
-export default function DashBoard() {
+export default function Bookmarks() {
   const location = useLocation()
   return (
     <>
-      <FixedTitle>ダッシュボード | Aivy</FixedTitle>
+      <FixedTitle>ブックマーク | Aivy</FixedTitle>
       <Container redirectWhenGuest>
-        <Show when={location.pathname.split('/').length < 4}>
-          <h1>ダッシュボード</h1>
-          <br />
-          <Tabs
-            class={css`
-              margin-bottom: 0.5rem;
-            `}
-          >
-            <Tab selected={location.pathname === '/dashboard/images'}>
-              <A href="/dashboard/images">画像管理</A>
-            </Tab>
-            <Tab selected={location.pathname === '/dashboard/notes'}>
-              <A href="/dashboard/notes">ノート管理</A>
-            </Tab>
-          </Tabs>
-        </Show>
+        <h1>ブックマーク</h1>
+        <br />
+        <Tabs
+          class={css`
+            margin-bottom: 0.5rem;
+          `}
+        >
+          <Tab selected={location.pathname === '/bookmarks/image'}>
+            <A href="/bookmarks/image">画像</A>
+          </Tab>
+          <Tab selected={location.pathname === '/bookmarks/note'}>
+            <A href="/bookmarks/note">ノート</A>
+          </Tab>
+        </Tabs>
         <Outlet />
       </Container>
     </>

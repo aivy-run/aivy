@@ -1,14 +1,19 @@
 import { supabase } from './client'
+import type { Comment } from './comments'
 import type { ImagePost } from './images'
+import type { NotePost } from './notes'
 
 import type { UserProfile } from '~/lib/api/supabase/user'
 import type { Database } from '~supabase/database.types'
 
 const NotificationType = [
     'image_post_like',
+    'note_post_like',
     'comment_like',
     'image_post_comment',
     'image_post_comment_reply',
+    'note_post_comment',
+    'note_post_comment_reply',
     'relationship',
 ] as const
 
@@ -21,6 +26,8 @@ export type CompleteNotification = Omit<
     type: NotificationType
     author: UserProfile['Row']
     target_image_post?: ImagePost['Row']
+    target_note_post?: NotePost['Row']
+    target_comment?: Comment['Row']
     target_user: UserProfile['Row']
 }
 
@@ -45,7 +52,10 @@ export class NotificationApi {
         if (count) options.count = count
         const builder = supabase
             .from('notifications')
-            .select('*, target_image_post(*), target_user!inner(*), author!inner(*)', options)
+            .select(
+                '*, target_image_post(*), target_note_post(*), target_user!inner(*), author!inner(*)',
+                options,
+            )
 
         if (filter?.latest) builder.order('id', { ascending: false })
         if (filter?.limit && !filter.since) builder.limit(filter.limit)
@@ -58,7 +68,7 @@ export class NotificationApi {
 
         return builder
     }
-    public async list(filter: NotificationFilter) {
+    public async list(filter: NotificationFilter): Promise<CompleteNotification[]> {
         const builder = this.createBuilder(filter)
         const { data, error, status } = await builder
         if (status === 406) return []

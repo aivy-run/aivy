@@ -13,13 +13,13 @@ import { css, styled, useTheme } from 'solid-styled-components'
 
 import { ADS } from '../ads'
 import { Pagination } from '../ui/pagination'
-import { Buttons } from './buttons'
 import { Information } from './information'
 import { MetaInfo, UserInfo } from './meta'
+import { ReactionButton } from './reaction-button'
 import { View } from './view'
 import { ZoningFilter } from './zoning-filter'
 
-import { Comments } from '~/components/image-post/comments'
+import { Comments } from '~/components/comments'
 import { HStack, VStack } from '~/components/ui/stack'
 import { useUser } from '~/context/user'
 import { api } from '~/lib/api/supabase'
@@ -82,7 +82,7 @@ export const ImagePostView: Component<{
     withUser(([me]) => {
       api.image.increaseViews(props.post.id)
       api.like.isLiked(props.post.id, 'image_post', me.id).then(setLiked)
-      api.bookmark.isBookmarked(props.post.id, me.id).then(setBookmarked)
+      api.bookmark.isBookmarked(props.post.id, 'image_post', me.id).then(setBookmarked)
     })
   })
 
@@ -137,7 +137,7 @@ export const ImagePostView: Component<{
               `}
             >
               <UserInfo />
-              <Buttons />
+              <ReactionButton type="image_post" />
               <HStack
                 class={css`
                   padding: 0.25rem;
@@ -234,12 +234,12 @@ export const ImagePostView: Component<{
               <Information />
             </div>
           </div>
-          <Comments id={props.post.id} />
+          <Comments id={props.post.id} commentable_type="image_post" />
         </ZoningFilter>
         <div
           class={css`
-            text-align: center;
             width: 100%;
+            text-align: center;
           `}
         >
           <ADS adSlot="AIVY_PAGE_IMAGE" format="horizontal" />

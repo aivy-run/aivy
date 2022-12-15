@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import {
   Component,
   createEffect,
@@ -21,7 +22,11 @@ import { api } from '~/lib/api/supabase'
 import type { Bookmark } from '~/lib/api/supabase/bookmarks'
 import type { CompleteImagePost } from '~/lib/api/supabase/images'
 import type { Like } from '~/lib/api/supabase/like'
+import IconBookmark from '~icons/carbon/bookmark'
+import IconChat from '~icons/carbon/chat'
+import IconFavorite from '~icons/carbon/favorite'
 import IconImage from '~icons/carbon/image'
+import IconView from '~icons/carbon/view'
 
 const WIDTH = 220
 const GAP = 14
@@ -80,6 +85,7 @@ export const Gallery: Component<{
   posts: CompleteImagePost[]
   page: number
   all: number
+  editable?: boolean
   scroll?: boolean
   ranking?: boolean
 }> = (props) => {
@@ -90,7 +96,7 @@ export const Gallery: Component<{
   const navigate = useNavigate()
   const [likes, setLikes] = createSignal<Like['Row'][]>([])
   const [bookmarks, setBookmarks] = createSignal<Bookmark['Row'][]>([])
-  const [remainder, setRemainder] = createSignal<any[]>([null, null, null, null, null, null])
+  const [remainder, setRemainder] = createSignal<any[]>(Array(6).fill(null))
 
   let ref: HTMLDivElement
 
@@ -99,7 +105,7 @@ export const Gallery: Component<{
     const result: any[] = []
     if (count < 1) return
     result.length = count
-    setRemainder(result)
+    setRemainder(result.fill(null))
   }
 
   onMount(() => {
@@ -149,7 +155,7 @@ export const Gallery: Component<{
           return (
             <ImageBox>
               <A
-                href={`/images/${post.id}`}
+                href={props.editable ? `/dashboard/images/${post.id}/edit` : `/images/${post.id}`}
                 class={css`
                   position: relative;
                   display: flex;
@@ -221,124 +227,187 @@ export const Gallery: Component<{
                   </div>
                 </Show>
               </A>
-              <div
-                class={css`
-                  display: grid;
-                  width: 100%;
-                  align-items: center;
-                  padding: 0.5rem;
-                  gap: 0.5rem;
-                  grid-template-columns: 80% 1fr;
-                  text-align: left;
+              <Show
+                when={props.editable}
+                fallback={
+                  <div
+                    class={css`
+                      display: grid;
+                      width: 100%;
+                      align-items: center;
+                      padding: 0.5rem;
+                      gap: 0.5rem;
+                      grid-template-columns: 80% 1fr;
+                      text-align: left;
 
-                  h1 {
-                    overflow: hidden;
-                    width: 100%;
-                    margin-bottom: 0.5rem;
-                    color: ${theme.$().colors.text.string()};
-                    font-size: 1rem;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                  }
-                  ${theme.$().media.breakpoints.lg} {
-                    padding: 0.5rem 1rem;
-                  }
-                `}
-              >
-                <div>
-                  <A
-                    href={`/images/${post.id}`}
-                    state={{
-                      post: {
-                        ...post,
-                        likes: post.likes + likeOffset(),
-                        bookmarks: post.bookmarks + bookmarkOffset(),
-                      },
-                    }}
+                      h1 {
+                        overflow: hidden;
+                        width: 100%;
+                        margin-bottom: 0.5rem;
+                        color: ${theme.$().colors.text.string()};
+                        font-size: 1rem;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                      }
+                      ${theme.$().media.breakpoints.lg} {
+                        padding: 0.5rem 1rem;
+                      }
+                    `}
                   >
-                    <h1>{post.title}</h1>
-                  </A>
-                  <A href={`/users/${post.profiles.id}`} state={{ user: post.profiles }}>
+                    <div>
+                      <A
+                        href={`/images/${post.id}`}
+                        state={{
+                          post: {
+                            ...post,
+                            likes: post.likes + likeOffset(),
+                            bookmarks: post.bookmarks + bookmarkOffset(),
+                          },
+                        }}
+                      >
+                        <h1>{post.title}</h1>
+                      </A>
+                      <A href={`/users/${post.profiles.id}`} state={{ user: post.profiles }}>
+                        <div
+                          class={css`
+                            display: flex;
+                            align-items: center;
+                            color: ${theme.$().colors.text.string()};
+                            font-size: 0.9rem;
+                            gap: 0.1rem;
+
+                            img {
+                              width: 30px;
+                              height: 30px;
+                              border: solid 0.25px black;
+                              border-radius: 50%;
+                              object-fit: cover;
+                            }
+
+                            ${theme.$().media.breakpoints.lg} {
+                              font-size: 1rem;
+                              gap: 0.5rem;
+                            }
+                          `}
+                        >
+                          <IconImg userId={post.profiles.uid} alt="" />
+                          <h5>{post.profiles.username}</h5>
+                        </div>
+                      </A>
+                    </div>
                     <div
                       class={css`
-                        display: flex;
-                        align-items: center;
-                        color: ${theme.$().colors.text.string()};
-                        font-size: 0.9rem;
-                        gap: 0.1rem;
-
-                        img {
-                          width: 30px;
-                          height: 30px;
-                          border: solid 0.25px black;
-                          border-radius: 50%;
-                          object-fit: cover;
-                        }
-
-                        ${theme.$().media.breakpoints.lg} {
-                          font-size: 1rem;
-                          gap: 0.5rem;
-                        }
+                        text-align: right;
                       `}
                     >
-                      <IconImg userId={post.profiles.uid} alt="" />
-                      <h5>{post.profiles.username}</h5>
+                      <FavButton
+                        selected={!!liked()}
+                        class={css`
+                          opacity: ${typeof liked() === 'boolean' ? '1' : '0'};
+                        `}
+                        onClick={async () => {
+                          withUser(
+                            async ([me], liked) => {
+                              if (liked) {
+                                await api.like.remove(post.id, 'image_post', me.id)
+                                setLikeOffset((prev) => prev - 1)
+                                setLiked(false)
+                              } else {
+                                await api.like.create(post.id, 'image_post')
+                                setLikeOffset((prev) => prev + 1)
+                                setLiked(true)
+                              }
+                            },
+                            () => navigate('/sign'),
+                            liked,
+                          )
+                        }}
+                      />
+                      <BookmarkButton
+                        selected={!!bookmarked()}
+                        class={css`
+                          opacity: ${typeof bookmarked() === 'boolean' ? '1' : '0'};
+                        `}
+                        onClick={async () => {
+                          withUser(
+                            async ([me], bookmarked) => {
+                              if (bookmarked) {
+                                await api.bookmark.remove(post.id, 'image_post', me.id)
+                                setBookmarkOffset((prev) => prev - 1)
+                                setBookmarked(false)
+                              } else {
+                                await api.bookmark.create(post.id, 'image_post')
+                                setBookmarkOffset((prev) => prev + 1)
+                                setBookmarked(true)
+                              }
+                            },
+                            () => navigate('/sign'),
+                            bookmarked,
+                          )
+                        }}
+                      />
                     </div>
-                  </A>
-                </div>
+                  </div>
+                }
+              >
                 <div
                   class={css`
-                    text-align: right;
+                    padding: 0.5rem;
+
+                    h1 {
+                      overflow: hidden;
+                      width: 100%;
+                      margin-bottom: 0.5rem;
+                      color: ${theme.$().colors.text.string()};
+                      font-size: 1rem;
+                      text-overflow: ellipsis;
+                      white-space: nowrap;
+                    }
+
+                    div:last-child {
+                      margin-top: 0.25rem;
+                      font-size: 0.8rem;
+                    }
                   `}
                 >
-                  <FavButton
-                    selected={!!liked()}
+                  <h1>{post.title}</h1>
+                  <div
                     class={css`
-                      opacity: ${typeof liked() === 'boolean' ? '1' : '0'};
+                      display: grid;
+                      font-size: 0.8rem;
+                      grid-template-columns: repeat(4, 1fr);
+
+                      svg {
+                        height: 100%;
+                      }
+
+                      & > div {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.25rem;
+                      }
                     `}
-                    onClick={async () => {
-                      withUser(
-                        async ([me], liked) => {
-                          if (liked) {
-                            await api.like.remove(post.id, 'image_post', me.id)
-                            setLikeOffset((prev) => prev - 1)
-                            setLiked(false)
-                          } else {
-                            await api.like.create(post.id, 'image_post')
-                            setLikeOffset((prev) => prev + 1)
-                            setLiked(true)
-                          }
-                        },
-                        () => navigate('/sign'),
-                        liked,
-                      )
-                    }}
-                  />
-                  <BookmarkButton
-                    selected={!!bookmarked()}
-                    class={css`
-                      opacity: ${typeof bookmarked() === 'boolean' ? '1' : '0'};
-                    `}
-                    onClick={async () => {
-                      withUser(
-                        async ([me], bookmarked) => {
-                          if (bookmarked) {
-                            await api.bookmark.remove(post.id, me.id)
-                            setBookmarkOffset((prev) => prev - 1)
-                            setBookmarked(false)
-                          } else {
-                            await api.bookmark.create(post.id)
-                            setBookmarkOffset((prev) => prev + 1)
-                            setBookmarked(true)
-                          }
-                        },
-                        () => navigate('/sign'),
-                        bookmarked,
-                      )
-                    }}
-                  />
+                  >
+                    <div>
+                      <IconFavorite />
+                      <div>{post.likes}</div>
+                    </div>
+                    <div>
+                      <IconView />
+                      <div>{post.views}</div>
+                    </div>
+                    <div>
+                      <IconBookmark />
+                      <div>{post.bookmarks}</div>
+                    </div>
+                    <div>
+                      <IconChat />
+                      <div>{post.comments}</div>
+                    </div>
+                  </div>
+                  <div>{dayjs(post.created_at).format('YYYY年MM月DD日')}</div>
                 </div>
-              </div>
+              </Show>
             </ImageBox>
           )
         }}
