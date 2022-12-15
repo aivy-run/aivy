@@ -16,7 +16,7 @@ export interface CloudflareImagesResponse<R extends Object> {
 
 const IMAGE_DELIVERY_URL = import.meta.env.DEV
     ? 'https://imagedelivery.net/' + import.meta.env['VITE_CLOUDFLARE_ACCOUNT_HASH']
-    : 'https://aivy.run/imagedeliverydelivery/'
+    : 'https://aivy.run/imagedelivery/delivery/'
 
 export const createImageURL = (id: string, variant = 'public') =>
     `${IMAGE_DELIVERY_URL}/${ID_PREFIX()}${id}/${variant}`
