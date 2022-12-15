@@ -5,5 +5,5 @@ export default function Images() {
   const {
     accessor: [me],
   } = useUser()
-  return <Posts all={20} filter={{ author: [me().id] }} editable />
+  return <Posts all={20} filter={{ author: [me().id] }} url="/dashboard/images" editable />
 }
