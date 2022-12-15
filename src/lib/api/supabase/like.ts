@@ -2,7 +2,7 @@ import { supabase } from './client'
 
 import type { Database } from '~supabase/database.types'
 
-const LikeTypes = ['image_post', 'comment'] as const
+const LikeTypes = ['image_post', 'note_post', 'comment'] as const
 export type LikeTypes = typeof LikeTypes[number]
 export type Like = Database['public']['Tables']['likes']
 export type CompleteLike = Omit<Like['Row'], 'type'> & {

@@ -3,7 +3,7 @@ import { ComponentProps, createEffect, createSignal, For, Show, splitProps } fro
 import type { Component } from 'solid-js'
 import { css, useTheme } from 'solid-styled-components'
 
-import { Button } from '../ui/button'
+import { Button } from './ui/button'
 
 import { classnames } from '~/lib/classnames'
 import IconAdd from '~icons/carbon/add'
@@ -73,14 +73,16 @@ export const ImageUpload: Component<
     multiple?: boolean
     editable?: boolean
   } & (
-      | { selectable: false }
+      | { selectable?: false | undefined }
       | { selectable: true; selected: number; onSelect: (i: number) => void }
     )
 > = (props) => {
   const theme = useTheme()
   const [images, setImages] = createSignal<UploadFile[]>([])
 
-  createEffect(() => setImages(props.images))
+  createEffect(() => {
+    setImages(props.images)
+  })
 
   const onDrop = async (files: UploadFile[]) => {
     if (!files) return
@@ -146,7 +148,7 @@ export const ImageUpload: Component<
                 <ImageBox
                   image={image}
                   removable={!!props.editable}
-                  selected={props.selectable && props.selected === i()}
+                  selected={!!props.selectable && props.selected === i()}
                   onSelect={() => props.selectable && props.onSelect(i())}
                   onDelete={() => {
                     const filtered = images().filter((p) => p.source !== image.source)

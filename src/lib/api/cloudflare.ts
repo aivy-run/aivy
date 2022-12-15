@@ -14,10 +14,12 @@ export interface CloudflareImagesResponse<R extends Object> {
     messages: any[]
 }
 
-const IMAGE_DELIVERY_URL = 'https://aivy.run/imagedelivery'
+const IMAGE_DELIVERY_URL = import.meta.env.DEV
+    ? 'https://imagedelivery.net/' + import.meta.env['VITE_CLOUDFLARE_ACCOUNT_HASH']
+    : 'https://aivy.run/imagedeliverydelivery/'
 
 export const createImageURL = (id: string, variant = 'public') =>
-    `${IMAGE_DELIVERY_URL}/delivery/${ID_PREFIX()}${id}/${variant}`
+    `${IMAGE_DELIVERY_URL}/${ID_PREFIX()}${id}/${variant}`
 
 export const createDirectUploadUrl = async <N>(
     count?: N,
@@ -63,7 +65,7 @@ export const uploadImage = async (url: string, file: File, id: string) => {
 
 export const deleteCache = async (id: string, variant: string) => {
     try {
-        await fetch(`${IMAGE_DELIVERY_URL}/delivery/caches/${ID_PREFIX()}${id}/${variant}`, {
+        await fetch(`${IMAGE_DELIVERY_URL}/caches/${ID_PREFIX()}${id}/${variant}`, {
             method: 'DELETE',
         })
         await fetch(createImageURL(id, variant), {

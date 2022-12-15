@@ -14,7 +14,6 @@ import { A, useNavigate } from 'solid-start'
 import { css, styled, useTheme } from 'solid-styled-components'
 
 import { CommentContext } from '.'
-import { useImagePost } from '..'
 import { CommentForm } from './form'
 
 import { Button } from '~/components/ui/button'
@@ -92,8 +91,7 @@ export const Comment: Component<
     accessor: [, profile],
     util: { withUser },
   } = useUser(true)
-  const { setComments, likes, setLikes } = useContext(CommentContext)
-  const { post } = useImagePost()
+  const { id, commentable_type, setComments, likes, setLikes } = useContext(CommentContext)
   const modal = useModal()
   const navigate = useNavigate()
   const theme = useTheme()
@@ -120,7 +118,7 @@ export const Comment: Component<
     api.comment
       .count({
         parent_id: props.comment.id,
-        commentable_type: 'image_post',
+        commentable_type,
       })
       .then(setReplyCount)
   })
@@ -132,7 +130,7 @@ export const Comment: Component<
       api.comment
         .list({
           parent_id: props.comment.id,
-          commentable_type: 'image_post',
+          commentable_type,
         })
         .then(setReplies)
     }
@@ -346,8 +344,8 @@ export const Comment: Component<
                     withUser(
                       async ([, profile], comment) => {
                         const result = await api.comment.comment(
-                          post.id,
-                          'image_post',
+                          id,
+                          commentable_type,
                           profile.uid,
                           comment,
                           props.comment.id,

@@ -10,10 +10,12 @@ import { ShareBox } from './share-box'
 
 import { useUser } from '~/context/user'
 import { api } from '~/lib/api/supabase'
-// import IconGift from '~icons/carbon/gift'
+import type { LikeTypes } from '~/lib/api/supabase/like'
 import IconShare from '~icons/carbon/share'
 
-export const Buttons: Component = () => {
+export const ReactionButton: Component<{
+  type: LikeTypes
+}> = (props) => {
   const {
     util: { withUser },
   } = useUser(true)
@@ -29,11 +31,11 @@ export const Buttons: Component = () => {
           withUser(
             async ([me]) => {
               if (selected) {
-                await api.like.remove(post.id, 'image_post', me.id)
+                await api.like.remove(post.id, props.type, me.id)
                 setLikeOffset((prev) => prev - 1)
                 setLiked(false)
               } else {
-                await api.like.create(post.id, 'image_post')
+                await api.like.create(post.id, props.type)
                 setLikeOffset((prev) => prev + 1)
                 setLiked(true)
               }
@@ -48,11 +50,11 @@ export const Buttons: Component = () => {
           withUser(
             async ([me]) => {
               if (selected) {
-                await api.bookmark.remove(post.id, me.id)
+                await api.bookmark.remove(post.id, props.type, me.id)
                 setBookmarkOffset((prev) => prev - 1)
                 setBookmarked(false)
               } else {
-                await api.bookmark.create(post.id)
+                await api.bookmark.create(post.id, props.type)
                 setBookmarkOffset((prev) => prev + 1)
                 setBookmarked(true)
               }
@@ -61,19 +63,6 @@ export const Buttons: Component = () => {
           )
         }}
       />
-      {/* <IconGift
-        class={css`
-          cursor: pointer;
-        `}
-        height={25}
-        width={25}
-        onClick={() => {
-          modal({
-            title: '現在準備中',
-            description: 'この機能は現在準備中です。今後クリエイターを支援できるようになります。',
-          })
-        }}
-      /> */}
       <IconShare
         class={css`
           cursor: pointer;

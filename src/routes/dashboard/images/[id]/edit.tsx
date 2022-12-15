@@ -4,7 +4,7 @@ import { useNavigate } from 'solid-start'
 import { css } from 'solid-styled-components'
 
 import { NotFoundError } from '~/components/error-handler'
-import { ImagePostUploader } from '~/components/image-post-form/image-post-uploader'
+import { ImagePostUploader } from '~/components/image-post-form'
 import { Button } from '~/components/ui/button'
 import { useModal } from '~/components/ui/modal'
 import { HStack, VStack } from '~/components/ui/stack'

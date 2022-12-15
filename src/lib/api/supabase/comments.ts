@@ -14,7 +14,7 @@ type CommentFilter = {
     latest: boolean
 }
 
-const CommetableTypes = ['image_post'] as const
+const CommetableTypes = ['image_post', 'note_post'] as const
 export type CommentableTypes = typeof CommetableTypes[number]
 export type Comment = Database['public']['Tables']['comments']
 export type CompleteComment = Omit<Comment['Row'], 'type' | 'author'> & {

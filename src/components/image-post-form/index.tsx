@@ -4,17 +4,16 @@ import { Component, createEffect, createSignal, For, Show } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { css, styled, useTheme } from 'solid-styled-components'
 
+import { Tagger } from '../tagger'
 import { Tab, Tabs } from '../ui/tab'
 import { ImageInformationForm } from './image-information'
 
-import { ImageUpload } from '~/components/image-post-form/image-upload'
-import { AutoComplete } from '~/components/ui/auto-complete'
+import { ImageUpload } from '~/components/image-upload'
 import { Button } from '~/components/ui/button'
 import { CheckBox } from '~/components/ui/checkbox'
 import { Input } from '~/components/ui/input'
 import { Required } from '~/components/ui/required'
 import { HStack, VStack } from '~/components/ui/stack'
-import { Tag } from '~/components/ui/tag'
 import { TextArea } from '~/components/ui/textarea'
 import { createImageURL } from '~/lib/api/cloudflare'
 import { api } from '~/lib/api/supabase'
@@ -61,7 +60,6 @@ export const ImagePostUploader: Component<Props> = (props) => {
   const theme = useTheme()
   const [images, setImages] = createSignal<UploadFile[]>([])
   const [selected, setSelected] = createSignal(0)
-  const [currentTag, setCurrentTag] = createSignal('')
   const [loading, setLoading] = createSignal(false)
   const [autoLoad, setAutoLoad] = createSignal(true)
   const [autoCopy, setAutoCopy] = createSignal(false)
@@ -281,60 +279,26 @@ export const ImagePostUploader: Component<Props> = (props) => {
               </CheckBox>
             </div>
           </div>
-          <div
-            class={css`
-              display: flex;
-              width: 100%;
-              min-height: 50px;
-              flex-wrap: wrap;
-              align-items: center;
-              gap: 1rem;
-            `}
-          >
-            <For each={data.tags}>
-              {(tag) => (
-                <Tag
-                  class={css`
-                    user-select: none;
-                  `}
-                  removable={true}
-                  onRemove={() => setData('tags', (prev) => (prev || []).filter((v) => v !== tag))}
-                >
-                  {tag}
-                </Tag>
-              )}
-            </For>
-          </div>
-          <div
-            class={css`
-              width: 100%;
-              font-weight: bold;
-              text-align: right;
-            `}
-          >
-            {data.tags?.length}/10
-          </div>
-          <AutoComplete
-            class={css`
-              width: 100%;
-            `}
-            placeholder="タグを入力..."
-            value={currentTag()}
-            error={errors['tags'] || ''}
-            confirmKey={[' ']}
-            onInput={(v) => setCurrentTag(v)}
-            suggestions={(value) => {
-              return api.tags.search(value)
-            }}
-            onChange={(v) => {
+          <Tagger
+            max={10}
+            value={data.tags}
+            onAdd={(v) => {
               if (v.length === 0) return
               setErrors('tags', '')
-              setCurrentTag('')
               if (data.tags && data.tags.length >= 10)
                 return setErrors('tags', 'タグは最大10件まで登録できます。')
               if (data.tags && data.tags.includes(v)) return
               setData('tags', (prev) => [...(prev || []), v])
             }}
+            onRemove={(tag) => {
+              setData('tags', (prev) => (prev || []).filter((v) => v !== tag))
+            }}
+            error={errors['tags'] || ''}
+            confirmKey={[' ']}
+            suggestions={(value) => {
+              return api.tags.search(value)
+            }}
+            placeholder="タグを入力..."
           />
           <br />
           <HStack>

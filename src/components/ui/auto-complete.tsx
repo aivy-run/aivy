@@ -23,7 +23,7 @@ type PropsT = {
 
   placeholder?: string
   class?: string
-  error?: string
+  error?: string | undefined
 }
 
 const Container = styled.div`

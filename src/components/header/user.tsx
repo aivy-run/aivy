@@ -66,7 +66,7 @@ export const User: Component = () => {
       >
         <Notifications />
         <A
-          href="/upload"
+          href="/submit/image"
           class={css`
             display: none;
             ${theme.$().media.breakpoints.md} {

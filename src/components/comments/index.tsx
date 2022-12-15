@@ -11,14 +11,14 @@ import {
 import { useNavigate } from 'solid-start'
 import { css, styled, useTheme } from 'solid-styled-components'
 
-import { Button } from '../../ui/button'
-import { Fallback } from '../../ui/fallback'
+import { Button } from '../ui/button'
+import { Fallback } from '../ui/fallback'
 import { Comment } from './comment'
 import { CommentForm } from './form'
 
 import { useUser } from '~/context/user'
 import { api } from '~/lib/api/supabase'
-import type { CompleteComment } from '~/lib/api/supabase/comments'
+import type { CommentableTypes, CompleteComment } from '~/lib/api/supabase/comments'
 import type { CompleteLike } from '~/lib/api/supabase/like'
 
 const I = 10
@@ -26,6 +26,7 @@ const I = 10
 export const CommentContext = createContext(
   {} as {
     id: number
+    commentable_type: CommentableTypes
     comments: Accessor<CompleteComment[]>
     setComments: Setter<CompleteComment[]>
     likes: Accessor<CompleteLike[]>
@@ -34,15 +35,16 @@ export const CommentContext = createContext(
 )
 
 const Container = styled.div`
+  width: 100%;
+  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+
   h1 {
     margin-bottom: 0.5rem;
     font-size: 1.25rem;
   }
 
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
-
   ${(p) => p.theme?.$().media.breakpoints.lg} {
-    padding: 1rem 12rem;
+    padding: 1rem 0;
     background-color: transparent;
   }
 `
@@ -53,7 +55,7 @@ const CommentList = styled.div`
   gap: 1rem;
 `
 
-export const Comments: Component<{ id: number }> = (props) => {
+export const Comments: Component<{ id: number; commentable_type: CommentableTypes }> = (props) => {
   const {
     util: { withUser },
   } = useUser(true)
@@ -68,7 +70,7 @@ export const Comments: Component<{ id: number }> = (props) => {
 
   const fetch = async (id: number, page: number) => {
     const comments = await api.comment.list({
-      commentable_type: 'image_post',
+      commentable_type: props.commentable_type,
       commentable_id: id,
       parent_id: -1,
       limit: I,
@@ -112,6 +114,7 @@ export const Comments: Component<{ id: number }> = (props) => {
     <CommentContext.Provider
       value={{
         id: props.id,
+        commentable_type: props.commentable_type,
         comments,
         setComments,
         likes,
@@ -123,7 +126,12 @@ export const Comments: Component<{ id: number }> = (props) => {
           onSubmit={async (content) => {
             await withUser(
               async ([me, profile], comment) => {
-                const result = await api.comment.comment(props.id, 'image_post', me.id, comment)
+                const result = await api.comment.comment(
+                  props.id,
+                  props.commentable_type,
+                  me.id,
+                  comment,
+                )
                 setComments((prev) => [{ ...result, author: profile }, ...prev])
               },
               () => navigate('/sign'),
