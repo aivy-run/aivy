@@ -131,6 +131,7 @@ export class ImagePostApi {
         if (typeof filter?.published !== 'boolean') builder.eq('published', true)
         else builder.eq('published', filter.published)
 
+        if (filter?.latest) builder.order('id', { ascending: false })
         if (filter?.ids && filter.ids.length > 0)
             builder.or(filter.ids.map((v) => `id.eq.${v}`).join(','))
         if (filter?.author && filter.author.length > 0)
