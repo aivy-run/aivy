@@ -105,6 +105,7 @@ export default function Search() {
                   title: '最新',
                   type: 'latest',
                   all: 20,
+                  search: true,
                   filter: {
                     latest: true,
                     search: search.q,
@@ -114,6 +115,7 @@ export default function Search() {
                   title: '人気',
                   type: 'likes',
                   all: 20,
+                  search: true,
                   filter: {
                     search: search.q,
                     build(builder) {

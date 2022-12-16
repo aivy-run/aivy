@@ -27,7 +27,7 @@ type Props = {
     | ((all: number, page: number, filter?: Partial<ImagesFilter>) => Promise<PostsData>)
     | undefined
   filter?: Partial<ImagesFilter>
-  random?: boolean
+  search?: boolean
   bypassMute?: boolean
 
   zoning?: ImagePost['Row']['zoning'][]
@@ -56,11 +56,11 @@ type Cache = {
 const getPostsData = async (
   all: number,
   page: number,
-  random: boolean,
+  search: boolean,
   filter?: Partial<ImagesFilter>,
 ) => {
-  const count = await api.image.count(filter)
-  const posts = await api.image.list(all, all * (page - 1), random, filter)
+  const count = await api.image.count(filter, search)
+  const posts = await api.image.list(all, all * (page - 1), search, filter)
   return { posts, count }
 }
 
@@ -89,7 +89,7 @@ export const Posts: Component<Props> = (props) => {
     all: props.all,
     page: page(),
     zoning: zoning(),
-    random: !!props.random,
+    search: !!props.search,
     filter: { ...props.filter },
     profile: profile(),
     fetchPosts: props.fetchPosts,
@@ -98,13 +98,13 @@ export const Posts: Component<Props> = (props) => {
     all,
     page,
     zoning,
-    random,
+    search,
     filter,
     profile,
     fetchPosts,
   }: ReturnType<typeof fetchData>) => {
     filter = filter || {}
-    const cacheKey = `${all}.${page}.${zoning}.${random}.${JSON.stringify(filter)}.${
+    const cacheKey = `${all}.${page}.${zoning}.${search}.${JSON.stringify(filter)}.${
       filter?.build?.toString().length
     }`
     const cached = cache[cacheKey]
@@ -124,7 +124,7 @@ export const Posts: Component<Props> = (props) => {
     }
     if (props.zoningButton) filter.zoning = zoning
 
-    const postData = await fn(all, page, random, filter)
+    const postData = await fn(all, page, search, filter)
     const data = {
       ...postData,
       page,

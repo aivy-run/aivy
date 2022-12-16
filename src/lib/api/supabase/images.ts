@@ -114,19 +114,23 @@ export class ImagePostApi {
 
     private createBuilder(
         filter?: Partial<ImagesFilter>,
-        random = false,
+        search = false,
         count?: 'exact' | 'planned' | 'estimated',
     ) {
         const options: Required<Parameters<ReturnType<typeof supabase.from>['select']>>['1'] = {}
         if (count) options.count = count
-        const builder = supabase.from('image_posts').select('*, profiles!inner(*)', options)
-
-        if (random) builder.order('uid', { foreignTable: 'profiles', ascending: false })
+        const builder = search
+            ? supabase
+                  .from('image_posts')
+                  .select(
+                      '*, profiles!inner(*), information:image_posts_information!inner(*)',
+                      options,
+                  )
+            : supabase.from('image_posts').select('*, profiles!inner(*)')
 
         if (typeof filter?.published !== 'boolean') builder.eq('published', true)
         else builder.eq('published', filter.published)
 
-        if (!random && filter?.latest) builder.order('id', { ascending: false })
         if (filter?.ids && filter.ids.length > 0)
             builder.or(filter.ids.map((v) => `id.eq.${v}`).join(','))
         if (filter?.author && filter.author.length > 0)
@@ -148,16 +152,16 @@ export class ImagePostApi {
         return builder
     }
 
-    public async list(limit = 5, since = 0, random = false, filter?: Partial<ImagesFilter>) {
-        const builder = this.createBuilder(filter, random)
+    public async list(limit = 5, since = 0, search = false, filter?: Partial<ImagesFilter>) {
+        const builder = this.createBuilder(filter, search)
         const { data, error } = await builder.range(since, since + limit - 1)
         if (error) throw error
         if (!checkMulti(data)) throw new Error('Incorrect data')
         return data
     }
 
-    public async count(filter?: Partial<ImagesFilter>): Promise<number> {
-        const builder = this.createBuilder(filter, false, 'exact')
+    public async count(filter?: Partial<ImagesFilter>, search = false): Promise<number> {
+        const builder = this.createBuilder(filter, search, 'exact')
         const { count, error } = await builder
         if (error) throw error
         return count!
