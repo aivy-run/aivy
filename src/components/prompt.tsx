@@ -85,7 +85,6 @@ export const Prompt: Component<{
       : '',
   )
   const degree = createMemo(() => {
-    if (props.current === 'decrease') return 1
     const split = raw().split(':')
     if (split.length > 1) return parseFloat(split[1]!) || 1
     else return props.degree || 1
@@ -127,7 +126,7 @@ export const Prompt: Component<{
                 <span
                   onClick={() => context.onTokenClick?.(prompt)}
                   class={css`
-                    color: ${color().string()};
+                    color: ${text().length === 3 ? 'inherit' : color().string()};
                     cursor: pointer;
                     transition: 0.2s;
 

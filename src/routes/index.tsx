@@ -84,14 +84,6 @@ export default function Index() {
           <MoreButton href="/images/ranking/daily">もっと見る→</MoreButton>
         </Inner>
         <Inner>
-          <Notes
-            title="最新のノート"
-            all={4}
-            pagination={false}
-            filter={{ latest: true, published: true }}
-          />
-        </Inner>
-        <Inner>
           <Posts
             title="新着"
             all={12}
@@ -130,6 +122,14 @@ export default function Index() {
             }}
           />
           <MoreButton href="/images/ranking/monthly">もっと見る→</MoreButton>
+        </Inner>
+        <Inner>
+          <Notes
+            title="最新のノート"
+            all={4}
+            pagination={false}
+            filter={{ latest: true, published: true }}
+          />
         </Inner>
       </Container>
     </>
