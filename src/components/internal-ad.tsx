@@ -119,7 +119,7 @@ export const InternalAD: Component = () => {
             <Fallback height="100%" />
           </div>
         </Show>
-        <div class="keen-slider" use:slider={slider}>
+        <div class="keen-slider" use:slider>
           <For each={ADS}>
             {(ad) => (
               <div>
