@@ -1,8 +1,8 @@
 import type { UploadFile } from '@solid-primitives/upload'
 import Color from 'color'
+import { css, styled, useTheme } from 'decorock'
 import { Component, createEffect, createSignal, For, Show } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { Tagger } from '../tagger'
 import { Tab, Tabs } from '../ui/tab'
@@ -27,7 +27,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   padding: 0;
-  ${(p) => p.theme?.$().media.breakpoints.md} {
+  ${(p) => p.theme.media.breakpoints.md} {
     padding: 2rem;
   }
 `
@@ -100,9 +100,9 @@ export const ImagePostUploader: Component<Props> = (props) => {
           min-height: 100vh;
           padding: 1rem 0;
           border-top: solid 1px black;
-          background-color: ${theme.$().colors.bg_accent.string()};
+          background-color: ${theme.colors.bg_accent};
           text-align: center;
-          ${theme.$().media.breakpoints.md} {
+          ${theme.media.breakpoints.md} {
             width: 80%;
             min-height: none;
             border-radius: 0.5rem;
@@ -153,7 +153,7 @@ export const ImagePostUploader: Component<Props> = (props) => {
         <Show when={errors['image']}>
           <div
             class={css`
-              color: ${Color('red').lighten(0.25).string()};
+              color: ${Color('red').lighten(0.25)};
             `}
           >
             {errors['image']}
@@ -243,7 +243,7 @@ export const ImagePostUploader: Component<Props> = (props) => {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 1rem;
-                ${theme.$().media.breakpoints.lg} {
+                ${theme.media.breakpoints.lg} {
                   flex-direction: row;
                   gap: 5rem;
                 }

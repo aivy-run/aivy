@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
+import { styled } from 'decorock'
 import { createEffect, createSignal, Show } from 'solid-js'
 import { A } from 'solid-start'
-import { styled } from 'solid-styled-components'
 
 import { Posts } from '~/components/gallery/posts'
 import { FixedTitle } from '~/components/head/title'
@@ -15,17 +15,17 @@ import type { Zoning } from '~/lib/api/supabase/user'
 
 const Container = styled.div`
   padding: 0;
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  ${(p) => p.theme.media.breakpoints.lg} {
     padding: 1rem 10rem;
   }
 `
 
 const Inner = styled.div`
   padding: 1rem 0;
-  border-bottom: 1px solid ${(p) => p.theme?.$().colors.text.fade(0.5).string()};
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  border-bottom: 1px solid ${(p) => p.theme.colors.text.fade(0.5)};
+  background-color: ${(p) => p.theme.colors.bg_accent};
   text-align: center;
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  ${(p) => p.theme.media.breakpoints.lg} {
     border-radius: 0.5rem;
     border-bottom: none;
     margin-bottom: 1rem;
@@ -34,7 +34,7 @@ const Inner = styled.div`
 
 const MoreButton = styled(A)`
   margin: 1rem 0;
-  color: ${(p) => p.theme?.$().colors.main.darken(0.25).string()};
+  color: ${(p) => p.theme.colors.main.darken(0.25)};
   font-weight: 500;
   text-underline-offset: 0.1rem;
 

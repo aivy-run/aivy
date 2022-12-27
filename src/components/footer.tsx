@@ -1,6 +1,6 @@
+import { css, styled, useTheme } from 'decorock'
 import { Show } from 'solid-js'
 import { A } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import LogoDark from '~icons/aivy/logo-dark'
 import LogoLight from '~icons/aivy/logo-light'
@@ -8,11 +8,11 @@ import LogoLight from '~icons/aivy/logo-light'
 const Container = styled.footer`
   height: 350px;
   padding-top: 2rem;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
   text-align: center;
 
   a {
-    color: ${(p) => p.theme?.$().colors.text.string()};
+    color: ${(p) => p.theme.colors.text};
     text-underline-offset: 3px;
 
     &:hover {
@@ -79,7 +79,7 @@ export const Footer = () => {
       >
         <A href="/">
           <Show
-            when={theme.$().name === 'dark'}
+            when={theme.name === 'dark'}
             fallback={
               <LogoLight
                 class={css`

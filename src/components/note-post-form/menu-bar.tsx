@@ -1,6 +1,6 @@
 import type { Editor } from '@tiptap/core'
+import { styled } from 'decorock'
 import { Component, For, useContext } from 'solid-js'
-import { styled } from 'solid-styled-components'
 import { createEditorTransaction } from 'solid-tiptap'
 
 import { NoteFormContext } from '.'
@@ -37,8 +37,8 @@ const Container = styled.div`
   flex-wrap: wrap;
   align-items: center;
   padding: 0.25rem;
-  border-bottom: 3px solid ${(p) => p.theme?.$().colors.text.string()};
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  border-bottom: 3px solid ${(p) => p.theme.colors.text};
+  background-color: ${(p) => p.theme.colors.bg_accent};
 `
 
 const Divider = styled.div`
@@ -46,7 +46,7 @@ const Divider = styled.div`
   height: 1.25rem;
   margin-right: 0.75rem;
   margin-left: 0.5rem;
-  background-color: ${(p) => p.theme?.$().colors.text.fade(0.5).string()};
+  background-color: ${(p) => p.theme.colors.text.fade(0.5)};
 `
 
 export const MenuBar: Component<{ editor: Editor }> = (props) => {

@@ -1,6 +1,6 @@
 import { A } from '@solidjs/router'
+import { css, useTheme } from 'decorock'
 import { Component, JSX, Show } from 'solid-js'
-import { css, useTheme } from 'solid-styled-components'
 
 import { useImagePost } from '.'
 import { FetchingTransition } from '../with-user'
@@ -33,11 +33,11 @@ export const ZoningFilter: Component<{ children: JSX.Element }> = (props) => {
               align-items: center;
               justify-content: center;
               border-radius: 0;
-              background-color: ${theme.$().colors.bg_accent.string()};
+              background-color: ${theme.colors.bg_accent};
               gap: 2rem;
               opacity: ${isFetching() ? '0' : '1'};
               transition: 0.2s;
-              ${theme.$().media.breakpoints.lg} {
+              ${theme.media.breakpoints.lg} {
                 height: 70vh;
                 border-radius: 0.5rem;
                 margin-top: 3rem;

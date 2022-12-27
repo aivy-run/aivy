@@ -1,3 +1,4 @@
+import { css, styled } from 'decorock'
 import {
   Accessor,
   Component,
@@ -9,7 +10,6 @@ import {
   useContext,
 } from 'solid-js'
 import { A } from 'solid-start'
-import { css, styled } from 'solid-styled-components'
 
 import { Comments } from '../comments'
 import { ProseMirror } from '../prose-mirror'
@@ -49,10 +49,10 @@ const Container = styled(ProseMirror)`
 
   & > div {
     width: 100%;
-    ${(p) => p.theme?.$().media.breakpoints.md} {
+    ${(p) => p.theme.media.breakpoints.md} {
       width: 70%;
     }
-    ${(p) => p.theme?.$().media.breakpoints.lg} {
+    ${(p) => p.theme.media.breakpoints.lg} {
       width: 40%;
     }
   }
@@ -60,7 +60,7 @@ const Container = styled(ProseMirror)`
   .ProseMirror {
     padding: 1rem;
     border-radius: 0.5rem;
-    background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+    background-color: ${(p) => p.theme.colors.bg_accent};
   }
 `
 
@@ -68,7 +68,7 @@ const User = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: ${(p) => p.theme?.$().colors.text.string()};
+  color: ${(p) => p.theme.colors.text};
   gap: 0.5rem;
 
   img {
@@ -91,7 +91,7 @@ const Header = styled.div`
 
   & > h1 {
     margin-bottom: 0.5rem;
-    ${(p) => p.theme?.$().media.breakpoints.lg} {
+    ${(p) => p.theme.media.breakpoints.lg} {
       font-size: 3rem;
     }
   }

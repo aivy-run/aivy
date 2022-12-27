@@ -1,4 +1,4 @@
-import { styled } from 'solid-styled-components'
+import { styled } from 'decorock'
 
 export const ProseMirror = styled.div`
   .ProseMirror {
@@ -39,8 +39,8 @@ export const ProseMirror = styled.div`
     code {
       padding: 0.2rem 0.4rem;
       border-radius: 4px;
-      background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
-      color: ${(p) => p.theme?.$().colors.text.fade(0.25).string()};
+      background-color: ${(p) => p.theme.colors.bg_accent};
+      color: ${(p) => p.theme.colors.text.fade(0.25)};
       font-family: JetBrainsMono, monospace;
       font-size: 0.85rem;
       vertical-align: 0.08rem;

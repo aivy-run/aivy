@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
+import { css, styled, useTheme } from 'decorock'
 import { createMemo, createResource, For, Show } from 'solid-js'
 import { useParams } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { NotFoundError } from '~/components/error-handler'
 import { PostsWithSorter } from '~/components/gallery/posts-sorter'
@@ -9,16 +9,16 @@ import { supabase } from '~/lib/api/supabase/client'
 
 const Container = styled.div`
   padding: 2rem 1rem;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
 
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  ${(p) => p.theme.media.breakpoints.lg} {
     padding: 2rem 12rem;
   }
 `
 
 const PostContainer = styled.div`
   padding: 1rem 0;
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  ${(p) => p.theme.media.breakpoints.lg} {
     padding: 1rem 12rem;
   }
 `
@@ -44,7 +44,7 @@ export default function Contest() {
       {(data) => (
         <div
           class={css`
-            background-color: ${theme.$().colors.bg_accent.string()};
+            background-color: ${theme.colors.bg_accent};
           `}
         >
           <Container>

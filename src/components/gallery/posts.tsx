@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
+import { css, styled } from 'decorock'
 import { Component, createEffect, createMemo, createSignal, JSX, Show } from 'solid-js'
 import { useSearchParams } from 'solid-start'
-import { css, styled } from 'solid-styled-components'
 
 import { Gallery } from '.'
 import { Tags } from '../tags'

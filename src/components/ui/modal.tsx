@@ -1,3 +1,4 @@
+import { css, styled } from 'decorock'
 import {
   Component,
   createContext,
@@ -9,7 +10,6 @@ import {
   useContext,
 } from 'solid-js'
 import { isServer } from 'solid-js/web'
-import { css, styled } from 'solid-styled-components'
 
 import { Button } from './button'
 import { VStack } from './stack'
@@ -50,7 +50,7 @@ const Modal = styled.div`
   border-radius: 1rem;
   animation-duration: 0.5s;
   animation-name: fade-in;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
   box-shadow: 0 0 12px -6px rgba(0, 0, 0, 0.6);
   gap: 1rem;
   grid-template-rows: 1fr 50px;

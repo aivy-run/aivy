@@ -1,4 +1,5 @@
 import Color from 'color'
+import { css, useTheme } from 'decorock'
 import { parse } from 'parse5'
 import {
   Component,
@@ -10,7 +11,6 @@ import {
   Switch,
   useContext,
 } from 'solid-js'
-import { css, useTheme } from 'solid-styled-components'
 
 export type Token = {
   attrs: Record<string, any>[]
@@ -90,7 +90,7 @@ export const Prompt: Component<{
     else return props.degree || 1
   })
   const color = createMemo(() => {
-    const t = theme.$()
+    const t = theme
     const deg = degree()
     if (deg === 1) return t.colors.text
     const blend = deg > 1 ? Color('#ffbb55') : Color('#99ddff')
@@ -126,13 +126,13 @@ export const Prompt: Component<{
                 <span
                   onClick={() => context.onTokenClick?.(prompt)}
                   class={css`
-                    color: ${text().length === 3 ? 'inherit' : color().string()};
+                    color: ${text().length === 3 ? 'inherit' : color()};
                     cursor: pointer;
                     transition: 0.2s;
 
                     &:hover {
                       border-radius: 0.2rem;
-                      background-color: ${theme.$().colors.text.fade(0.8).string()};
+                      background-color: ${theme.colors.text.fade(0.8)};
                     }
                   `}
                 >

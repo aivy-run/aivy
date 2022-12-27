@@ -1,3 +1,3 @@
-import { styled } from 'solid-styled-components'
+import { styled } from 'decorock'
 
 export const Label = styled.label``

@@ -1,6 +1,6 @@
+import { css } from 'decorock'
 import type { Component } from 'solid-js'
 import { useNavigate } from 'solid-start'
-import { css } from 'solid-styled-components'
 
 import { useImagePost } from '.'
 import { BookmarkButton, FavButton } from '../ui/fav-button'

@@ -1,3 +1,4 @@
+import { styled } from 'decorock'
 import {
   Component,
   createEffect,
@@ -9,7 +10,6 @@ import {
   Show,
 } from 'solid-js'
 import { isServer } from 'solid-js/web'
-import { styled } from 'solid-styled-components'
 
 import { Input } from './input'
 
@@ -43,7 +43,7 @@ const Suggestions = styled.div`
   padding: 0.5rem;
   border-radius: 0.25rem;
   margin-top: 0.5rem;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
   box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.6);
   overflow-y: auto;
 `
@@ -52,15 +52,13 @@ const Item = styled.div<{ selecting: boolean }>`
   width: 100%;
   padding: 0.5rem;
   background-color: ${(p) =>
-    p.selecting
-      ? p.theme?.$().colors.bg_accent.darken(0.25).string()
-      : p.theme?.$().colors.bg_accent.string()};
+    p.selecting ? p.theme.colors.bg_accent.darken(0.25) : p.theme.colors.bg_accent};
   cursor: pointer;
   text-align: left;
   transition: 0.25s;
 
   &:hover {
-    background-color: ${(p) => p.theme?.$().colors.bg_accent.darken(0.25).string()};
+    background-color: ${(p) => p.theme.colors.bg_accent.darken(0.25)};
   }
 `
 

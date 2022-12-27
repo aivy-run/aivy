@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { css, styled, useTheme } from 'decorock'
 import {
   Component,
   createEffect,
@@ -11,7 +12,6 @@ import {
   useContext,
 } from 'solid-js'
 import { A, useNavigate } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { CommentContext } from '.'
 import { CommentForm } from './form'
@@ -32,15 +32,15 @@ import IconChat from '~icons/carbon/chat'
 const CommentItem = styled.div`
   padding: 1rem;
   border-radius: 0.5rem;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
 `
 const UserItem = styled.aside`
   position: relative;
   display: flex;
   align-items: center;
   margin-bottom: 0.5rem;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
-  color: ${(p) => p.theme?.$().colors.text.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
+  color: ${(p) => p.theme.colors.text};
   gap: 0.5rem;
 
   img {
@@ -70,7 +70,7 @@ const ReplyList = styled.div`
     bottom: 0;
     left: 62px;
     width: 2px;
-    background-color: ${(p) => p.theme?.$().colors.text.fade(0.75).string()};
+    background-color: ${(p) => p.theme.colors.text.fade(0.75)};
     content: '';
   }
 `
@@ -166,7 +166,7 @@ export const Comment: Component<
           </A>
           <div
             class={css`
-              color: ${theme.$().colors.text.fade(0.25).string()};
+              color: ${theme.colors.text.fade(0.25)};
               font-size: 0.9rem;
             `}
           >
@@ -286,7 +286,7 @@ export const Comment: Component<
                 user-select: none;
 
                 &:hover {
-                  background-color: ${theme.$().colors.text.fade(0.75).string()};
+                  background-color: ${theme.colors.text.fade(0.75)};
                 }
               `}
               onClick={() => {
@@ -326,9 +326,9 @@ export const Comment: Component<
                     class={css`
                       display: inline-block;
                       padding: 0.5rem;
-                      border: 1px solid ${theme.$().colors.text.string()};
+                      border: 1px solid ${theme.colors.text};
                       border-radius: 0.5rem;
-                      background-color: ${theme.$().colors.bg.string()};
+                      background-color: ${theme.colors.bg};
                       cursor: pointer;
                       user-select: none;
                     `}

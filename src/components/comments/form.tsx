@@ -1,5 +1,5 @@
+import { css, styled } from 'decorock'
 import { Accessor, Component, createContext, createEffect, createSignal, Setter } from 'solid-js'
-import { css, styled } from 'solid-styled-components'
 
 import { Button } from '../ui/button'
 import { TextArea } from '../ui/textarea'
@@ -9,7 +9,7 @@ import type { CompleteComment } from '~/lib/api/supabase/comments'
 const Form = styled.div`
   padding: 1rem;
   border-radius: 0.5rem;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
 `
 
 export const CommentContext = createContext(

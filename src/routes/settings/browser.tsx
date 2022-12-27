@@ -1,5 +1,5 @@
+import { css, useTheme } from 'decorock'
 import { Show } from 'solid-js'
-import { css, useTheme } from 'solid-styled-components'
 
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
@@ -41,7 +41,7 @@ export default function Browser() {
         <HStack
           class={css`
             width: 100%;
-            ${theme.$().media.breakpoints.lg} {
+            ${theme.media.breakpoints.lg} {
               width: 50%;
             }
           `}

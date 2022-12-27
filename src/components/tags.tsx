@@ -1,6 +1,6 @@
+import { styled } from 'decorock'
 import { For, Show } from 'solid-js'
 import { A } from 'solid-start'
-import { styled } from 'solid-styled-components'
 
 import { Tag } from './ui/tag'
 

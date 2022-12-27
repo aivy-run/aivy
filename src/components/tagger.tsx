@@ -1,5 +1,5 @@
+import { css } from 'decorock'
 import { Component, ComponentProps, createSignal, For, Show } from 'solid-js'
-import { css } from 'solid-styled-components'
 
 import { AutoComplete } from './ui/auto-complete'
 import { Tag } from './ui/tag'

@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { css, styled, useTheme } from 'decorock'
 import {
   Component,
   createEffect,
@@ -10,7 +11,6 @@ import {
   Show,
 } from 'solid-js'
 import { A, useNavigate } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { BookmarkButton, FavButton } from '../ui/fav-button'
 import { IconImg } from '../ui/icon-img'
@@ -42,7 +42,7 @@ const Inner = styled.div<{ scroll: boolean }>`
   padding: 0 5px;
   gap: 5px;
   overflow-x: ${(p) => (p.scroll ? 'auto' : 'hidden')};
-  ${(p) => p.theme?.$().media.breakpoints.sm} {
+  ${(p) => p.theme.media.breakpoints.sm} {
     justify-content: ${(p) => (p.scroll ? 'flex-start' : 'center')};
     padding: ${PADDING.toString()}px;
     gap: ${GAP.toString()}px;
@@ -54,10 +54,10 @@ const ImageBox = styled.div`
   overflow: hidden;
   width: calc(50% - 5px);
   min-width: calc(50% - 5px);
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
   grid-template-columns: 100%;
   grid-template-rows: 1fr 0.25fr;
-  ${(p) => p.theme?.$().media.breakpoints.sm} {
+  ${(p) => p.theme.media.breakpoints.sm} {
     width: ${WIDTH.toString()}px;
     min-width: ${WIDTH.toString()}px;
     border: none;
@@ -77,7 +77,7 @@ const RankingTag = styled.div`
   justify-content: center;
   border-radius: 50%;
   aspect-ratio: 1/1;
-  color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  color: ${(p) => p.theme.colors.bg_accent};
   font-weight: bold;
 `
 
@@ -163,7 +163,7 @@ export const Gallery: Component<{
                   justify-content: center;
                   border-radius: 1rem;
                   background-color: rgba(0, 0, 0, 0.75);
-                  ${theme.$().media.breakpoints.sm} {
+                  ${theme.media.breakpoints.sm} {
                     border-radius: 0;
                   }
                 `}
@@ -199,7 +199,7 @@ export const Gallery: Component<{
                         : rank() === 3
                         ? '#c8a17e'
                         : '#33333350'};
-                      color: ${theme.$().colors.text.string()};
+                      color: ${theme.colors.text};
                     `}
                   >
                     {rank()}
@@ -216,8 +216,8 @@ export const Gallery: Component<{
                       justify-content: center;
                       padding: 0.25rem 0.5rem;
                       border-radius: 0.25rem;
-                      background-color: ${theme.$().colors.bg.fade(0.25).string()};
-                      color: ${theme.$().colors.text.string()};
+                      background-color: ${theme.colors.bg.fade(0.25)};
+                      color: ${theme.colors.text};
                       font-size: 0.9rem;
                       gap: 0.25rem;
                     `}
@@ -244,12 +244,12 @@ export const Gallery: Component<{
                         overflow: hidden;
                         width: 100%;
                         margin-bottom: 0.5rem;
-                        color: ${theme.$().colors.text.string()};
+                        color: ${theme.colors.text};
                         font-size: 1rem;
                         text-overflow: ellipsis;
                         white-space: nowrap;
                       }
-                      ${theme.$().media.breakpoints.lg} {
+                      ${theme.media.breakpoints.lg} {
                         padding: 0.5rem 1rem;
                       }
                     `}
@@ -272,7 +272,7 @@ export const Gallery: Component<{
                           class={css`
                             display: flex;
                             align-items: center;
-                            color: ${theme.$().colors.text.string()};
+                            color: ${theme.colors.text};
                             font-size: 0.9rem;
                             gap: 0.1rem;
 
@@ -284,7 +284,7 @@ export const Gallery: Component<{
                               object-fit: cover;
                             }
 
-                            ${theme.$().media.breakpoints.lg} {
+                            ${theme.media.breakpoints.lg} {
                               font-size: 1rem;
                               gap: 0.5rem;
                             }
@@ -358,7 +358,7 @@ export const Gallery: Component<{
                       overflow: hidden;
                       width: 100%;
                       margin-bottom: 0.5rem;
-                      color: ${theme.$().colors.text.string()};
+                      color: ${theme.colors.text};
                       font-size: 1rem;
                       text-overflow: ellipsis;
                       white-space: nowrap;

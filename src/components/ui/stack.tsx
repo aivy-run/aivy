@@ -1,5 +1,5 @@
+import { styled } from 'decorock'
 import type { ComponentProps } from 'solid-js'
-import { styled } from 'solid-styled-components'
 
 type Props = ComponentProps<'div'> & {
   gap?: string | number

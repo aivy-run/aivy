@@ -1,5 +1,5 @@
+import { css, styled, useTheme } from 'decorock'
 import { Component, ComponentProps, Show, splitProps } from 'solid-js'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { classnames } from '~/lib/classnames'
 import IconClose from '~icons/carbon/close'
@@ -28,8 +28,8 @@ export const Tag: Component<
       class={classnames(
         local.class,
         css`
-          background-color: ${theme.$().colors.text.string()};
-          color: ${theme.$().colors.bg_accent.string()};
+          background-color: ${theme.colors.text};
+          color: ${theme.colors.bg_accent};
 
           p {
             margin: 0;

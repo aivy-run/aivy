@@ -4,6 +4,7 @@ import { Image } from '@tiptap/extension-image'
 import { Link } from '@tiptap/extension-link'
 import { StarterKit } from '@tiptap/starter-kit'
 import dayjs from 'dayjs'
+import { css, styled } from 'decorock'
 import {
   Accessor,
   Component,
@@ -17,7 +18,6 @@ import {
   Switch,
 } from 'solid-js'
 import { createStore, SetStoreFunction } from 'solid-js/store'
-import { css, styled } from 'solid-styled-components'
 import { createTiptapEditor, useEditorHTML } from 'solid-tiptap'
 
 import { ProseMirror } from '../prose-mirror'
@@ -48,19 +48,19 @@ export const NoteFormContext = createContext(
 )
 
 const Container = styled.div`
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  ${(p) => p.theme.media.breakpoints.lg} {
     margin: 2rem 4rem;
   }
 
   *::selection {
-    background-color: ${(p) => p.theme?.$().colors.text.fade(0.7).string()};
+    background-color: ${(p) => p.theme.colors.text.fade(0.7)};
   }
 `
 
 const EditorContainer = styled.div`
   position: relative;
   max-height: 90vh;
-  border: 3px solid ${(p) => p.theme?.$().colors.text.string()};
+  border: 3px solid ${(p) => p.theme.colors.text};
   border-radius: 0.5rem;
   overflow-y: auto;
 `
@@ -70,8 +70,8 @@ const Editor = styled(ProseMirror)`
   flex-direction: column;
   padding: 1rem;
   border-radius: 0.75rem;
-  background-color: ${(p) => p.theme?.$().colors.bg.string()};
-  color: ${(p) => p.theme?.$().colors.text.string()};
+  background-color: ${(p) => p.theme.colors.bg};
+  color: ${(p) => p.theme.colors.text};
 `
 
 export const NotePostForm: Component<{

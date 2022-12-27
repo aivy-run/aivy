@@ -1,7 +1,7 @@
+import { css, styled, useTheme } from 'decorock'
 import { createEffect, createSignal, For, Match, on, Show, Switch } from 'solid-js'
 import type { Component } from 'solid-js'
 import { A } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { Button } from '../ui/button'
 import { IconImg } from '../ui/icon-img'
@@ -23,7 +23,7 @@ const Container = styled.div`
   max-height: 330px;
   border-radius: 0.5rem;
   margin-top: 1rem;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.5);
   overflow-y: auto;
 `
@@ -37,11 +37,11 @@ const NoticeItem = styled.div`
   transition: 0.2s;
 
   a {
-    color: ${(p) => p.theme?.$().colors.text.string()};
+    color: ${(p) => p.theme.colors.text};
   }
 
   &:hover {
-    background-color: ${(p) => p.theme?.$().colors.text.fade(0.9).string()};
+    background-color: ${(p) => p.theme.colors.text.fade(0.9)};
   }
 `
 
@@ -133,9 +133,9 @@ export const Notifications: Component = () => {
             min-width: 18px;
             height: 18px;
             padding: 1.5px 3px;
-            border: 2px solid ${theme.$().colors.bg_accent.string()};
+            border: 2px solid ${theme.colors.bg_accent};
             border-radius: 50%;
-            background-color: ${theme.$().colors.main.darken(0.25).string()};
+            background-color: ${theme.colors.main.darken(0.25)};
             color: #fff;
             font-size: 10px;
             line-height: 1.1;
@@ -172,9 +172,7 @@ export const Notifications: Component = () => {
                 <>
                   <NoticeItem
                     class={css`
-                      background-color: ${v.read
-                        ? 'transparent'
-                        : theme.$().colors.sub.fade(0.75).string()};
+                      background-color: ${v.read ? 'transparent' : theme.colors.sub.fade(0.75)};
                     `}
                     onClick={() => {
                       setOpen(false)

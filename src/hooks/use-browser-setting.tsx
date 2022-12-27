@@ -1,5 +1,13 @@
-import { createEffect, createSignal } from 'solid-js'
-import { createStore } from 'solid-js/store'
+import {
+  Accessor,
+  Component,
+  createContext,
+  createSignal,
+  JSX,
+  onMount,
+  useContext,
+} from 'solid-js'
+import { createStore, SetStoreFunction } from 'solid-js/store'
 import { isServer } from 'solid-js/web'
 import { parseCookie, serializeCookie } from 'solid-start'
 import { useRequest } from 'solid-start/server'
@@ -16,6 +24,14 @@ const DEFAULT: BrowserSettings = {
   },
   theme: 'system',
 }
+
+const Context = createContext(
+  {} as {
+    setting: BrowserSettings
+    setSetting: SetStoreFunction<BrowserSettings>
+    loaded: Accessor<boolean>
+  },
+)
 
 const saveToCookie = (raw: string) => {
   document.cookie = serializeCookie(COOKIE_KEY, raw, {
@@ -46,18 +62,27 @@ const load = () => {
 }
 
 export const useBrowserSetting = () => {
-  const [store, setStore] = createStore(load())
-  const [loaded, setLoaded] = createSignal(false)
+  const { setting, setSetting, loaded } = useContext(Context)
 
   const save = () => {
-    const str = JSON.stringify({ ...store })
+    const str = JSON.stringify({ ...setting })
     localStorage.setItem(STORAGE_KEY, str)
     saveToCookie(str)
   }
-  createEffect(() => {
-    setStore(load())
+
+  return [setting, setSetting, save, loaded] as const
+}
+
+export const BrowserSettingProvider: Component<{ children: JSX.Element }> = (props) => {
+  const [setting, setSetting] = createStore(load())
+  const [loaded, setLoaded] = createSignal(false)
+
+  onMount(() => {
+    setSetting(load())
     setLoaded(true)
   })
 
-  return [store, setStore, save, loaded] as const
+  return (
+    <Context.Provider value={{ setting, setSetting, loaded }}>{props.children}</Context.Provider>
+  )
 }

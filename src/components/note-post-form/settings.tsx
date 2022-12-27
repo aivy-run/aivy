@@ -1,7 +1,7 @@
 import type { UploadFile } from '@solid-primitives/upload'
+import { css } from 'decorock'
 import { createSignal, useContext } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import { css } from 'solid-styled-components'
 
 import { NoteFormContext } from '.'
 import { ImageUpload } from '../image-upload'

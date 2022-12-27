@@ -1,5 +1,5 @@
+import { styled } from 'decorock'
 import type { Component, ComponentProps } from 'solid-js'
-import { styled } from 'solid-styled-components'
 
 const Container = styled.div`
   display: flex;
@@ -8,9 +8,9 @@ const Container = styled.div`
 const Inner = styled.div`
   width: 100%;
   padding: 1rem 2rem;
-  border-top: solid 1px ${(p) => p.theme?.$().colors.text.fade(0.5).string()};
-  border-bottom: solid 1px ${(p) => p.theme?.$().colors.text.fade(0.5).string()};
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  border-top: solid 1px ${(p) => p.theme.colors.text.fade(0.5)};
+  border-bottom: solid 1px ${(p) => p.theme.colors.text.fade(0.5)};
+  background-color: ${(p) => p.theme.colors.bg_accent};
 
   & > {
     div {
@@ -19,7 +19,7 @@ const Inner = styled.div`
     }
 
     h1 {
-      border-bottom: solid 1px ${(p) => p.theme?.$().colors.text.fade(0.5).string()};
+      border-bottom: solid 1px ${(p) => p.theme.colors.text.fade(0.5)};
       margin-bottom: 2rem;
       text-align: center;
     }
@@ -30,7 +30,7 @@ const Inner = styled.div`
   }
 
   a {
-    color: ${(p) => p.theme?.$().colors.main.darken(0.5).string()};
+    color: ${(p) => p.theme.colors.main.darken(0.5)};
     text-underline-offset: 0.25rem;
 
     &:hover {
@@ -52,7 +52,7 @@ const Inner = styled.div`
     }
   }
 
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  ${(p) => p.theme.media.breakpoints.lg} {
     width: 60%;
     border-radius: 1rem;
     border-top: none;

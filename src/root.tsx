@@ -1,6 +1,7 @@
 // @refresh reload
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
+import { renderStyle, styled } from 'decorock'
 import { Component, JSX, Suspense } from 'solid-js'
 import { useAssets } from 'solid-js/web'
 import { SolidNProgress } from 'solid-progressbar'
@@ -16,7 +17,6 @@ import {
   Link,
   Title,
 } from 'solid-start'
-import { extractCss, styled } from 'solid-styled-components'
 
 import { ErrorHandler } from './components/error-handler'
 import { Footer } from './components/footer'
@@ -25,6 +25,7 @@ import { Maintenance } from './components/maintenance'
 import { ModalProvider } from './components/ui/modal'
 import { ToastProvider } from './components/ui/toast'
 import { UserProvider } from './context/user'
+import { BrowserSettingProvider } from './hooks/use-browser-setting'
 import { ThemeProvider } from './styles/theme'
 
 import 'dayjs/locale/ja'
@@ -36,25 +37,27 @@ dayjs.locale('ja')
 dayjs.extend(duration)
 
 const Providers: Component<{ children: JSX.Element }> = (props) => (
-  <ThemeProvider>
-    <ToastProvider>
-      <ModalProvider>
-        <UserProvider>{props.children}</UserProvider>
-      </ModalProvider>
-    </ToastProvider>
-  </ThemeProvider>
+  <BrowserSettingProvider>
+    <ThemeProvider>
+      <ToastProvider>
+        <ModalProvider>
+          <UserProvider>{props.children}</UserProvider>
+        </ModalProvider>
+      </ToastProvider>
+    </ThemeProvider>
+  </BrowserSettingProvider>
 )
 
 const Container = styled.div`
   min-height: 100vh;
 
   & > main {
-    min-height: ${(p) => p.theme?.$().alias.main_height};
+    min-height: ${(p) => p.theme.alias.main_height};
   }
 `
 
 const Root = () => {
-  useAssets(() => `<style id="_goober">${extractCss()}</style>`)
+  useAssets(renderStyle)
 
   return (
     <Html lang="ja">

@@ -1,6 +1,6 @@
+import { css, useTheme } from 'decorock'
 import { Component, For } from 'solid-js'
 import { A } from 'solid-start'
-import { css, useTheme } from 'solid-styled-components'
 
 import { useImagePost } from '.'
 import { IconImg } from '../ui/icon-img'
@@ -53,7 +53,7 @@ export const UserInfo: Component = () => {
         a {
           display: inline-flex;
           align-items: center;
-          color: ${theme.$().colors.text.string()};
+          color: ${theme.colors.text};
           gap: 0.5rem;
 
           & > div {

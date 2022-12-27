@@ -1,28 +1,28 @@
+import { styled } from 'decorock'
 import { createResource, For, Show } from 'solid-js'
 import { A } from 'solid-start'
-import { styled } from 'solid-styled-components'
 
 import { supabase } from '~/lib/api/supabase/client'
 
 const Container = styled.div`
-  min-height: ${(p) => p.theme?.$().alias.main_height};
+  min-height: ${(p) => p.theme.alias.main_height};
   padding: 2rem 1rem;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
 
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  ${(p) => p.theme.media.breakpoints.lg} {
     padding: 2rem 12rem;
   }
 `
 
 const Contest = styled.div`
   padding: 1rem;
-  border: 1px solid ${(p) => p.theme?.$().colors.text.string()};
+  border: 1px solid ${(p) => p.theme.colors.text};
   border-radius: 1rem;
-  color: ${(p) => p.theme?.$().colors.text.string()};
+  color: ${(p) => p.theme.colors.text};
   transition: 0.2s;
 
   &:hover {
-    border: 1px solid ${(p) => p.theme?.$().colors.text.fade(0.5).string()};
+    border: 1px solid ${(p) => p.theme.colors.text.fade(0.5)};
   }
 `
 

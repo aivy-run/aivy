@@ -1,5 +1,5 @@
+import { css, styled } from 'decorock'
 import { A, Outlet, useLocation } from 'solid-start'
-import { css, styled } from 'solid-styled-components'
 
 import { FixedTitle } from '~/components/head/title'
 import { Tab, Tabs } from '~/components/ui/tab'
@@ -10,8 +10,8 @@ const Container = styled(WithUser)`
   padding: 1rem;
   border-radius: 0;
   margin: 0;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  background-color: ${(p) => p.theme.colors.bg_accent};
+  ${(p) => p.theme.media.breakpoints.lg} {
     min-height: auto;
     padding: 2rem;
     border-radius: 1rem;

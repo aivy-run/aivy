@@ -1,7 +1,7 @@
+import { css, styled, useTheme } from 'decorock'
 import { Component, createEffect, createMemo, createSignal, For, on, Show } from 'solid-js'
 import { createSlider } from 'solid-slider'
 import { A } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { Fallback } from './ui/fallback'
 
@@ -21,7 +21,7 @@ const Inner = styled.div`
   overflow: hidden;
   width: 100vw;
   aspect-ratio: 3/1;
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  ${(p) => p.theme.media.breakpoints.lg} {
     width: 70%;
     border-radius: 1rem;
     margin-bottom: 1rem;
@@ -113,7 +113,7 @@ export const InternalAD: Component = () => {
               left: 0;
               width: 100%;
               height: 100%;
-              background-color: ${theme.$().colors.bg.string()};
+              background-color: ${theme.colors.bg};
             `}
           >
             <Fallback height="100%" />

@@ -1,5 +1,5 @@
+import { css, styled } from 'decorock'
 import { Component, ComponentProps, For, Show, splitProps } from 'solid-js'
-import { css, styled } from 'solid-styled-components'
 
 import { CircleSpinner } from './spinner'
 
@@ -9,8 +9,8 @@ const StyledButton = styled.button`
   border: none;
   border-radius: 1rem;
   margin: 0.5rem;
-  background-color: ${(p) => p.theme?.$().colors.main.fade(0.8).string()};
-  color: ${(p) => p.theme?.$().colors.text.string()};
+  background-color: ${(p) => p.theme.colors.main.fade(0.8)};
+  color: ${(p) => p.theme.colors.text};
   cursor: pointer;
   font-size: medium;
   font-weight: bold;
@@ -20,31 +20,27 @@ const StyledButton = styled.button`
   transition: 0.2s;
 
   &:hover {
-    background-color: ${(p) => p.theme?.$().colors.main.fade(0.7).string()};
+    background-color: ${(p) => p.theme.colors.main.fade(0.7)};
   }
 
   &:active {
     div {
-      color: ${(p) => p.theme?.$().colors.text.lighten(0.7).string()};
+      color: ${(p) => p.theme.colors.text.lighten(0.7)};
     }
 
-    background-color: ${(p) => p.theme?.$().colors.main.darken(0.75).fade(0.75).string()};
+    background-color: ${(p) => p.theme.colors.main.darken(0.75).fade(0.75)};
   }
 `
 
 const Inner = styled.div<{ disabled: boolean }>`
   width: 100%;
   height: 100%;
-  color: ${(p) =>
-    p.theme
-      ?.$()
-      .colors.text.fade(p.disabled ? 0.5 : 0)
-      .string()};
+  color: ${(p) => p.theme.colors.text.fade(p.disabled ? 0.5 : 0)};
 `
 
 const Status = styled.div`
   margin-top: 0.5rem;
-  color: ${(p) => p.theme?.$().colors.text.fade(0.5).string()};
+  color: ${(p) => p.theme.colors.text.fade(0.5)};
   font-size: 0.9rem;
 `
 

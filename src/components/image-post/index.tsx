@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { css, styled, useTheme } from 'decorock'
 import {
   Accessor,
   Component,
@@ -9,7 +10,6 @@ import {
   useContext,
 } from 'solid-js'
 import { useSearchParams } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { ADS } from '../ads'
 import { Pagination } from '../ui/pagination'
@@ -32,8 +32,8 @@ const Container = styled.div`
   width: 100%;
   height: auto;
   padding: 0;
-  border-bottom: 1px solid ${(p) => p.theme?.$().colors.text.fade(0.5).string()};
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  border-bottom: 1px solid ${(p) => p.theme.colors.text.fade(0.5)};
+  ${(p) => p.theme.media.breakpoints.lg} {
     min-height: 100%;
     padding: 3rem;
     border-bottom: none;
@@ -114,14 +114,14 @@ export const ImagePostView: Component<{
               width: 100%;
               padding: 1rem;
               border-radius: 0;
-              background-color: ${theme.$().colors.bg_accent.string()};
+              background-color: ${theme.colors.bg_accent};
               gap: 1rem;
 
               & > div {
                 display: flex;
                 flex-direction: column;
               }
-              ${theme.$().media.breakpoints.lg} {
+              ${theme.media.breakpoints.lg} {
                 border-radius: 0.5rem;
                 border-bottom: none;
                 box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.25);
@@ -154,7 +154,7 @@ export const ImagePostView: Component<{
               </HStack>
               <div
                 class={css`
-                  color: ${theme.$().colors.text.fade(0.25).string()};
+                  color: ${theme.colors.text.fade(0.25)};
                   font-size: 0.9rem;
                 `}
               >
@@ -165,7 +165,7 @@ export const ImagePostView: Component<{
           <div
             class={css`
               display: none;
-              ${theme.$().media.breakpoints.lg} {
+              ${theme.media.breakpoints.lg} {
                 display: block;
                 margin-top: 1rem;
               }
@@ -189,9 +189,9 @@ export const ImagePostView: Component<{
               align-items: center;
               padding: 0.5rem 0;
               border-radius: 0;
-              background-color: ${theme.$().colors.bg_accent.string()};
+              background-color: ${theme.colors.bg_accent};
               gap: 0.5rem;
-              ${theme.$().media.breakpoints.lg} {
+              ${theme.media.breakpoints.lg} {
                 height: 70vh;
                 flex-direction: row;
                 padding: 0;
@@ -205,7 +205,7 @@ export const ImagePostView: Component<{
             <div
               class={css`
                 display: block;
-                ${theme.$().media.breakpoints.lg} {
+                ${theme.media.breakpoints.lg} {
                   display: none;
                 }
               `}
@@ -225,7 +225,7 @@ export const ImagePostView: Component<{
                 height: 100%;
                 padding: 1rem;
                 overflow-y: auto;
-                ${theme.$().media.breakpoints.lg} {
+                ${theme.media.breakpoints.lg} {
                   width: 50%;
                   padding: 1rem 0;
                 }

@@ -1,7 +1,7 @@
 import { createDropzone, createFileUploader, UploadFile } from '@solid-primitives/upload'
+import { css, useTheme } from 'decorock'
 import { ComponentProps, createEffect, createSignal, For, Show, splitProps } from 'solid-js'
 import type { Component } from 'solid-js'
-import { css, useTheme } from 'solid-styled-components'
 
 import { Button } from './ui/button'
 
@@ -35,9 +35,7 @@ const ImageBox: Component<
         css`
           position: relative;
           max-width: 100%;
-          border: ${local.selected
-            ? `3px solid ${theme.$().colors.main.darken(0.25).string()}`
-            : 'none'};
+          border: ${local.selected ? `3px solid ${theme.colors.main.darken(0.25)}` : 'none'};
           aspect-ratio: 1 / 1;
           background-color: gray;
           background-image: url(${local.image.source});
@@ -118,8 +116,8 @@ export const ImageUpload: Component<
         class={css`
           width: 100%;
           padding: 5rem 0;
-          background-color: ${theme.$().colors.text.fade(0.9).string()};
-          color: ${theme.$().colors.text.fade(0.5).string()};
+          background-color: ${theme.colors.text.fade(0.9)};
+          color: ${theme.colors.text.fade(0.5)};
           cursor: ${images().length > 0 ? 'auto' : 'pointer'};
           text-align: center;
         `}

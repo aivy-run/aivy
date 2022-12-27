@@ -1,6 +1,6 @@
+import { styled } from 'decorock'
 import type { Component, JSX } from 'solid-js'
 import { A, Outlet, useLocation } from 'solid-start'
-import { styled } from 'solid-styled-components'
 
 import { FixedTitle } from '~/components/head/title'
 import { Tab, Tabs } from '~/components/ui/tab'
@@ -19,11 +19,11 @@ const Inner = styled.div`
   width: 100%;
   min-height: 100vh;
   padding: 1rem;
-  border-top: solid 1.5px ${(p) => p.theme?.$().colors.text.fade(0.5).string()};
+  border-top: solid 1.5px ${(p) => p.theme.colors.text.fade(0.5)};
   margin: 0;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
 
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  ${(p) => p.theme.media.breakpoints.lg} {
     width: 70%;
     height: 100%;
     min-height: auto;

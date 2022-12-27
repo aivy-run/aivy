@@ -1,6 +1,6 @@
 import { Link } from '@solidjs/router'
+import { css, styled, useTheme } from 'decorock'
 import { Show } from 'solid-js'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { HeaderTabs } from './tabs'
 import { User } from './user'
@@ -14,11 +14,11 @@ const Container = styled.header`
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
   grid-template-columns: 100px 150px;
   grid-template-rows: 60px;
 
-  ${(p) => p.theme?.$().media.breakpoints.md} {
+  ${(p) => p.theme.media.breakpoints.md} {
     padding: 0 4rem;
     grid-template-columns: 100px 300px;
   }
@@ -33,7 +33,7 @@ export const Header = () => {
         <Link
           href="/"
           class={css`
-            color: ${theme.$().colors.text.string()};
+            color: ${theme.colors.text};
 
             svg {
               max-width: 100%;
@@ -42,7 +42,7 @@ export const Header = () => {
             }
           `}
         >
-          <Show when={theme.$().name === 'dark'} fallback={<LogoLight height={40} />}>
+          <Show when={theme.name === 'dark'} fallback={<LogoLight height={40} />}>
             <LogoDark height={40} />
           </Show>
         </Link>

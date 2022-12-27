@@ -1,6 +1,6 @@
+import { css, styled, useTheme } from 'decorock'
 import { createEffect } from 'solid-js'
 import { useNavigate } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { FixedTitle } from '~/components/head/title'
 import { Button } from '~/components/ui/button'
@@ -51,8 +51,8 @@ export default function Sign() {
             width: 80%;
             padding: 1rem 0;
             border-radius: 1rem;
-            background-color: ${theme.$().colors.bg_accent.string()};
-            ${theme.$().media.breakpoints.md} {
+            background-color: ${theme.colors.bg_accent};
+            ${theme.media.breakpoints.md} {
               width: 50%;
             }
           `}

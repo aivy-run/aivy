@@ -1,6 +1,6 @@
+import { css, styled } from 'decorock'
 import { Component, createMemo, createSignal, Show } from 'solid-js'
 import { A } from 'solid-start'
-import { css, styled } from 'solid-styled-components'
 
 import { Button } from './ui/button'
 import { useModal } from './ui/modal'
@@ -12,8 +12,8 @@ import type { Zoning } from '~/lib/api/supabase/user'
 
 const Container = styled.div`
   padding: 1rem;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  background-color: ${(p) => p.theme.colors.bg_accent};
+  ${(p) => p.theme.media.breakpoints.lg} {
     border-radius: 0.5rem;
     margin-bottom: 1rem;
   }

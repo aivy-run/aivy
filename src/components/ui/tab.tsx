@@ -1,5 +1,5 @@
+import { css, styled, useTheme } from 'decorock'
 import { Component, ComponentProps, createSignal, splitProps } from 'solid-js'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { classnames } from '~/lib/classnames'
 
@@ -33,7 +33,7 @@ export const Tabs: Component<ComponentProps<'div'>> = (props) => {
             left: ${scroll().toString()}px;
             min-width: 100%;
             height: 1.25px;
-            background: ${theme.$().colors.main.lighten(0.01).string()};
+            background: ${theme.colors.main.lighten(0.01)};
             content: '';
           }
         `,
@@ -52,20 +52,12 @@ export const Tab = styled.div<{ selected?: boolean }>`
   flex: 0 0 auto;
   padding: 0.25rem;
   margin-right: 0.25rem;
-  color: ${(p) =>
-    p.theme
-      ?.$()
-      .colors.text.fade(p.selected ? 0 : 0.5)
-      .string()};
+  color: ${(p) => p.theme.colors.text.fade(p.selected ? 0 : 0.5)};
   cursor: pointer;
   font-weight: ${(p) => (p.selected ? 'bold' : 'normal')};
 
   * {
-    color: ${(p) =>
-      p.theme
-        ?.$()
-        .colors.text.fade(p.selected ? 0 : 0.5)
-        .string()};
+    color: ${(p) => p.theme.colors.text.fade(p.selected ? 0 : 0.5)};
     font-weight: ${(p) => (p.selected ? 'bold' : 'normal')};
     white-space: nowrap;
   }
@@ -77,8 +69,7 @@ export const Tab = styled.div<{ selected?: boolean }>`
     left: 0;
     width: 100%;
     height: 2px;
-    background: ${(p) =>
-      p.selected ? p.theme?.$().colors.main.darken(0.1).string() : 'transparent'};
+    background: ${(p) => (p.selected ? p.theme.colors.main.darken(0.1) : 'transparent')};
     content: '';
   }
 `

@@ -1,5 +1,5 @@
+import { css, useTheme } from 'decorock'
 import type { Component } from 'solid-js'
-import { css, useTheme } from 'solid-styled-components'
 
 import { AutoComplete } from '~/components/ui/auto-complete'
 import { Input } from '~/components/ui/input'
@@ -60,7 +60,7 @@ export const ImageInformationForm: Component<{
           margin: 1rem 0;
           gap: 1rem;
           grid-template-columns: 1fr;
-          ${theme.$().media.breakpoints.lg} {
+          ${theme.media.breakpoints.lg} {
             width: 100%;
             grid-template-columns: repeat(3, 1fr);
           }
@@ -89,7 +89,7 @@ export const ImageInformationForm: Component<{
           margin: 1rem 0;
           gap: 1rem;
           grid-template-columns: 1fr 1fr;
-          ${theme.$().media.breakpoints.lg} {
+          ${theme.media.breakpoints.lg} {
             width: 100%;
             grid-template-columns: 400px 1fr 0.25fr 0.25fr;
           }

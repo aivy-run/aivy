@@ -1,6 +1,6 @@
 import { A } from '@solidjs/router'
+import { css, styled, useTheme } from 'decorock'
 import type { Component } from 'solid-js'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { Button } from '../ui/button'
 import { WithUser } from '../with-user'
@@ -35,7 +35,7 @@ export const User: Component = () => {
         class={css`
           display: flex;
           align-items: center;
-          color: ${theme.$().colors.text.string()};
+          color: ${theme.colors.text};
         `}
         href="/search"
       >
@@ -55,7 +55,7 @@ export const User: Component = () => {
                 padding: 0.75rem 1rem;
 
                 a {
-                  color: ${theme.$().colors.text.string()};
+                  color: ${theme.colors.text};
                 }
               `}
             >
@@ -69,7 +69,7 @@ export const User: Component = () => {
           href="/submit/image"
           class={css`
             display: none;
-            ${theme.$().media.breakpoints.md} {
+            ${theme.media.breakpoints.md} {
               display: block;
             }
           `}

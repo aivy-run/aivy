@@ -1,6 +1,6 @@
 import { A } from '@solidjs/router'
+import { css, styled, useTheme } from 'decorock'
 import type { Component } from 'solid-js'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { Button } from '../ui/button'
 import { useToast } from '../ui/toast'
@@ -68,13 +68,13 @@ export const ShareBox: Component<{ post: CompleteNotePost }> = (props) => {
           align-items: center;
           padding: 0.5rem;
           border-radius: 0.25rem;
-          background-color: ${theme.$().colors.text.fade(0.95).string()};
+          background-color: ${theme.colors.text.fade(0.95)};
           gap: 1rem;
         `}
       >
         <div
           class={css`
-            color: ${theme.$().colors.text.string()};
+            color: ${theme.colors.text};
           `}
         >
           https://aivy.run/notes/{props.post.id}
@@ -85,7 +85,7 @@ export const ShareBox: Component<{ post: CompleteNotePost }> = (props) => {
 
             &:hover {
               path {
-                fill: ${theme.$().colors.text.fade(0.5).string()};
+                fill: ${theme.colors.text.fade(0.5)};
               }
             }
           `}

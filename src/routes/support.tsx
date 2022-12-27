@@ -1,5 +1,5 @@
+import { styled } from 'decorock'
 import { A } from 'solid-start'
-import { styled } from 'solid-styled-components'
 
 import { FixedTitle } from '~/components/head/title'
 import { Button } from '~/components/ui/button'
@@ -11,7 +11,7 @@ const Container = styled.div`
   justify-content: center;
   padding: 2rem 0;
   margin-top: 4rem;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
 `
 
 export default function Support() {

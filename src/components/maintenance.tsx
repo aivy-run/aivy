@@ -1,13 +1,13 @@
+import { styled } from 'decorock'
 import { Component, JSX, Show } from 'solid-js'
 import { A, useSearchParams } from 'solid-start'
-import { styled } from 'solid-styled-components'
 
 import { Button } from './ui/button'
 
 const Container = styled.div`
   display: flex;
   width: 100%;
-  height: ${(p) => p.theme?.$().alias.main_height};
+  height: ${(p) => p.theme.alias.main_height};
   flex-direction: column;
   align-items: center;
   justify-content: center;

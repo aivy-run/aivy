@@ -1,6 +1,6 @@
 import Color from 'color'
+import { css, styled, useTheme } from 'decorock'
 import { createSignal } from 'solid-js'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { FixedTitle } from '~/components/head/title'
 import { Button } from '~/components/ui/button'
@@ -11,7 +11,7 @@ import { supabase } from '~/lib/api/supabase/client'
 
 const Container = styled(WithUser)`
   display: flex;
-  height: ${(p) => p.theme?.$().alias.main_height};
+  height: ${(p) => p.theme.alias.main_height};
   align-items: center;
   justify-content: center;
   margin-bottom: 4rem;
@@ -20,8 +20,8 @@ const Inner = styled.div`
   width: 100%;
   height: 100%;
   padding: 1rem;
-  border-top: 1px solid ${(p) => p.theme?.$().colors.text.fade(0.5).string()};
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  border-top: 1px solid ${(p) => p.theme.colors.text.fade(0.5)};
+  background-color: ${(p) => p.theme.colors.bg_accent};
 
   ul {
     padding-left: 1.5em;
@@ -34,7 +34,7 @@ const Inner = styled.div`
       }
     }
   }
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  ${(p) => p.theme.media.breakpoints.lg} {
     width: 60%;
     height: auto;
     border-radius: 1rem;
@@ -68,7 +68,7 @@ export default function DeleteAccount() {
               一度アカウントを削除すると、以下のものが
               <span
                 class={css`
-                  color: ${theme.$().colors.text.mix(Color('red').lighten(0.5)).string()};
+                  color: ${theme.colors.text.mix(Color('red').lighten(0.5))};
                 `}
               >
                 削除され、復元することはできません。
@@ -92,20 +92,17 @@ export default function DeleteAccount() {
                 justify-content: center;
                 padding: 1rem;
                 border-radius: 0.5rem;
-                background-color: ${theme.$().colors.bg.mix(Color('red').fade(0.9)).string()};
+                background-color: ${theme.colors.bg.mix(Color('red').fade(0.9))};
               `}
             >
               <Button
                 class={css`
-                  border: 1px solid ${Color('red').fade(0.75).string()};
-                  background-color: ${theme.$().colors.bg.mix(Color('red').lighten(0.6)).string()};
-                  color: ${theme.$().colors.text.string()};
+                  border: 1px solid ${Color('red').fade(0.75)};
+                  background-color: ${theme.colors.bg.mix(Color('red').lighten(0.6))};
+                  color: ${theme.colors.text};
 
                   &:hover {
-                    background-color: ${theme
-                      .$()
-                      .colors.bg.mix(Color('red').lighten(0.8))
-                      .string()};
+                    background-color: ${theme.colors.bg.mix(Color('red').lighten(0.8))};
                   }
                 `}
                 disabled={!checked() || loading()}

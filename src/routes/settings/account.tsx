@@ -1,6 +1,6 @@
+import { css, useTheme } from 'decorock'
 import { createEffect, createSignal } from 'solid-js'
 import { A } from 'solid-start'
-import { css, useTheme } from 'solid-styled-components'
 
 import { Button } from '~/components/ui/button'
 import { CheckBox } from '~/components/ui/checkbox'
@@ -77,7 +77,7 @@ export default function Account() {
         <h2>アカウントの削除</h2>
         <A
           class={css`
-            color: ${theme.$().colors.text.string()};
+            color: ${theme.colors.text};
             text-underline-offset: 0.25rem;
 
             &:hover {

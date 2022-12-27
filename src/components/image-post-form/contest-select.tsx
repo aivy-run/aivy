@@ -1,7 +1,7 @@
 import Color from 'color'
 import dayjs from 'dayjs'
+import { css, styled, useTheme } from 'decorock'
 import { Component, createEffect, createMemo, createSignal, onMount, Show } from 'solid-js'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { CheckBox } from '../ui/checkbox'
 
@@ -13,12 +13,7 @@ const Container = styled.div``
 const Item = styled.div<{ selected: boolean }>`
   display: grid;
   padding: 0.5rem;
-  border: solid 1px
-    ${(p) =>
-      p.theme
-        ?.$()
-        .colors.main.fade(p.selected ? 0.25 : 0.8)
-        .string()};
+  border: solid 1px ${(p) => p.theme.colors.main.fade(p.selected ? 0.25 : 0.8)};
   border-radius: 1rem;
   cursor: pointer;
   gap: 1rem;
@@ -38,7 +33,7 @@ const AINetaContest: Component<{ onSelect: (select: boolean) => void; posted: bo
   return (
     <Item
       class={css`
-        color: ${props.posted ? theme.$().colors.text.fade(0.25).string() : 'inherit'};
+        color: ${props.posted ? theme.colors.text.fade(0.25) : 'inherit'};
       `}
       selected={checked()}
       onClick={() => {
@@ -63,7 +58,7 @@ const AINetaContest: Component<{ onSelect: (select: boolean) => void; posted: bo
           <br />
           <div
             class={css`
-              color: ${Color('red').lighten(0.25).string()};
+              color: ${Color('red').lighten(0.25)};
             `}
           >
             今日はすでに投稿しています。

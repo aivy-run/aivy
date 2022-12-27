@@ -1,12 +1,12 @@
+import { css, styled, useTheme } from 'decorock'
 import { Component, JSX, Show } from 'solid-js'
 import { A, useLocation } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 const FallBack = styled.div`
   position: relative;
   z-index: 5;
   height: 0;
-  border-bottom: solid 1px ${(p) => p.theme?.$().colors.text.fade(0.5).string()};
+  border-bottom: solid 1px ${(p) => p.theme.colors.text.fade(0.5)};
   margin-bottom: -1px;
 `
 
@@ -15,9 +15,9 @@ const Container = styled.div`
   z-index: 5;
   top: 0;
   padding: 0 1rem;
-  border-bottom: solid 1px ${(p) => p.theme?.$().colors.text.fade(0.5).string()};
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
-  ${(p) => p.theme?.$().media.breakpoints.md} {
+  border-bottom: solid 1px ${(p) => p.theme.colors.text.fade(0.5)};
+  background-color: ${(p) => p.theme.colors.bg_accent};
+  ${(p) => p.theme.media.breakpoints.md} {
     padding: 0 4rem;
   }
 `
@@ -36,9 +36,7 @@ const Tab: Component<{ href: string; selected: boolean; children: JSX.Element }>
         position: relative;
         height: 100%;
         padding: 0.5rem 0;
-        color: ${props.selected
-          ? theme.$().colors.text.string()
-          : theme.$().colors.text.fade(0.5).string()};
+        color: ${props.selected ? theme.colors.text : theme.colors.text.fade(0.5)};
         font-weight: bold;
         transition: 0.5s;
 
@@ -49,14 +47,12 @@ const Tab: Component<{ href: string; selected: boolean; children: JSX.Element }>
           left: 0;
           width: 100%;
           height: 2px;
-          background: ${props.selected
-            ? theme.$().colors.main.darken(0.1).string()
-            : 'transparent'};
+          background: ${props.selected ? theme.colors.main.darken(0.1) : 'transparent'};
           content: '';
         }
 
         &:hover {
-          color: ${theme.$().colors.text.string()};
+          color: ${theme.colors.text};
         }
       `}
     >

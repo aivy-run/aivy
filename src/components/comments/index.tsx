@@ -1,3 +1,4 @@
+import { css, styled, useTheme } from 'decorock'
 import {
   Accessor,
   Component,
@@ -9,7 +10,6 @@ import {
   Show,
 } from 'solid-js'
 import { useNavigate } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { Button } from '../ui/button'
 import { Fallback } from '../ui/fallback'
@@ -36,14 +36,14 @@ export const CommentContext = createContext(
 
 const Container = styled.div`
   width: 100%;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
 
   h1 {
     margin-bottom: 0.5rem;
     font-size: 1.25rem;
   }
 
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  ${(p) => p.theme.media.breakpoints.lg} {
     padding: 1rem 0;
     background-color: transparent;
   }
@@ -148,7 +148,7 @@ export const Comments: Component<{ id: number; commentable_type: CommentableType
                 class={css`
                   padding: 1rem;
                   border-radius: 0.5rem;
-                  background-color: ${theme.$().colors.bg_accent.string()};
+                  background-color: ${theme.colors.bg_accent};
                   text-align: center;
                 `}
               >

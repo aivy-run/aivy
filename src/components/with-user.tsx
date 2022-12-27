@@ -1,3 +1,4 @@
+import { css } from 'decorock'
 import {
   Component,
   ComponentProps,
@@ -8,7 +9,6 @@ import {
   splitProps,
 } from 'solid-js'
 import { useNavigate } from 'solid-start'
-import { css } from 'solid-styled-components'
 
 import { useUser } from '~/context/user'
 import { classnames } from '~/lib/classnames'

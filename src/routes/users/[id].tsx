@@ -1,3 +1,4 @@
+import { css, styled, useTheme } from 'decorock'
 import {
   Accessor,
   createContext,
@@ -8,7 +9,6 @@ import {
   Show,
 } from 'solid-js'
 import { A, Meta, Outlet, useLocation, useParams } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { NotFoundError } from '~/components/error-handler'
 import { FixedTitle } from '~/components/head/title'
@@ -26,12 +26,12 @@ import IconTwitter from '~icons/thirdparty/twitter'
 const Container = styled.div`
   position: relative;
   display: flex;
-  min-height: ${(p) => p.theme?.$().alias.main_height};
+  min-height: ${(p) => p.theme.alias.main_height};
   flex-direction: column;
   align-items: center;
-  border-top: solid 1.5px ${(p) => p.theme?.$().colors.text.string()};
+  border-top: solid 1.5px ${(p) => p.theme.colors.text};
   margin-bottom: 2rem;
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  ${(p) => p.theme.media.breakpoints.lg} {
     border-top: none;
   }
 `
@@ -40,9 +40,9 @@ const UserBox = styled.div`
   width: 100%;
   min-height: 100%;
   padding: 1rem 2rem;
-  border-top: solid 1.5px ${(p) => p.theme?.$().colors.text.fade(0.5).string()};
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  border-top: solid 1.5px ${(p) => p.theme.colors.text.fade(0.5)};
+  background-color: ${(p) => p.theme.colors.bg_accent};
+  ${(p) => p.theme.media.breakpoints.lg} {
     width: 80%;
     border-radius: 0.5rem;
     border-top: none;
@@ -93,7 +93,7 @@ export default function User() {
       fallback={
         <div
           class={css`
-            min-height: ${theme.$().alias.main_height};
+            min-height: ${theme.alias.main_height};
           `}
         />
       }
@@ -128,7 +128,7 @@ export default function User() {
                     opacity: 0;
                     transition: 0.2s;
                     vertical-align: top;
-                    ${theme.$().media.breakpoints.lg} {
+                    ${theme.media.breakpoints.lg} {
                       aspect-ratio: 4/1;
                     }
                   }
@@ -154,7 +154,7 @@ export default function User() {
                     align-items: center;
                     justify-content: space-between;
 
-                    ${theme.$().media.breakpoints.lg} {
+                    ${theme.media.breakpoints.lg} {
                       flex-direction: row;
                       align-items: flex-start;
                     }
@@ -198,7 +198,7 @@ export default function User() {
                         width: 100%;
                         padding: 0.5rem 0.75rem;
                         border-radius: 0.5rem;
-                        background-color: ${theme.$().colors.text.fade(0.9).string()};
+                        background-color: ${theme.colors.text.fade(0.9)};
                       `}
                     >
                       {user.introduction}
@@ -207,7 +207,7 @@ export default function User() {
                   <div
                     class={css`
                       text-align: center;
-                      ${theme.$().media.breakpoints.lg} {
+                      ${theme.media.breakpoints.lg} {
                         min-width: 300px;
                         text-align: right;
                       }

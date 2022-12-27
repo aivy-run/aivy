@@ -1,4 +1,4 @@
-import { styled } from 'solid-styled-components'
+import { styled } from 'decorock'
 
 const RectSpinnerContainer = styled.div`
   @keyframes sk-stretchdelay {
@@ -25,7 +25,7 @@ const RectSpinnerContainer = styled.div`
     height: 100%;
     margin: 0 4px;
     animation: sk-stretchdelay 1.2s infinite ease-in-out;
-    background-color: ${(p) => p.theme?.$().colors.text.string()};
+    background-color: ${(p) => p.theme.colors.text};
   }
 
   div:nth-child(2) {
@@ -74,7 +74,7 @@ const CircleSpinnerContainer = styled.div`
       border-radius: 100%;
       margin: 0 auto;
       animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;
-      background-color: ${(p) => p.theme?.$().colors.text.string()};
+      background-color: ${(p) => p.theme.colors.text};
       content: '';
     }
   }

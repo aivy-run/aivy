@@ -1,6 +1,6 @@
+import { css, styled, useTheme } from 'decorock'
 import { Component, createSignal, For, onCleanup, onMount } from 'solid-js'
 import { A } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { IconImg } from '../ui/icon-img'
 
@@ -26,7 +26,7 @@ const Inner = styled.div<{ scroll: boolean }>`
   padding: 0 5px;
   gap: 5px;
   overflow-x: ${(p) => (p.scroll ? 'auto' : 'hidden')};
-  ${(p) => p.theme?.$().media.breakpoints.sm} {
+  ${(p) => p.theme.media.breakpoints.sm} {
     justify-content: ${(p) => (p.scroll ? 'flex-start' : 'center')};
     padding: ${PADDING.toString()}px;
     gap: ${GAP.toString()}px;
@@ -42,11 +42,11 @@ const NoteItem = styled.div`
   overflow: hidden;
   width: 100%;
   flex-direction: column;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
-  color: ${(p) => p.theme?.$().colors.text.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
+  color: ${(p) => p.theme.colors.text};
   grid-template-columns: 100%;
   grid-template-rows: 1fr 0.25fr;
-  ${(p) => p.theme?.$().media.breakpoints.sm} {
+  ${(p) => p.theme.media.breakpoints.sm} {
     width: ${WIDTH.toString()}px;
     min-width: ${WIDTH.toString()}px;
     border: none;
@@ -111,12 +111,12 @@ export const NoteList: Component<PropsT> = (props) => {
                       overflow: hidden;
                       width: 100%;
                       margin-bottom: 0.5rem;
-                      color: ${theme.$().colors.text.string()};
+                      color: ${theme.colors.text};
                       font-size: 1.25rem;
                       text-overflow: ellipsis;
                       white-space: nowrap;
                     }
-                    ${theme.$().media.breakpoints.lg} {
+                    ${theme.media.breakpoints.lg} {
                       padding: 0.5rem 1rem;
                     }
                   `}
@@ -134,7 +134,7 @@ export const NoteList: Component<PropsT> = (props) => {
                         class={css`
                           display: inline-flex;
                           align-items: center;
-                          color: ${theme.$().colors.text.string()};
+                          color: ${theme.colors.text};
                           font-size: 0.9rem;
                           gap: 0.1rem;
 
@@ -146,7 +146,7 @@ export const NoteList: Component<PropsT> = (props) => {
                             object-fit: cover;
                           }
 
-                          ${theme.$().media.breakpoints.lg} {
+                          ${theme.media.breakpoints.lg} {
                             font-size: 1rem;
                             gap: 0.5rem;
                           }

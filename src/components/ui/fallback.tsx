@@ -1,5 +1,5 @@
+import { css, styled } from 'decorock'
 import type { Component } from 'solid-js'
-import { css, styled } from 'solid-styled-components'
 
 import { RectSpinner } from './spinner'
 

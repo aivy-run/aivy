@@ -1,3 +1,4 @@
+import { css, styled, useTheme } from 'decorock'
 import {
   createMemo,
   Show,
@@ -8,7 +9,6 @@ import {
   splitProps,
 } from 'solid-js'
 import { useLocation, useNavigate, useSearchParams } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { PostsWithSorter } from '~/components/gallery/posts-sorter'
 import { FixedTitle } from '~/components/head/title'
@@ -62,16 +62,16 @@ const SearchInput: Component<ComponentProps<'div'>> = (props) => {
 
 const Container = styled.div`
   padding: 2rem 0;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
 
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  ${(p) => p.theme.media.breakpoints.lg} {
     padding: 2rem 12rem;
   }
 `
 
 const PostContainer = styled.div`
   padding: 1rem;
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  ${(p) => p.theme.media.breakpoints.lg} {
     padding: 1rem 12rem;
   }
 `
@@ -88,8 +88,8 @@ export default function Search() {
       </>
       <div
         class={css`
-          min-height: ${theme.$().alias.main_height};
-          background-color: ${theme.$().colors.bg_accent.string()};
+          min-height: ${theme.alias.main_height};
+          background-color: ${theme.colors.bg_accent};
         `}
       >
         <Container>

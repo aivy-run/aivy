@@ -1,6 +1,6 @@
+import { css, styled, useTheme } from 'decorock'
 import { createSignal, Show } from 'solid-js'
 import { A, useNavigate } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { IconImg } from '../ui/icon-img'
 import { Line } from '../ui/line'
@@ -25,7 +25,7 @@ const Container = styled.div`
   width: 200px;
   border-radius: 0.5rem;
   margin-top: 1rem;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.5);
 `
 
@@ -36,12 +36,8 @@ const MenuItem = styled.div<{ loading?: boolean }>`
   align-items: center;
   padding: 0.5rem 1rem;
   border: none;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
-  color: ${(p) =>
-    p.theme
-      ?.$()
-      .colors.text.fade(p.loading ? 0.5 : 0)
-      .string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
+  color: ${(p) => p.theme.colors.text.fade(p.loading ? 0.5 : 0)};
   cursor: pointer;
   font-weight: bold;
   grid-template-columns: 25px 1fr;
@@ -81,7 +77,7 @@ export const Menu = () => {
     width: 100%;
     padding: 0.5rem 1rem;
     border: none;
-    background-color: ${theme.$().colors.bg_accent.string()};
+    background-color: ${theme.colors.bg_accent};
     cursor: pointer;
     outline: none;
     transition: 0.2s;
@@ -107,14 +103,14 @@ export const Menu = () => {
               style_button,
               css`
                 padding: 0.5rem;
-                color: ${theme.$().colors.text.string()};
+                color: ${theme.colors.text};
 
                 h2 {
                   font-size: 1rem;
                 }
 
                 p {
-                  color: ${theme.$().colors.text.fade(0.25).string()};
+                  color: ${theme.colors.text.fade(0.25)};
                   font-size: 0.75rem;
                 }
               `,

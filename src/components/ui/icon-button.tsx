@@ -1,4 +1,4 @@
-import { styled } from 'solid-styled-components'
+import { styled } from 'decorock'
 
 export const IconButton = styled.button`
   display: inline-flex;
@@ -9,13 +9,13 @@ export const IconButton = styled.button`
   border-radius: 0.5rem;
   aspect-ratio: 1/1;
   background-color: transparent;
-  color: ${(p) => p.theme?.$().colors.text.string()};
+  color: ${(p) => p.theme.colors.text};
   cursor: pointer;
   outline: none;
   transition: 0.2s;
   user-select: none;
 
   &:hover {
-    background-color: ${(p) => p.theme?.$().colors.main.fade(0.75).string()};
+    background-color: ${(p) => p.theme.colors.main.fade(0.75)};
   }
 `

@@ -1,7 +1,7 @@
 import { createFileUploader, UploadFile } from '@solid-primitives/upload'
+import { css, useTheme } from 'decorock'
 import { createEffect, createSignal, Show } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import { css, useTheme } from 'solid-styled-components'
 
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
@@ -55,7 +55,7 @@ export default function Profile() {
           <div
             class={css`
               width: 100%;
-              background-color: ${theme.$().colors.text.fade(0.9).string()};
+              background-color: ${theme.colors.text.fade(0.9)};
 
               img {
                 width: 100%;
@@ -100,7 +100,7 @@ export default function Profile() {
           <VStack
             class={css`
               width: 100%;
-              ${theme.$().media.breakpoints.lg} {
+              ${theme.media.breakpoints.lg} {
                 width: 40%;
               }
             `}
@@ -136,7 +136,7 @@ export default function Profile() {
               display: inline-flex;
               width: 100%;
               align-items: flex-start;
-              ${theme.$().media.breakpoints.lg} {
+              ${theme.media.breakpoints.lg} {
                 width: 50%;
               }
 

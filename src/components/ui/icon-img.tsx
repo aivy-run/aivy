@@ -1,5 +1,5 @@
+import { css } from 'decorock'
 import { Component, ComponentProps, splitProps } from 'solid-js'
-import { css } from 'solid-styled-components'
 
 import { createImageURL } from '~/lib/api/cloudflare'
 import { classnames } from '~/lib/classnames'

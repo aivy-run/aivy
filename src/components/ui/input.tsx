@@ -1,6 +1,6 @@
 import Color from 'color'
+import { css, styled } from 'decorock'
 import { Component, ComponentProps, createEffect, createSignal, Show, splitProps } from 'solid-js'
-import { css, styled } from 'solid-styled-components'
 
 import { Required } from './required'
 
@@ -14,16 +14,15 @@ const StyledInput = styled.input`
   width: 100%;
   box-sizing: border-box;
   padding: 0.5rem;
-  border: 1px solid ${(p) => p.theme?.$().colors.main.fade(0.5).string()};
+  border: 1px solid ${(p) => p.theme.colors.main.fade(0.5).string()};
   border-radius: 0.5rem;
   background-color: rgba(0, 0, 0, 0.05);
-  color: ${(p) =>
-    (p.disabled ? p.theme?.$().colors.text.fade(0.25) : p.theme?.$().colors.text)?.string()};
+  color: ${(p) => (p.disabled ? p.theme.colors.text.fade(0.25) : p.theme.colors.text)};
   font-size: 1rem;
   outline: none;
 
   &:focus {
-    border: 1px solid ${(p) => p.theme?.$().colors.main.darken(0.25).string()};
+    border: 1px solid ${(p) => p.theme.colors.main.darken(0.25).string()};
   }
 `
 export const Input: Component<

@@ -1,3 +1,4 @@
+import { css, styled, useTheme } from 'decorock'
 import {
   Component,
   createContext,
@@ -11,7 +12,6 @@ import {
   useContext,
 } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import IconCheck from '~icons/carbon/checkmark-outline'
 import IconClose from '~icons/carbon/close'
@@ -33,7 +33,6 @@ const ToastContainer = styled.div`
   z-index: 10;
   left: 0;
   display: flex;
-  height: 100vh;
   height: 100dvh;
   flex-direction: column-reverse;
   padding: 1rem;
@@ -66,7 +65,7 @@ const Toast: Component<
         align-items: center;
         padding: 1rem;
         border-radius: 0.5rem;
-        background-color: ${theme.$().colors.bg_accent.string()};
+        background-color: ${theme.colors.bg_accent};
         box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.6);
         gap: 0.25rem;
         grid-template-columns: 50px 1fr 25px;
@@ -123,7 +122,7 @@ const Toast: Component<
             }
 
             &:hover {
-              background-color: ${theme.$().colors.bg.string()};
+              background-color: ${theme.colors.bg};
             }
           `}
           onClick={() => hideToast()}

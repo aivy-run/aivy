@@ -1,8 +1,8 @@
+import { styled } from 'decorock'
 import { Component, createEffect, createMemo } from 'solid-js'
 import { NoHydration } from 'solid-js/web'
 import { A } from 'solid-start'
 import { HttpStatusCode } from 'solid-start/server'
-import { styled } from 'solid-styled-components'
 
 import { FixedTitle } from './head/title'
 import { Button } from './ui/button'
@@ -23,12 +23,12 @@ export class NotFoundError extends Error implements HttpError {
 
 const Container = styled.div`
   display: flex;
-  min-height: ${(p) => p.theme?.$().alias.main_height};
+  min-height: ${(p) => p.theme.alias.main_height};
   align-items: center;
   justify-content: center;
   padding: 1rem 2rem;
   border-radius: 0.5rem;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
 
   & > div {
     text-align: center;

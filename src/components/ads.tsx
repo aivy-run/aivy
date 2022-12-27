@@ -1,6 +1,6 @@
+import { css } from 'decorock'
 import { Component, ComponentProps, onMount, splitProps } from 'solid-js'
 import { NoHydration } from 'solid-js/web'
-import { css } from 'solid-styled-components'
 
 import { classnames } from '~/lib/classnames'
 

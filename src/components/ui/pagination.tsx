@@ -1,6 +1,6 @@
+import { css, styled, useTheme } from 'decorock'
 import { Component, createMemo, For, Show } from 'solid-js'
 import { A } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { Button } from './button'
 
@@ -53,7 +53,7 @@ export const Pagination: Component<{
         <A
           class={css`
             display: none;
-            ${theme.$().media.breakpoints.lg} {
+            ${theme.media.breakpoints.lg} {
               display: block;
             }
           `}
@@ -100,12 +100,12 @@ export const Pagination: Component<{
                     height: 35px;
                     align-items: center;
                     justify-content: center;
-                    border: 1.5px solid ${theme.$().colors.text.string()};
+                    border: 1.5px solid ${theme.colors.text};
                     border-radius: 0.25rem;
                     background-color: ${page === props.current
-                      ? theme.$().colors.bg.darken(0.25).string()
-                      : theme.$().colors.bg.lighten(0.75).string()};
-                    color: ${page === props.current ? 'white' : theme.$().colors.text.string()};
+                      ? theme.colors.bg.darken(0.25)
+                      : theme.colors.bg.lighten(0.75)};
+                    color: ${page === props.current ? 'white' : theme.colors.text};
                     font-size: 1rem;
                     font-weight: 400;
                   `}
@@ -136,7 +136,7 @@ export const Pagination: Component<{
         <A
           class={css`
             display: none;
-            ${theme.$().media.breakpoints.lg} {
+            ${theme.media.breakpoints.lg} {
               display: block;
             }
           `}

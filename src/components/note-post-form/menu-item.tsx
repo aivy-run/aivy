@@ -1,5 +1,5 @@
+import { styled } from 'decorock'
 import type { Accessor, Component, JSX } from 'solid-js'
-import { styled } from 'solid-styled-components'
 
 const Button = styled.button<{ active: boolean }>`
   width: 1.75rem;
@@ -8,15 +8,14 @@ const Button = styled.button<{ active: boolean }>`
   border: none;
   border-radius: 0.5rem;
   margin-right: 0.25rem;
-  background-color: ${(p) => (p.active ? p.theme?.$().colors.text.string() : 'transparent')};
-  color: ${(p) => (p.active ? p.theme?.$().colors.bg.string() : p.theme?.$().colors.text.string())};
+  background-color: ${(p) => (p.active ? p.theme.colors.text : 'transparent')};
+  color: ${(p) => (p.active ? p.theme.colors.bg : p.theme.colors.text)};
   cursor: pointer;
   transition: 0.1s;
   user-select: none;
 
   &:hover {
-    background-color: ${(p) =>
-      p.active ? p.theme?.$().colors.text.string() : p.theme?.$().colors.text.fade(0.9).string()};
+    background-color: ${(p) => (p.active ? p.theme.colors.text : p.theme.colors.text.fade(0.9))};
   }
 
   svg {

@@ -1,5 +1,5 @@
+import { css, useTheme } from 'decorock'
 import { Component, ComponentProps, createEffect, createSignal, JSX, splitProps } from 'solid-js'
-import { css, useTheme } from 'solid-styled-components'
 
 import { classnames } from '~/lib/classnames'
 import IconBookmark from '~icons/carbon/bookmark-filled'
@@ -50,21 +50,11 @@ export const createBaseButton = (
 
 export const FavButton: ReturnType<typeof createBaseButton> = (props) => {
   const theme = useTheme()
-  const Comp = createBaseButton(
-    IconFavorite,
-    '#ff4060',
-    theme.$().colors.bg_accent.string(),
-    theme.$().colors.text.string(),
-  )
+  const Comp = createBaseButton(IconFavorite, '#ff4060', theme.colors.bg_accent, theme.colors.text)
   return <Comp {...props} />
 }
 export const BookmarkButton: ReturnType<typeof createBaseButton> = (props) => {
   const theme = useTheme()
-  const Comp = createBaseButton(
-    IconBookmark,
-    '#5d85b9',
-    theme.$().colors.bg_accent.string(),
-    theme.$().colors.text.string(),
-  )
+  const Comp = createBaseButton(IconBookmark, '#5d85b9', theme.colors.bg_accent, theme.colors.text)
   return <Comp {...props} />
 }

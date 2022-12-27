@@ -1,7 +1,7 @@
+import { css, useTheme } from 'decorock'
 import { createMemo, Show } from 'solid-js'
 import type { Component } from 'solid-js'
 import { useNavigate } from 'solid-start'
-import { css, useTheme } from 'solid-styled-components'
 
 import { useImagePost } from '.'
 import { TokenizedPrompt } from '../prompt'
@@ -19,7 +19,7 @@ export const Information: Component = () => {
         margin-top: 1.5rem;
 
         & > div {
-          color: ${theme.$().colors.text.fade(0.25).string()};
+          color: ${theme.colors.text.fade(0.25)};
           user-select: none;
 
           h2 {
@@ -28,7 +28,7 @@ export const Information: Component = () => {
 
           & > div {
             display: inline-block;
-            color: ${theme.$().colors.text.string()};
+            color: ${theme.colors.text};
             font-weight: bold;
             user-select: text;
           }

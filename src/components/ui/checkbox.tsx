@@ -1,5 +1,5 @@
+import { styled } from 'decorock'
 import { Component, ComponentProps, splitProps } from 'solid-js'
-import { styled } from 'solid-styled-components'
 
 const Container = styled.div`
   display: flex;

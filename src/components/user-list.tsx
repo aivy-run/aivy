@@ -1,6 +1,6 @@
+import { css, styled, useTheme } from 'decorock'
 import { Component, For } from 'solid-js'
 import { A } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { IconImg } from './ui/icon-img'
 
@@ -12,7 +12,7 @@ const Container = styled.div`
   flex-direction: column;
   padding: 0.5rem 1rem;
   gap: 1rem;
-  ${(p) => p.theme?.$().media.breakpoints.lg} {
+  ${(p) => p.theme.media.breakpoints.lg} {
     padding: 0.5rem 12rem;
   }
 `
@@ -30,7 +30,7 @@ const User: Component<{ profile: UserProfile['Row'] }> = (props) => {
           grid-template-columns: 50px 1fr;
 
           h1 {
-            color: ${theme.$().colors.text.string()};
+            color: ${theme.colors.text};
             font-size: 1rem;
           }
         `}

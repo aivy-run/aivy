@@ -1,6 +1,6 @@
+import { css, styled, useTheme } from 'decorock'
 import { Component, createEffect, createSignal, For, Show } from 'solid-js'
 import { createSlider } from 'solid-slider'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { useImagePost } from '.'
 import { Fallback } from '../ui/fallback'
@@ -106,7 +106,7 @@ export const View: Component = () => {
         max-width: 100%;
         height: 70vh;
         background-color: rgba(0, 0, 0, 0.35);
-        ${theme.$().media.breakpoints.lg} {
+        ${theme.media.breakpoints.lg} {
           min-width: 50%;
           max-width: 50%;
           height: 100%;
@@ -118,7 +118,7 @@ export const View: Component = () => {
           class={css`
             width: 100%;
             height: 100%;
-            background-color: ${theme.$().colors.bg.string()};
+            background-color: ${theme.colors.bg};
           `}
         >
           <Fallback height="100%" />

@@ -1,9 +1,9 @@
 import { createFileUploader } from '@solid-primitives/upload'
 import dayjs from 'dayjs'
+import { css, styled, useTheme } from 'decorock'
 import { createEffect, createSignal, on } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { useNavigate } from 'solid-start'
-import { css, styled, useTheme } from 'solid-styled-components'
 
 import { FixedTitle } from '~/components/head/title'
 import { Button } from '~/components/ui/button'
@@ -74,12 +74,12 @@ export default function Setup() {
             width: 100%;
             padding: 1rem 4rem;
             border-radius: 1rem;
-            background-color: ${theme.$().colors.bg_accent.string()};
+            background-color: ${theme.colors.bg_accent};
             opacity: ${!profile() ? '1' : '0'};
             text-align: center;
             transition: 0.2s;
 
-            ${theme.$().media.breakpoints.lg} {
+            ${theme.media.breakpoints.lg} {
               width: 50%;
             }
 
@@ -217,7 +217,7 @@ export default function Setup() {
           </Button>
           <div
             class={css`
-              color: ${theme.$().colors.text.fade(0.25).string()};
+              color: ${theme.colors.text.fade(0.25)};
               cursor: pointer;
 
               &:hover {

@@ -1,7 +1,7 @@
 import { A, useSearchParams } from '@solidjs/router'
+import { css, styled } from 'decorock'
 import { Component, ComponentProps, createMemo, For, JSX, Show } from 'solid-js'
 import { useLocation } from 'solid-start'
-import { css, styled } from 'solid-styled-components'
 
 import { Posts } from './posts'
 
@@ -10,7 +10,7 @@ import { Tab, Tabs } from '~/components/ui/tab'
 const Inner = styled.div`
   padding: 1rem 2rem;
   border-radius: 1rem;
-  background-color: ${(p) => p.theme?.$().colors.bg_accent.string()};
+  background-color: ${(p) => p.theme.colors.bg_accent};
 `
 
 type PropsT = {

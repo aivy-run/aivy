@@ -1,7 +1,7 @@
 import { useParams } from '@solidjs/router'
+import { css } from 'decorock'
 import { createResource, createSignal, Show } from 'solid-js'
 import { useNavigate } from 'solid-start'
-import { css } from 'solid-styled-components'
 
 import { NotFoundError } from '~/components/error-handler'
 import { ImagePostUploader } from '~/components/image-post-form'

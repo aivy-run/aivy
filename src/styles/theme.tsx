@@ -1,37 +1,39 @@
 import Color from 'color'
 import dayjs from 'dayjs'
-import { Accessor, Component, createEffect, createMemo, createSignal, JSX, onMount } from 'solid-js'
+import { type DefaultTheme, createThemeStore, DecoRockProvider, useTheme } from 'decorock'
+import { Component, createEffect, createMemo, JSX, onMount } from 'solid-js'
 import { isServer } from 'solid-js/web'
 import { parseCookie, serializeCookie, useServerContext } from 'solid-start'
-import { ThemeProvider as _ThemeProvider, useTheme } from 'solid-styled-components'
 
 import { MediaBreakpoints } from './media'
 
 import { useBrowserSetting } from '~/hooks/use-browser-setting'
 
-type Theme = {
-  name: 'dark' | 'light'
-  colors: {
-    main: Color
-    sub: Color
-    text: Color
-    bg: Color
-    bg_accent: Color
-  }
-  media: {
-    breakpoints: {
-      sm: string
-      md: string
-      lg: string
-      xl: string
+declare module 'decorock' {
+  export interface DefaultTheme {
+    name: 'dark' | 'light'
+    colors: {
+      main: Color
+      sub: Color
+      text: Color
+      bg: Color
+      bg_accent: Color
     }
-  }
-  alias: {
-    main_height: string
+    media: {
+      breakpoints: {
+        sm: string
+        md: string
+        lg: string
+        xl: string
+      }
+    }
+    alias: {
+      main_height: string
+    }
   }
 }
 
-export const light: Theme = {
+export const light: DefaultTheme = {
   name: 'light',
   colors: {
     main: Color('#aed1ff'),
@@ -53,7 +55,7 @@ export const light: Theme = {
   },
 }
 
-const dark: Theme = {
+const dark: DefaultTheme = {
   name: 'dark',
   colors: {
     main: Color('#aed1ff'),
@@ -83,8 +85,8 @@ const GlobalStyles: Component = () => {
       // eslint-disable-next-line solid/no-innerhtml
       innerHTML={`
         body {
-          background-color: ${theme.$().colors.bg.string()};
-          color: ${theme.$().colors.text.string()};
+          background-color: ${theme.colors.bg};
+          color: ${theme.colors.text};
           min-height: 100vh;
         }
       `}
@@ -93,7 +95,7 @@ const GlobalStyles: Component = () => {
 }
 
 export const ThemeProvider: Component<{ children: JSX.Element }> = (props) => {
-  const [theme, setTheme] = createSignal(light)
+  const [theme, setTheme] = createThemeStore({ ...light })
   const [setting] = useBrowserSetting()
   const event = useServerContext()
 
@@ -101,9 +103,9 @@ export const ThemeProvider: Component<{ children: JSX.Element }> = (props) => {
     const cookie = parseCookie(
       isServer ? event.request.headers.get('cookie') || '' : document.cookie,
     )
-    const theme = cookie['prefers-color-scheme']
+    const prefers = cookie['prefers-color-scheme']
     return isServer
-      ? (setting.theme === 'system' && theme === 'light') || setting.theme === 'light'
+      ? (setting.theme === 'system' && prefers === 'light') || setting.theme === 'light'
       : window.matchMedia('(prefers-color-scheme: light)').matches
   })
 
@@ -111,12 +113,19 @@ export const ThemeProvider: Component<{ children: JSX.Element }> = (props) => {
     if (setting.theme === 'system') setTheme(prefersLight() ? light : dark)
     setTheme(setting.theme === 'light' ? light : dark)
   }
-
+  // eslint-disable-next-line solid/reactivity
   set()
 
   createEffect(() => {
-    if (setting.theme === 'system') setTheme(prefersLight() ? light : dark)
-    setTheme(setting.theme === 'light' ? light : dark)
+    setTheme({
+      ...(setting.theme === 'system'
+        ? prefersLight()
+          ? light
+          : dark
+        : setting.theme === 'light'
+        ? light
+        : dark),
+    })
   })
 
   onMount(() => {
@@ -128,15 +137,9 @@ export const ThemeProvider: Component<{ children: JSX.Element }> = (props) => {
   })
 
   return (
-    <_ThemeProvider theme={{ $: theme }}>
+    <DecoRockProvider theme={theme} build={(p) => (p?.string ? p : p)}>
       <GlobalStyles />
       {props.children}
-    </_ThemeProvider>
+    </DecoRockProvider>
   )
-}
-
-declare module 'solid-styled-components' {
-  export interface DefaultTheme {
-    $: Accessor<Theme>
-  }
 }
