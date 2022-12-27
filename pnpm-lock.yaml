@@ -26,7 +26,7 @@ importers:
       autosize: ^5.0.1
       color: ^4.2.3
       dayjs: ^1.11.6
-      decorock: ^0.1.7
+      decorock: ^0.1.8
       dotenv: ^16.0.3
       eslint: ^8.20.0
       eslint-config-prettier: ^8.5.0
@@ -82,7 +82,7 @@ importers:
       autosize: 5.0.1
       color: 4.2.3
       dayjs: 1.11.6
-      decorock: 0.1.7_solid-js@1.6.4
+      decorock: 0.1.8_solid-js@1.6.4
       dotenv: 16.0.3
       highlight.js: 11.7.0
       nprogress: 0.2.0
@@ -3939,8 +3939,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /decorock/0.1.7_solid-js@1.6.4:
-    resolution: {integrity: sha512-yKZwcZnMcVJ7rGXIR8ozc+6+c5EupbBPESkWfOX/am/eQyKy00pebdFuJdqCpiGYt1t+CdtNuspFn47p0BzDVA==}
+  /decorock/0.1.8_solid-js@1.6.4:
+    resolution: {integrity: sha512-bIIFrableT4UIAS2kNB+M4oRhaWNs4S4MQpKVae0N8sJbZabrBUS46rFUHNp0Y/4i/6ar8yGByvdMPI/RmC6Nw==}
     peerDependencies:
       solid-js: '*'
     dependencies:
