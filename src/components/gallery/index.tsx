@@ -44,8 +44,8 @@ const Inner = styled.div<{ scroll: boolean }>`
   overflow-x: ${(p) => (p.scroll ? 'auto' : 'hidden')};
   ${(p) => p.theme.media.breakpoints.sm} {
     justify-content: ${(p) => (p.scroll ? 'flex-start' : 'center')};
-    padding: ${PADDING.toString()}px;
-    gap: ${GAP.toString()}px;
+    padding: ${() => PADDING.toString()}px;
+    gap: ${() => GAP.toString()}px;
   }
 `
 
@@ -58,12 +58,12 @@ const ImageBox = styled.div`
   grid-template-columns: 100%;
   grid-template-rows: 1fr 0.25fr;
   ${(p) => p.theme.media.breakpoints.sm} {
-    width: ${WIDTH.toString()}px;
-    min-width: ${WIDTH.toString()}px;
+    width: ${() => WIDTH.toString()}px;
+    min-width: ${() => WIDTH.toString()}px;
     border: none;
     border-radius: 1rem;
     box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.25);
-    grid-template-rows: ${WIDTH.toString()}px 0.25fr;
+    grid-template-rows: ${() => WIDTH.toString()}px 0.25fr;
   }
 `
 

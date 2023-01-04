@@ -31,7 +31,7 @@
     "postcss": "^8.4.18",
     "postcss-syntax": "^0.36.2",
     "prettier": "^2.7.1",
-    "solid-start-netlify": "^0.2.9",
+    "solid-start-netlify": "^0.2.10",
     "stylelint": "^14.14.0",
     "stylelint-config-idiomatic-order": "^9.0.0",
     "stylelint-config-prettier": "^9.0.3",
@@ -75,7 +75,7 @@
     "solid-js": "^1.6.6",
     "solid-progressbar": "^0.1.1",
     "solid-slider": "^1.3.12",
-    "solid-start": "^0.2.9",
+    "solid-start": "^0.2.10",
     "solid-tiptap": "^0.4.0",
     "undici": "^5.11.0",
     "uuid": "^9.0.0"

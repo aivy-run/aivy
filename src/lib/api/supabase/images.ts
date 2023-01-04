@@ -126,7 +126,7 @@ export class ImagePostApi {
                       '*, profiles!inner(*), information:image_posts_information!inner(*)',
                       options,
                   )
-            : supabase.from('image_posts').select('*, profiles!inner(*)')
+            : supabase.from('image_posts').select('*, profiles!inner(*)', options)
 
         if (typeof filter?.published !== 'boolean') builder.eq('published', true)
         else builder.eq('published', filter.published)
